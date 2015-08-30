@@ -1,0 +1,64 @@
+集中式版本控制系统
+CVS SVN（必须联网才能干活）
+分布式版本控制系统
+git
+
+所有的版本控制系统，只能跟踪文本文件的改动。
+
+windows下要使用很多Linux和Unix工具时，需要Cygwin这样的模拟环境。
+打包好的git，msysgit.exe
+$ git config --global user.name "bugong"
+$ git config --global user.email "1761869346@qq.com"
+
+$ mkdir git
+$ cd git
+$ pwd  //查看文件目录
+
+$ git init
+
+$ git add test_git.txt
+$ git commit -m "这是git的第一行"  //描述文字，最好用英文，否则，会报出警告。
+
+$ git status
+$ git diff test_git.txt  //查看某文件的修改内容
+
+$ git log  //产看历史提交记录（由近到远）
+$ git log --pretty=oneline
+
+HEAD当前版本（HEAD可全部小写）
+HEAD^ 上一个版本
+HEAD^^ 上上个版本
+HEAD^^...  
+HEAD~199  上199个版本
+
+$ git reset --hard HEAD^  //--hard 暂存区，工作区全部替换
+$ git reset --hard 版本号（7位）  //到指定版本号，可前进和后退
+
+$ cat test_git.txt  //查看当前文件的内容
+
+$ git reflog  //产看历史命令记录
+
+工作区，版本库（暂存区 stage|index，只有git有）
+
+$ git diff HEAD -- test_git.txt  //--后面要有空格，查看工作区和版本库里面最新版本的区别
+
+$ git checkout -- test_git.txt  //丢弃工作区中的修改，没有--，就变成创建一个分支的命令。
+1、还没有放到暂存区，就回到和版本库一模一样的状态。
+2、已添加到暂存区，就回到添加到暂存区的状态。
+
+$ git reset HEAD test_git.txt //把暂存区中的修改重新放回工作区(丢弃暂存区中的修改)。
+
+$ rm test_git2.txt
+
+$ git rm test_git2.txt
+$ git commit -m "remove test_git2.txt"
+
+$ ssh-keygen -t rsa -C "1761869346@qq.com"  //创建ssh key
+
+$ git remote add origin git@github.com:woodjs/learn_git.git  //origin是默认远程仓库的名字，可更改。
+
+$ git push -u origin master  //第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令。
+
+$ git clone git@github.com:woodjs/learn_git_clone.git
+
+$ ls  //查看当前目录，文件列表
