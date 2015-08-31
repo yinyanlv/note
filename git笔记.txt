@@ -62,3 +62,39 @@ $ git push -u origin master  //第一次推送，加-u，推送所有内容，�
 $ git clone git@github.com:woodjs/learn_git_clone.git
 
 $ ls  //查看当前目录，文件列表
+
+$ git checkout -b dev  //创建并切换分支
+相当于
+$ git branch dev
+$ git checkout dev
+
+$ git branch  //查看所有的分支
+
+$ git merge dev  //将merge分支合并到master分支，合并指定分支到当前分支
+Fast forward模式（快进模式）
+
+$ git branch -d dev  //删除dev分支
+
+$ git log --graph --pretty=oneline --abbrev-commit  //查看分支合并情况
+--graph 可以看到分支合并图
+
+Fast forward模式，在这种模式下，删除分支后，会丢掉分支信息。如果强制禁用Fast forward模式，git会merge时，生成一个新的commit，这样从分支历史上就可以看出分支信息。
+
+强制禁用 Fast forward模式
+$ git merge --no-ff -m "merge with no-ff" dev
+--no-ff参数就可以用普通模式合并，合并后的历史有分支记录，可以看出做过合并，而Fast forward合并就看不出来曾经做过合并。
+
+$ git stash  //储存工作现场
+$ git stash list
+
+$ git stash apply  //恢复工作现场，但不删除stash
+$ git stash apply stash@{0}  //到指定工作现场
+$ git stash drop  //删除stash
+
+$ git stash pop  //恢复工作现场，并删除stash
+
+
+$ git branch -D feature  //强行丢弃一个没有被合并过的分支。
+
+$ git remote  //查看远程库名称
+$ git remote -v  //显示更详细的信息
