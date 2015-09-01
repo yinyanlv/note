@@ -2,7 +2,7 @@
   "name": "webpack",
   "version": "0.0.1",
   "description": "webpack",
-  "main": "index.js",
+  "main": "webpack.config.js",
   "devDependencies": {
     "extract-text-webpack-plugin": "^0.8.2",
     "node-sass": "^3.2.0",
