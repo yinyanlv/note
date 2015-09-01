@@ -1,0 +1,142 @@
+$fontSize: 14px !default;
+$fontColor: #333 !default;
+$lighterFontColor: #666 !default;
+$lightestFontColor: #999 !default;
+$bdColor: #eee !default;
+$bgColor: #455;
+$bgColor: #eee !default;
+$themeFontColor: #333 !default;
+$themeBdColor: #eee !default;
+$themeBgColor: #fff !default;
+$prefixList: '-webkit-', '-ms-', '-moz-', '-o-', '';
+
+$marginTopList: 8 10 50;
+@each $i in $marginTopList {
+  .margin-top-#{$i}{
+    margin-top: #{$i}px;
+  }
+}
+
+$marginBottomList: 8 10 50 51;
+@each $i in $marginBottomList {
+  .margin-bottom-#{$i}{
+    margin-bottom: #{$i}px;
+  }
+}
+
+@mixin setHeightGroup($height) {
+  height: $height;
+  line-height: $height;
+}
+
+@mixin transition($prop...) {
+  -webkit-transition: $prop;
+  -ms-transition: $prop;
+  -moz-transition: $prop;
+  -o-transition: $prop;
+  transition: $prop;
+}
+
+@mixin transform($prop...) {
+  -webkit-transform: $prop;
+  -ms-transform: $prop;
+  -moz-transform: $prop;
+  -o-transform: $prop;
+  transform: $prop;
+}
+
+@mixin boxShadow($prop...) {
+  -webkit-box-shadow: $prop;
+  -ms-box-shadow: $prop;
+  -moz-box-shadow: $prop;
+  -o-box-shadow: $prop;
+  box-shadow: $prop;
+}
+
+@mixin boxSizing($prop) {
+  -webkit-box-sizing: $prop;
+  -ms-box-sizing: $prop;
+  -moz-box-sizing: $prop;
+  -o-box-sizing: $prop;
+  box-sizing: $prop;
+}
+
+@mixin placeholderColor($color){
+  :-moz-placeholder {  //Mozilla Firefox 4 to 18
+    color: $color;
+  }
+  ::-moz-placeholder {  //Mozilla Firefox 19+
+    color: $color;
+  }
+  input:-ms-input-placeholder,textarea:-ms-input-placeholder {
+    color: $color;
+  }
+  input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {
+    color: $color;
+  }
+}
+
+@mixin createAnimation($name, $duration: 1s, $func: ease-in-out, $delay: 0, $count: infinite, $direction: normal, $state: running) {
+  @each $prefix in $prefixList {
+    #{$prefix}animation-name: $name;
+    #{$prefix}animation-duration: $duration;
+    #{$prefix}animation-timing-function: $func;
+    #{$prefix}animation-delay: $delay;
+    #{$prefix}animation-iteration-count: $count;
+    #{$prefix}animation-direction: $direction;
+    #{$prefix}animation-play-state: $state;
+  }
+}
+
+@mixin createKeyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+  @-ms-keyframes #{$name} {
+    @content;
+  }
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+  @-o-keyframes #{$name} {
+    @content;
+  }
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+%textOverflowEllipsis{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+//sass 3.4 开始支持!global
+//ios 滚动hack
+//-webkit-overflow-scrolling : touch;
+
+html,body,header,section,footer,article,nav,aside,div,p,ul,dl,li,dt,dd,span,a,label,input,textarea{
+  margin:0;
+  padding:0;
+  border:0;
+  @include boxSizing(border-box);
+  -webkit-tap-highlight-color:rgba(255,0,0,0);
+}
+dl,ul{
+  list-style: none;
+}
+input,textarea{
+  outline:medium;
+  -webkit-appearance: none;
+}
+input::-webkit-search-cancel-button{
+  display: none;  //去除部分浏览器搜索框中的删除按钮
+}
+input {
+  line-height: normal;  //解决部分浏览器文本框中的文字不能垂直居中的问题
+}
+a:link,a:visited,a:hover,a:active{
+  color: $fontColor;
+  text-decoration: none;
+}
