@@ -2,8 +2,6 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-console.log(__dirname);
-
 module.exports = {
 	entry: {
 		page1: path.join(__dirname, 'src/js/entry_1.js'),  //入口文件
