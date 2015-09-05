@@ -1,0 +1,888 @@
+npm的两层含义
+node包管理器(node packaged manager)
+node封装模块(node packaged module)
+
+npm命令行选项
+init
+search
+install  //npm install express@0.1.1
+install -g 
+update
+remove
+pack  //把package.json文件中定义的模块封装成.tgz文件
+view  //显示模块的详细信息  npm view express
+publish 
+unpublish  //--force 强制删除，npm注册表中清除和删除该模块
+owner  //添加、删除、列出作者  add  rm  ls
+adduser 
+–save参数表示将该模块写入dependencies属性，
+–save-dev表示将该模块写入devDependencies属性。
+波浪号~+指定版本：比如~1.2.2，表示安装1.2.x的最新版本（不低于1.2.2），但是不安装1.3.x，也就是说安装时不改变大版本号和次要版本号。 
+
+package.json
+//网络资源参考地址：http://realwall.cn/blog/?p=120
+package.json中必须的指令只是名称和版本
+常用指令
+name
+preferGlobal  //表示该模块倾向全局模式安装
+version
+author
+description
+contributors
+bin  //随项目安装的二进制文件
+scripts  //npm start [<name>]，npm stop [<name>]，npm test [<name>]触发。key是生命周期事件名，value是在事件点要跑的命令。
+main  //应用程序的主入口点，它可以是一个二进制文件或js文件，如果其他用户需要你的包，当用户调用require()方法时，返回的就是这个模块的导出（exports）。
+repository  //仓库类型和位置
+keywords
+dependencies
+engines  //此包可使用的node的版本
+
+console模块
+log
+info
+error
+warn
+dir  //把一个javascript对象的字符串表示形式写到控制台
+time
+timeEnd
+trance  //把代码当前位置的栈跟踪信息写到stderr
+assert  //断言，把消息和栈跟踪信息写到控制台
+
+nodejs线程模型
+事件循环线程和线程池中的线程（执行阻塞型io功能）
+
+事件队列调度的几种方式
+1、对阻塞io库调用，如写入一个文件或连接到一个数据库
+2、对内置事件的响应，如http.request,server.connection
+3、自定义事件发射器，并添加自定义的侦听器
+4、process.nextTick
+5、定时器，setTimeout, setInterval, setImmeidiate
+
+定时器
+setTimeout(func, time, [args]);
+setInterval(func, time, [args]);
+setImmediate(func, [args]);  //即时定时器用来在io事件的回调函数开始执行后（有机会被调用时），但任何超时时间或时间间隔事件被执行之前，立刻开始执行
+timeId.unref();  //当定时器事件回调，是事件队列中仅有的事件时，unref可使得事件循环不要继续  
+timeId.ref();
+
+nextTick()
+nextTick()在io事件被触发之前执行。一次事件循环，可执行多个nextTick()
+通过process.maxTickDepth来限制事件队列每次循环可执行的nextTick()事件的数目
+
+事件发射器和事件侦听器
+事件由一个EventEmitter对象发出，这个对象包含在events模块中
+emit(eventName, [args]);  //触发名为eventName的事件
+var events = require('events');
+var emitter = new events.EventEmitter();
+emitter.emit('myFirstEvent');
+将事件系统，添加到自定义js对象
+function MyObj() {
+	events.EventEmitter.call(this);
+}
+MyObj.prototype.__proto__ = events.EventEmitter.prototype;
+var obj = new MyObj();
+obj.emit('objFirstEvent');
+把事件侦听器添加到EventEmitter对象
+.addListener(eventName, callback);
+.on(eventName, callback);
+.once(eventName, callback);
+把事件侦听器从EventEmitter对象移除
+.listeners(eventName);  //返回eventName事件侦听器组成的数组
+.setMaxListeners(n);  //默认10
+.removeListener(eventName, callback);
+
+
+node.js中处理数据io
+JSON
+JSON.parse(str);
+JSON.stringify(obj);
+
+Buffer模块缓冲数据
+js对unicode友好，但是它不很擅长管理二进制数据。
+缓冲数据是由一系列的大端或小端格式的字节组成。它比文本数据占用更少的空间。
+nodejs提供Buffer（缓冲区）模块，允许你在缓冲区结构中创建、写入、读取、操作二进制数据。
+Buffer模块是全局性，不需要require。
+缓冲数据被存储在正常v8堆之外的原始内存分配区，因此缓冲区不能调整大小，创建时需确定其大小。
+当对缓冲区与字符串进行转换时，需要指定明确的编码方法。
+
+大端编码（BE）：高位字节放在内存中的低位
+0x0A 0x0B 0x0C  =>  [0x0A, 0x0B, 0x0C] 
+小端编码（LE）：高位字节放在内存中的高位
+0x0A 0x0B 0x0C  =>  [0x0C, 0x0B, 0x0A]
+
+写入缓冲区
+buffer.write(string, [offset], [length], [encoding]);
+buffer[offset] = value;
+buffer.fill(value, [offset], [end]);
+buffer.writeInt8(value, offset, [noAssert]);
+buffer.writeInt16LE(value, offset, [noAssert]);
+buffer.writeInt16BE(value, offset, [noAssert]);
+
+从缓冲区读取
+buffer.toString([encoding], [start], [end]);
+stringDecoder.write(buffer);  //nodejs提供StringDecoder对象，读取缓冲区数据，返回缓冲区的解码字符串版本
+buffer[offset]
+buffer.readInt8(value, offset, [noAssert]);
+buffer.readInt16LE(value, offset, [noAssert]);
+buffer.readInt16BE(value, offset, [noAssert]);
+
+确定缓冲区长度
+Buffer.byteLength(string, [encoding]);
+
+复制缓冲区
+buffer.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd]);  //[sourceEnd]不包含
+
+对缓冲区切片
+buffer.slice([start], [end]);  //切片与副本不同，切片指向原始的buffer对象
+
+拼接缓冲区
+Buffer.concat(list, [totalLength]);  //[totalLength]定义缓冲区的最大字节数，指定totalLength执行更快
+
+Stream模块传送数据
+Stream模块需要require
+数据流是可读、可写或即可读又可写的内存结构。
+流的目的是提供一种从一个地方向另一个地方传送数据的通用机制。它们公开各种事件。一般用于http和文件。
+
+Readable流
+事件
+readable
+data
+end
+error
+close
+方法
+readable.read([size]);  //返回String对象，Buffer对象或null
+readable.setEncoding(encoding);
+readable.pause();  //暂停data事件
+readable.resume();
+readable.pipe(destination, [options]);  //把这个流的输出传递到一个由destination指定writeable流对象。
+readable.unpipe([destination]);
+
+自定义Readable流
+var stream = require('stream');
+var util = require('util');
+util.inherits(MyReadableStream, stream.Readable);
+function MyReadableStream(opt) {
+	stream.Readable.call(this, opt);
+}
+还需要在MyReadableStream的原型上实现一个_read()方法，_read()方法通过调用this.push()来输出Readable对象中的数据。
+
+只需调用一次read()
+
+Writable流
+事件
+drain  //当write()调用返回false后，当准备好开始写更多的数据时，发出此事件通知侦听器
+finish
+pipe
+unpipe
+方法
+writable.write(chunk, [encoding], [callback]);
+writable.end(chunk, [encoding], [callback]);
+
+自定义Writeable流
+var stream = require('stream');
+var util = require('util');
+util.inherits(MyWritablStream, stream.Writable);
+function MyWritablStream(opt) {
+	stream.Writable.call(this, opt);
+}
+还需要在MyWritablStream的原型上实现一个_write(data, encoding, callback)方法。
+
+需多次调用write(),最后一次调用end()
+
+Duplex(双向)流
+自定义Duplex流
+var stream = require('stream');
+var util = require('util');
+util.inherits(MyDuplexStream, stream.Duplex);
+function MyDuplexStream(opt) {
+	stream.Duplex.call(this, opt);
+}
+//opt参数，allowHalfOpen属性为true时，即使可写入端已经结束，可读取端也保持打开状态。false时，结束可写入端时也会结束可读取端。
+还需要在MyDuplexStream的原型上同时实现_read(size)和_write(data, encoding, callback)方法。
+
+需多次调用write(),无需手动调用read(),自动触发read()
+
+Transform(变换)流
+Transform流扩展了Duplex流，可修改Writeable流和Readable流之间的数据。
+Duplex流和Transform流之间一个主要区别是，Transform流中不需要实现_read()和_write()原型方法，这些被作为直通函数提供。但需要实现_transform(chunk, encoding, callback)和_flush(callback)方法。此_transform()方法应接受来自write()的数据，对其修改，并推出修改后的数据。
+
+自定义Transform流
+var stream = require('stream');
+var util = require('util');
+util.inherits(MyTransformStream, stream.Transform);
+function MyTransformStream(opt) {
+	stream.Transform.call(this, opt);
+}
+还需要在MyTransformStream的原型上同时实现_transform(chunk, encoding, callback)和_flush(callback)方法。在_transform方法中，使用this.push()方法，触发data事件。
+
+需多次调用write(),无需手动调用read()
+
+
+把Readable流用管道输送到Writable流
+readabel.pipe(writeabel, {end: true});  //end为true时，Writable流随着Readable流的结束而结束。
+
+无需手动调用write(),无需手动调用read()
+
+Zlib模块压缩和解压缩数据
+Zlib压缩模块，使你非常方便、高效地压缩和解压缩在缓冲区中的数据。但是，压缩数据需要花费cpu周期，需要权衡利弊。
+Zlib支持如下压缩方法：
+gzip/gunzip  标准gzip压缩
+deflate/inflate  基于Huffman编码的标准deflate压缩算法
+deflateRaw/inflateRaw  针对原始缓冲区的deflate压缩算法
+
+Zlib压缩(普通字符串?)/解压缩缓冲区
+压缩效果：deflateRaw > deflate > gzip
+var zlib = require('zlib');
+zlib.[funcName](buffer, callback);  //funcName：压缩/解压缩方法
+
+Zlib压缩/解压缩流
+使用pipe()函数，通过压缩解压缩对象把数据从一个流输送到另一个流
+var zlib = require('zlib');
+var gzip = zlib.createGzip();
+readableStream.pipe(gzip).pipe(writableStream);
+
+nodejs访问文件系统
+fs模块，几乎所有功能，都有两种形式可供选择，同步和异步。
+异步调用，自动处理异常。同步调用中，处理异常，必须使用try/catch块
+
+打开和关闭文件
+fs.open(path, flags, [mode], callback);  //flags指定打开文件的模式，mode设置文件访问模式，默认为0666，表示可读且可写。
+fs.openSync(path, flags, [mode]);
+fs.close(fd, callback);  //fd:文件描述符
+fs.closeSync(fd);
+定义文件如何打开的标志(flags)
+r  读
+r+  读写
+rs  同步模式下打开文件读取，可以绕过本地文件缓存
+rs+  同步模式下打开文件读写
+w  写
+w+  读写
+wx  写，如果路径存在则打开失败
+wx+  读写，如果路径存在则打开失败
+a  追加
+a+  读取，追加
+ax  追加，如果路径存在则打开失败
+ax+  读取，追加，如果路径存在则打开失败
+
+写入文件
+4种方式
+1、简单单个文件写入
+fs.writeFile(path, data, [options], callback);
+fs.writeFileSync(path, data, [options]);
+2、同步文件写入  多次写入
+fs.writeSync(fd, data, offset, length, position);  //必须先使用openSync()获得文件描述符fd,最后使用closeSync()
+3、异步文件写入  多次写入
+fs.write(fd, data, offset, length, position, callback);  //必须先使用open()获得文件描述符fd,callback接受error和bytes(写入的字节数)两个参数,最后使用close()
+4、流式文件写入  写入大量数据
+fs.createWriteStream(path, [options]);  //返回一个writable流，手动调用write()方法和end()方法写入
+
+读取文件
+4种方式
+1、简单单个文件读取
+fs.readFile(path, [options], callback);
+fs.readFile(path, [options]);
+2、同步文件读取  多次读取
+fs.readSync(fd, buffer, offset, length, position);  //借助buffer实现。必须先使用openSync()获得文件描述符fd,最后使用closeSync()
+3、异步文件读取  多次读取
+fs.read(fd, buffer, offset, length, position, callback);  //借助buffer实现。必须先使用open()获得文件描述符fd,callback接受error、bytes(写入的字节数)和buffer(读取的数据块)三个参数,最后使用close()
+4、流式文件读取  读取大量数据
+fs.createReadStream(path, [options]);  //返回一个readable流，无需手动调用read()方法
+
+验证路径的存在性
+fs.exists(path, callback);  //callback第一个参数返回true或false
+fs.existsSync(path);
+
+获取文件信息
+fs.stats(path, callback);  //callback第二参数返回一个Stats对象
+fs.statsSync(path);
+Stats对象的属性和方法
+isFile()
+isDirectory()
+isSocket()
+dev  文件所在的设备ID
+mode  文件的访问模式
+size  指定文件字节数
+blkSize  指定用于存储该文件的块大小，字节为单位
+blocks  指定文件在磁盘上占用的块的数目
+atime  上次访问文件的时间
+mtime  文件最后修改的时间
+ctime  文件的创建时间
+
+列出文件
+fs.readdir(path, callback);
+fs.readdirSync(path);
+
+删除文件
+fs.unlink(path, callback);  //callback,返回true或false
+fs.unlinkSync(path);
+
+截断文件
+fs.truncate(path, len, callback);  //len:代表字节，callback,返回true或false，常用于截断不重要的文件，如日志
+fs.truncateSync(path, len);
+
+建立和删除目录
+fs.mkdir(path, [mode], callback);  //callback,返回true或false
+fs.mkdirSync(path, [mode]);
+fs.rmdir(path, callback);  //callback,返回true或false
+fs.rmdirSync(path);
+
+重命名文件和目录
+fs.rename(oldPath, newPath, callback);  //callback,返回true或false
+fs.renameSync(oldPath, newPath);
+
+监视文件的更改
+fs.watchFile(path, [options], callback);  //options包含两个属性persistent(持续，true或false)和interval(单位ms)
+
+在nodejs中实现http服务
+因为http模块，相当低层次，所以更可能使用的地方是实现供应用程序使用的后端web服务。
+http://user:pass@host.com:80/resource/path/?query=string#hash
+http  协议
+user:pass  身份验证
+host.com  主机，主机名
+80  端口
+resource/path/?query=string  路径,路径名
+?query=string  搜索，查询
+#hash  散列
+
+nodejs提供url模块，把一个url字符串换成一个url对象
+url.parse(urlStr, [parseQueryString], [slashesDenoteHost]);
+parseQueryString参数默认为false，如果为true，则将url中的查询字符串部分，转换成对象字面量。  
+slashesDenoteHost参数默认为false，如果为true，则将//host/path解析为{host: 'host', pathname: '/path'}，而不是{pathname: '//host/path'}
+url对象属性
+href  
+protocol
+host
+auth
+hostname
+port 
+pathname
+search
+path
+query
+hash
+
+解析url组件，把url解析到新的位置
+url.resolve(originUrl, newUrl);  //不改变域名和端口
+
+处理查询字符串和表单参数(从客户端请求的正文读出)
+
+querystring模块的parse方法将字符串转换为JavaScript对象
+querystring.parse(str, [sep], [eq], [options]);
+seq参数，允许你指定使用的分隔符，默认&
+eq参数，允许你指定分析时使用的赋值运算符，默认=
+options参数，具有一个maxKeys属性，限制生成的对象可以包含的键的数量，默认1000，如果指定为0，则表示没有限制
+
+querystring模块的stringify方法将JavaScript对象转换成一个查询字符串
+querystring.stringify(obj, [sep], [eq]);
+
+
+请求、响应和服务器对象
+http.ClientRequest对象
+构建http客户端时，调用http.request()使得一个ClientRequest对象被创建。ClientRequest对象实现了一个Writable流。ClientRequest对象来启动、监控和处理来自服务器端的响应。
+http.request(options, callback);  //实现一个ClientRequest对象,callback回调函数唯一的参数是一个IncomingMessage对象，该对象时来自服务器的响应。
+
+clientReq = http.request(options, function (response) {
+	
+}) ;
+clientReq.end();
+
+options参数可配置属性
+host
+hostname
+port
+localAddress
+socketPath
+method
+path
+headers
+auth
+agent
+
+ClientRequest对象的事件
+response
+socket
+connect
+upgrade
+continue
+
+ClientRequest对象的方法
+write(chunk, [encoding]);
+end([data], [encoding]);
+abort();
+setTimeout(timeout, [callback]);
+setNoDelay([noDelay]);
+setSocketKeepAlive([enable], [initialDelay]);
+
+
+http.ServerResponse对象
+当http服务器，接收到一个request请求时，会创建一个ServerResponse对象。这个对象作为第二个参数被传递到request请求的处理程序。使用ServerResponse对象制定并发送到客户端的响应。ServerResponse对象，实现了一个writable流。
+http.createServer(function (req, res) {  //res即http.ServerResponse对象
+	
+});
+
+ServerResponse对象的事件和属性
+close
+headersSent
+sendDate
+statusCode
+
+ServerResponse对象的方法
+writeContinue();
+writeHead(statusCode, [resonPhrase], [headers]);
+setTimeout(msecs, callback);
+setHeader(name, value);
+getHeader(name);
+removeHeader(name);
+write(chunk, [encoding]);
+addTrailers(header);
+end([data], [encoding]);
+
+http.IncomingMessage对象
+无论是http服务器还是http客户端，都创建IncomingMessage对象。IncomingMessage对象实现了一个readable流。
+
+IncomingMessage对象的事件、属性和方法
+close
+httpVersion
+headers
+trailers
+method
+url
+statusCode
+socket
+setTimeout(msecs, callback);
+
+HTTP Server对象
+nodejs的HTTP server对象提供了实现http服务器的基本框架。它提供了一个监听底层套接字和请求，然后发送响应给客户端连接的处理程序。HTTP Server对象实现了EventEmitter对象，可发出如下事件：
+request
+connection
+close
+checkContinue
+connect
+upgrade
+clientError
+启动http服务器，得到HTTP Server对象
+server = http.createServer(function (req, res) {//req:IncomingMessage对象，res:ServerResponse对象
+	
+});
+server对象的方法
+server.listen(port, [hostname], [backlog], [callback]);  //backlog(积压)，指定允许进行排队的最大待处理连接数。默认511
+另外两个方法监听通过文件系统的连接
+server.listen(path, [callback]);  //path一个要监听的文件路径
+server.listen(handle, [callback]);  //handle一个已经打开的文件描述符句柄
+server.close([callback]);
+
+HTTPS服务器和客户端
+超文本传输安全协议(HTTPS)是一种在HTTP客户端和服务器之间提供安全通信的通信协议。实际上只是在传输层安全性/安全套接字层(TLS/SSL)协议上面运行的HTTP。
+HTTPS采用两种方式提供安全保护：1、使用长期的公钥和密钥对短期会话密钥进行交换，使数据加密。2、身份验证，防止中间人攻击。
+
+nodejs中使用https模块实现HTTPS服务器和客户端。使用https之前，需要生成一个私钥和一个公共证书。可使用平台的OpenSSL库生成。P127
+生成一个私钥
+openssl genrsa -out server.pem 2048
+创建一个证书签名请求文件
+openssl req -new -key server.pem -out server.csr
+创建一个可以用于自己的目的或用于测试的自签名证书
+openssl x509 -req -days 365 -in server.csr -signkey server.pen -out server.crt
+
+HTTPS客户端
+var clientRequest = https.request(options, function () {
+	
+});
+创建自定义的Agent对象来实现https协议下的代理,options.agent = new https.Agent(options);
+HTTPS服务器
+var server = https.createServer(options, function (req, res) {
+	
+});
+https.request()和https.createServer()中options的配置项
+key  私钥,用于指定SSL私钥
+cert  公共证书(公钥)，指定要使用的X509公钥
+agent  代理
+pfx
+passphrase
+ca
+ciphers
+rejectUnauthorized
+crl
+secureProtocol
+示例：HTTPS客户端options
+var options = {
+	key: fs.readFileSync('test/keys/client.pem'),
+	cert: fs.readFileSync('test/keys/client.crt'),
+	agent: null
+};
+示例：HTTPS服务器options
+var options = {
+	key: fs.readFileSync('test/keys/server.pem'),
+	cert: fs.readFileSync('test/keys/server.crt')
+};
+
+
+nodejs实现套接字服务
+套接字允许一个进程通过一个ip地址和端口与另一个进程实现通信。nodejs的net模块，可创建套接字服务器，和连接到套接字服务器的客户端。nodejs的tls模块，可实现TLS套接字服务器和客户端。
+
+网络套接字
+nodejs套接字，实现了Duplex流，套接字是http模块的底层结构，如果你不需要处理如GET和POST的web请求的功能，你只需要点对点的传输数据，使用套接字可以提供一个轻量级的解决方案和更多的控制。
+进程不能直接共享内存，使用套接字可实现内存共享。
+
+TCP服务器和Socket对象
+net.Socket对象
+Socket对象，同时在套接字服务器和客户端套接字上创建，并允许数据在它们之间来回写入和读取。Socket对象实现了Duplex流。
+在套接字客户端，当调用net.connect()或net.createConnection()时，Socket对象被创建。nodejs的net模块没有明确的客户端对象，Socket对象就是客户端。
+客户端创建一个Socket对象的有3中方式
+var socket = net.connect(options, [connectListener]);
+var socket = net.createConnection(options, [connetionListener]);
+var socket = net.connect(port, [host], [connectionListener]);
+var socket = net.createConnection(port, [host], [connectionListener]);
+var socket = net.connect(path, [connecionListener]);
+var socket = net.createConnection(path, [connectionListener]);
+
+Socket对象的options选项
+port
+host
+localAdress
+allowHalfOpen
+
+Socket对象的事件
+connect
+data
+end
+timeout
+drain
+error
+close
+
+Socket对象上的方法
+setEncoding([encoding]);
+write(data, [encoding], [callback]);
+end(data, [encoding]);
+destory();
+pause();
+resume();
+setTimeout(timeout, [callback]);
+setNoDelay([noDelay]);
+setKeepAlive([enable], [iniialDelay]);
+address();
+unref();
+ref();
+
+Socket对象上的属性
+bufferSize
+remoteAddress
+remotePort
+localAdress
+localPort
+bytesRead
+bytesWritten
+
+net.Server对象
+调用net.createServer()时，Server对象被创建。当服务器接收到一个连接时，服务器会创建一个Socket对象，并把它传递给正在监听的任何事件处理程序。
+var server = net.createServer([options], [connectionListener]);  //connectionListener的参数为Socket对象。
+
+options配置项
+allowHalfOpen
+
+Server对象的事件
+listening
+connection
+close
+error
+
+Server对象的方法
+listen(port, [host], [backlog], [callback]);  //backlog默认值511，待处理最大连接数
+listen(path, [callback]);
+listen(handle, [callback]);
+getConnections(callback);
+close([callback]);
+address();
+unref();
+ref();
+
+Server对象的属性
+maxConnection  设置服务器拒绝连接之前的接受的最大连接数目。如果一个进程使用child_process.fork()被派生给一个子进程处理，则不应该使用这个选项。
+
+TLS套接字服务器和客户端
+TLS采用两种方式提供安全保护：1、使用长期的公钥和密钥对短期会话密钥进行交换，使数据加密。2、身份验证，防止中间人攻击。
+nodejs中使用tls模块实现TLS套接字服务器和客户端，使用TLS之前，需要为客户端和服务器生成一个私钥和公共证书，借助平台的openssl。P143
+生成一个私钥
+openssl genrsa -out server.pem 2048
+创建一个证书签名请求文件
+openssl req -new -key server.pem -out server.csr
+创建一个用于自己的母的或用于测试的自签名证书
+openssl x509 -rea -days 365 -in server.csr -signkey server.pem -out server.crt
+
+TLS套接字客户端
+var options = {
+	hostname: '...',
+	...,
+	key: fs.readFileSync('test/keys/client.pem'),  //指定用于SSL的私钥
+	cert: fs.readFileSync('test/keys/client.crt'),  //指定使用的X509公钥
+	ca: fs.readFileSync('test/keys/server.crt')  //如果使用的是自签名证书，需要在服务器的证书上指出ca属性
+};
+var socket = tls.connect(options, function (res) {
+	
+};
+tls.connect()的options的其他配置项
+key
+cert
+ca
+pfx
+passphrase
+rejectUnauthorized
+servername
+secureProtocol
+
+TLS套接字服务器
+var options = {
+	key: fs.readFileSync('test/keys/server.pem'),  //指定用于SSL的私钥
+	cert: fs.readFileSync('test/keys/server.crt'),  //指定使用的X509公钥
+	ca: fs.readFileSync('test/keys/client.crt')  //如果使用的是自签名证书，需要在客户端的证书上指出ca属性
+};
+var server = tls.createServer(options, function (socket) {
+	
+});
+tls.createServer()的options的其他配置项
+key
+cert
+ca
+pfx
+passphrase
+crl
+ciphers
+handshakeTimeout
+honorClipherOrder
+requestCert
+rejectUnauthorized
+NPNProtocols
+SNICallback
+sessionIdContext
+secureProtocol
+TLS Server对象上的其它事件
+secureConnection
+clientError
+newSession
+resumeSession
+
+在nodejs中使用多处理器扩展应用程序
+nodejs允许用户从主应用程序把工作派生为随后可以彼此并行和主应用程序一起处理的各个进程。
+为了方便使用多进程，nodejs提供3个模块
+1、process(进程)模块，提供了访问正在运行的进程的能力
+2、child_process(子进程)模块，使你可以创建子进程，并与它们通信
+3、cluster(集群)模块，提供了实现共享相同端口的集群服务器的能力，从而允许多个请求被同时处理
+
+process模块
+process模块是一个全局模块，无需使用require()。该模块使你能够访问正在运行的进程及底层硬件体系结构信息。
+process模块为进程的stdin,stdout,stderr提供了标准io管道的功能。
+stdin是进程的标准输入管道，通常是控制台。
+process.stdin.on('data', function (data) {
+	console.log('hi:' + data);
+});
+process模块的stdout和stderr属性是可以相应处理的Readable(?)流。
+
+进程信号，process模块的一个特点是，它允许你注册监听器来处理操作系统发送给一个进程的信号。
+process.on('SIGBREAK', function () {
+	
+});
+操作系统可以发送给nodejs进程的事件
+SIGUSR1
+SIGPIPE
+SIGHUP
+SIGTERM
+SIGINT
+SIGBREAK
+SIGWINCH
+SIGKILL
+SIGSTOP
+
+process模块上被调用来影响进程执行的方法
+abort();
+exit([code]);
+kill(pid, [signal]);
+nextTick(callback);
+
+process模块获取信息的方法和属性
+version
+versions
+config
+argv
+execpath
+exexArgv
+chdir(directory)
+cwd()
+env
+pid
+title
+arch
+platform
+memoryUsage()
+maxTickDepath
+uptime()
+hrtime()
+gitgid()
+setgid(id)
+gituid()
+setuid(id)
+getgroups()
+setgroups(groups)
+initgroups(user, extra_group)
+
+
+子进程
+要使nodejs应用程序能利用服务器多个处理器的优势，就需要把工作分包给子进程。child_process模块使你可以在其他进程上产生、派生并执行工作。子进程不能直接访问彼此或父进程中的全局内存。
+
+ChildProcess对象
+child_process模块提供了一个ChildProcess的新类，它作为可以从父进程访问子进程的表示形式。这使得你可以从启动子进程的父进程控制、结束、并将消息发送到子进程。process模块也是一个ChildProcess对象。
+
+ChildProcess对象上的事件
+message
+error
+exit
+close
+disconnect
+
+ChildProcess对象上的方法
+kill([signal]);
+send(message, [sendHandle]);
+disconnect();
+
+ChildProcess对象上的属性
+stdin
+stdout 
+stderr
+pid
+connected
+
+使用child_process.exec()在另一进程上执行一个系统命令,返回一个ChildProcess对象。使用了子shell，几乎可以执行任何可执行的东西。
+var childProcess = child_process.exec(command, [options], callback);  //callback3个参数,error,stdout,stderr
+
+使用child_process.execFile()在另一个进程上执行一个可执行文件，返回一个ChildProcess对象。未使用子shell，执行的命令必须是一个二进制的可执行文件。
+var childProcess = child_process.execFile(file, args, options, callback);  //callback3个参数,error,stdout,stderr
+
+exec()和execFile()中options可配置项
+cwd
+env
+encoding
+maxBuffer
+timeout
+killSignal
+
+使用chile_process.spawn()在另一个nodejs实例中产生一个进程,返回一个ChildProcess对象。  //spawn,大量生产
+spawn()和exec()/execFile()的主要区别是。产生的进程中的stdio可以进行配置，并且stdout和stderr都是父进程中的Readable流。这意味着exec()/execFile()必须先执行完成才能读取缓冲区输出。但是一旦一个spawn()进程的输出数据已被写入，你就可以读出它。
+var childProcess = child_process.spawn(command, [args], [options]);  //无callback
+spawn()中options可配置项
+cwd
+env
+detached
+uid
+gid
+stdio
+
+使用子派生child_process.fork()，在一个单独的处理器上运行另一个v8引擎实例中的nodejs模块代码。每个v8实例需要大约10MB的内存。不能从创建比系统CPU数更多的进程来获得性能收益，返回一个ChildProcess对象。
+不同于spawn(),在派生时，不能为子进程配置stdio。相反，应使用ChildProcess对象中的send()机制，在父进程和子进程之间通信。
+var childProcess = child_process.fork(modulePath, [args], [options]);    //无callback
+fork()中options可配置项
+cwd
+env
+encoding
+execPath
+silent
+
+进程集群(可通过child_process.fork()手动实现)
+cluster模块  //cluster 群
+cluster模块，可以让你很快实现在同一台机器上的运行的TCP或HTTP服务器集群。目前的api并不稳定。
+
+cluster模块事件
+fork
+online
+listening
+disconnect
+exit
+setup
+
+cluster模块方法和属性
+settings
+isMaster
+isWorker
+setupMaster([settings])
+disconnect([callback])
+worker
+workers
+
+Worker对象
+当一个工作进程被派生时，一个新的Worker对象同时在主进程和工作进程中创建。
+
+Worker对象的事件
+message
+disconnect
+exit
+error
+
+Worker对象的方法和属性
+id
+process
+suicide
+send(message, [sendHandle])
+kill([signal])
+disconnect()
+
+os模块
+nodejs的os模块，可以使你获取有关操作系统的信息，如操作系统类型和版本、平台体系结构，还能获取编程信息，如可用内存、临时文件夹位置，以及行尾字符。
+os模块的方法
+tepdir();
+endianness();
+hostname();
+type();
+platform();
+arch();
+release();
+uptime();
+loadavg();
+totalmem();
+freemen();
+cpus();
+networkInterfaces();
+EOL
+
+util模块
+nodejs的util模块，是一个工具库，提供了如格式化字符串、将对象转换为字符串、检查对象类型、输出流的同步写入，以及对象继承的增强。
+
+格式化字符串
+util.format(formatStr, [...]);  //foramatStr中，受支持的占位符。%s,%d,%j(json字符串),%
+
+检测对象类型
+util.isArray(obj);
+util.isRegExp(obj);
+util.isDate(obj);
+util.isError(obj);
+
+同步写入输出流，同步写数据到stdout和stderr，阻塞进程，直到写操作完成。
+util.debug(string);
+util.error([...]);
+util.puts([...]);
+util.print([...]);
+util.log(string);
+
+将JavaScript对象转换成字符串
+util.inspect(object, [options]);
+options可配置项
+showHidden  //默认false
+depth  //默认2
+colors  //默认false
+customInspect  //默认为true，设置为false时，被检查的对象的任何自定义inspect()函数都不会被调用
+
+从其它对象继承功能
+util.inherits(constructor, superConstructor);
+可以通过constructor.super_属性访问superConstructor
+
+dns模块
+nodejs的dns模块，使得nodejs应用程序可以解析域名、查找域、或做反向查找
+dns模块上的方法
+lookup(domain, [family], callback);
+resolve(domain, [rrtype], callback);
+resolve4(domain, callback);
+resolve6(domain, callback);
+resolveMx(domain, callback);
+resolveTxt(domain, callback);
+resolveSrv(domain, callback);
+resolveNs(domain, callback);
+resolveCname(domain, callback);
+reverse(ip, callback);
