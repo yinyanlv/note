@@ -1,0 +1,62 @@
+express把nodejs的http模块封装在一个简单易用的接口中。且扩展了http模块的功能，使你轻松处理服务器的路由、响应、cookie和http请求的状态。
+
+创建一个express类的实例作为http服务器
+var express = require('express');
+var app = express();
+
+配置express
+通过配置express来定义环境以及express如何处理json解析、路由和视图。
+express提供了以下几种方法来配置express：
+app.set(setting, value);
+app.get(setting);
+app.enable(setting);
+app.disable(setting);
+setting参数的可配置项：
+env  定义环境模式字符串，development，testing，production。定义默认值process.env.NODE_ENV
+trust proxy  启用/禁用反向代理的支持，默认值disabled
+jsonp callback name  设置jsonp请求的默认回调函数名，默认为?callback=
+json replacer  定义json replacer回调函数，默认为null
+json spaces  格式化json响应时使用的空格数量。默认2，生产中为0
+case sensitive routing  启用/禁用路由区分大小写。默认disabled
+strict routing  启用/禁用严格路由，/home和/home/不一样。默认disabled
+view cache  启用/禁用视图模板编译缓存。默认enabled
+view engine  指定呈现模板时，如果从视图中省略了文件扩展名，应该使用默认模板引擎扩展。
+views  指定模板引擎用来查找视图模板的路径。默认./views
+
+启动基于http模块的express服务器
+app.listen(port);  //?
+事实上，express()返回的值实际上是一个回调函数，它映射了传递到http.createServer()和https.createServer()的回调函数。
+http.createServer(app).listen(3000);
+https.createServer(options, app).listen(3000);
+
+路由定义为两部分，第一部分是http请求方法，第二部分是url中指定的路径。
+实现路由
+app.<method>(path, [middleware...], callback);  
+<method>部分指的是http请求方法。
+path指的是url路径部分
+middleware参数是回调函数执行前，要应用的中间件函数。
+app.all()，对指定路径的每个请求，不管是否是http方法，都调用回调函数
+
+路由中的参数
+实现路由参数的4中方法
+1、查询字符串 ?key=value&key=value
+app.get('/find', function (req, res) {
+	var urlObj = url.parser(req.url, true, false);
+	var query = urlObj.query;
+	...
+});
+2、post参数  请求正文中传递参数
+3、正则  express使用正则表达式解析url并把与表达式匹配的路径作为参数数组存储。使用正则，可以为你的路径实现不遵循标准的/格式的模式。
+/book/12:15
+app.get(/^\/book\/(\w+)\:(\w+)$/, function (req, res) {//req.params是与url路径中的条目(分组捕获)匹配的数组
+	res.send(req.params[0] + ' ' + req.params[1]);  //12 15
+});
+
+4、已定义的参数  在路由路径部分使用:<param_name>按名称定义一个参数。解析路径时，express自动为该参数分配一个名称
+app.get('/user/:userid', function (req, res) {//当使用比正则更加结构化的定义的参数时，req.param是一个函数，调用req.param(param_name)返回参数的值。
+	res.send(req.param('userid'));
+});
+为已定义的参数应用回调函数，解析url时，如果express发现某个参数有注册的回调函数时，它就在调用路由处理函数前调用参数的回调函数。一个路由可以有多个回调函数。要注册回调函数使用app.param()方法。
+app.param(param_name, function (req, res, next, value) {//value参数时从url路径解析的参数值，注意是app.param()，写在最外层。
+	next();  //必须在回调函数的某处调用next()，否则回调链将被破坏。
+});
