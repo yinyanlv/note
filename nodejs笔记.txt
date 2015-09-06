@@ -363,7 +363,7 @@ query
 hash
 
 解析url组件，把url解析到新的位置
-url.resolve(originUrl, newUrl);  //不改变域名和端口
+url.resolve(originUrl, newUrl);  //不改变域名和端口  resolve 分解
 
 处理查询字符串和表单参数(从客户端请求的正文读出)
 
@@ -877,7 +877,7 @@ dns模块
 nodejs的dns模块，使得nodejs应用程序可以解析域名、查找域、或做反向查找
 dns模块上的方法
 lookup(domain, [family], callback);
-resolve(domain, [rrtype], callback);
+resolve(domain, [rrtype], callback);  //resolve，分解
 resolve4(domain, callback);
 resolve6(domain, callback);
 resolveMx(domain, callback);
