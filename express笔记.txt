@@ -195,3 +195,50 @@ body-parser中间件
 express的body-parser中间件解析请求正文中的json数据，把它们正确地格式化为request对象的req.body属性。
 app.use('/', bodyparser());
 req.body
+
+cookie-parser中间件
+connect 3.0发布时，cookie-parser被重命名为cookie。
+cookie中间件从一个请求解析cookie，并将它们作为JavaScript对象存储在req.cookies属性中。
+cookieParser([secret]);  //secret字符串参数，利用secret字符串在cookie内部签署，防止cookie的篡改。
+在响应中设置cookie
+res.cookie(name, value, [options]);
+options参数的配置项
+maxAge  以毫秒为单位，cookie过期前的生成时间
+httpOnly  如果为true，表示这个cookie只能由服务器访问，不能通过客户端JavaScript访问
+signed  如果为true，表示该cookie将被签署，你需要使用req.signedCookie而不是req.cookie对象来访问它。
+path  该cookie应用的路径
+删除cookie
+res.clearCookie(name);
+
+cookie-session会话中间件
+cookie-session会话中间件底层利用cookie-parser中间件，所以cookie-parser中间件需被先添加。
+cookieSession([options]);
+options的可配置项：
+key  用于标志会话的cookie名称
+secret  用来签署会话cookie的字符串，防止cookie窃取
+cookie  一个对象，定义cookie的设置，默认包括maxAge、path、httpOnly、signed。默认值{path: '/', httpOnly: true, maxAge: null}
+proxy  如果为true，将导致通过x-forwarded-proto设置安全cookie时，信任反向代理。
+当cookie-session被实现时，会话存储为req.session对象。你对req.session做的任何改动都会跨越来自同一个浏览器的多个请求流动。
+
+basic-auth-connect http身份验证中间件
+basicAuth(function (userName, password) {
+	return 判断代码;
+})
+
+express-session会话中间件
+实现自定义的身份验证机制，并将其存储在一个你可以随意使之过期的会话中
+session中间件附加一个session对象到request对象上来实现会话功能。
+res.session对象的方法
+regenerate([callback]);  重置会话
+destory([callback]);  删除会话
+save([callback]);  保存会话数据
+touch([callback]);  为会话cookie重置maxAge计数
+cookie  指定把会话链接到浏览器的cookie对象
+crypto模块生成安全的密码来实现会话验证
+crypto.createHash('sha256').update(pwd).digset('base64').toString();
+
+实现自定义中间件函数
+fucntion myMiddlewareFunc(req, res, next) {//next，是一个通过中间件框架传递的函数，它指向下一个要执行的中间件函数，必须在离开自定义函数前调用它。
+	next();
+}
+app.use(myMiddlewareFunc);
