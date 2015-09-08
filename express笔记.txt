@@ -82,7 +82,7 @@ response对象
 get(header);
 set(header, value);
 set(headerObj);
-location(path);  //把location标头设置为指定的参数
+location(path);  //把header中location标头设置为指定的参数
 type(type_string);  //根据type_string参数设置Content-Type标头
 attachment([filepath])  //把Content-Disposition(可控制文件是否下载)标头设置为attachment，并且如果指定filepath，则Content-Type是基于文件扩展名设置的。
 
@@ -100,7 +100,7 @@ res.status(number);
 发送响应
 res.send(status, [body]);  //status是http状态码，body是一个string或buffer对象。
 res.send([body]);
-如果指定buffer对象，内容类型被自动设置为application/octet-stream(应用程序/八字节流)，除非你明确设置为其它东西，如"text/html"
+如果指定buffer对象，内容类型被自动设置为application/octet-stream(应用程序/八字节流)，除非你明确将其设置为其它东西，如"text/html"
 一旦send()方法完成，它就自动设置res.finished和res.headerSent(已发送的headers)属性
 
 发送json响应
@@ -108,7 +108,7 @@ res.send([body]);
 res.json(status, [object]);
 res.json([object]);
 res.jsonp(status, [object]);  //app.get('/jsonp', function () {
-	app.set('jsonp callback name', 'cb');  //自定义为cb，?cb=handleJsonp
+	app.set('jsonp callback name', 'cb');  //标识参数自定义为cb，?cb=handleJsonp
 });
 res.jsonp([object]);
 
@@ -131,9 +131,9 @@ res.redirect(path);
 var app = express();
 app.set('views', './views');  //设置模板文件存放位置
 app.set('view engine', 'ejs');  //设置使用的模板引擎
-app.engine(ext, callback);  //通过模板文件的扩展名注册模板引擎。ext,模板文件的扩展名。callback，支持express呈现的功能函数。许多引擎在一个_express函数中提供回调功能。
+app.engine(ext, callback);  //通过模板文件的扩展名注册模板引擎。ext,模板文件的扩展名。callback，支持express呈现的，由模板引擎提供的功能函数。许多引擎在一个_express函数中提供回调功能。
 app.engine('ejs', require('ejs')._express);
-_express函数往往只能在默认的文件扩展名上工作。要为自定义的文件扩展名注册模板引擎，可使用各模板引擎自己提供的方法。如ejs提供renderFile函数
+_express函数往往只能在默认的文件扩展名上工作。要为自定义的文件扩展名注册模板引擎，可使用各模板引擎自己提供的方法。如ejs提供renderFile函数。
 app.engine('html', require('ejs').renderFile);  //为html扩展名，注册ejs模板引擎
 
 定义本地对象
@@ -188,7 +188,7 @@ maxAge  浏览器缓存时间，以毫秒为单位，默认为0
 hidden  如果为true，表示启用隐藏文件传输功能，默认false
 redirect  如果为true，表示如果请求路径是一个目录，则该请求将被重定向到有一个尾随/的路径，默认true
 index  根路径的默认文件名，默认为index.html
-app.use('/', express.static('./static'), {maxAge: 60 * 1000});
+app.use('/', express.static('./static', {maxAge: 60 * 1000}));
 app.use('/images', express.static('../images'));
 
 body-parser中间件
