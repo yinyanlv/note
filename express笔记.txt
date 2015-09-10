@@ -24,7 +24,7 @@ view engine  指定呈现模板时，如果从视图中省略了文件扩展名�
 views  指定模板引擎用来查找视图模板的路径。默认./views
 
 启动基于http模块的express服务器
-app.listen(port);  //?
+app.listen(port);  
 事实上，express()返回的值实际上是一个回调函数，它映射了传递到http.createServer()和https.createServer()的回调函数。
 http.createServer(app).listen(3000);
 https.createServer(options, app).listen(3000);
@@ -242,3 +242,88 @@ fucntion myMiddlewareFunc(req, res, next) {//next，是一个通过中间件框�
 	next();
 }
 app.use(myMiddlewareFunc);
+
+----------------------------------------------------------------------------------------
+express 4中的变化
+1、express核心和中间件系统：对connect和内建中间件的依赖被删除了。所以你必须自己添加中间件。
+express 4不再依赖connect，并且从核心中移除了所有内建的中间件，除了express.static之外。这意味着express现在是一个不依赖路由和中间件的web框架。express的版本变化和发布不再受到中间件的影响。
+express 4必须显式添加所有依赖的中间件，npm install  [module_name] --save
+express 3中对应express 4 中的模块
+Express 3	             Express 4
+express.bodyParser	     body-parser + multer
+express.compress	     compression
+express.cookieSession	 cookie-session
+express.cookieParser	 cookie-parser
+express.logger	         morgan
+express.session	         express-session
+express.favicon	         serve-favicon
+express.responseTime	 response-time
+express.errorHandler	 errorhandler
+express.methodOverride	 method-override
+express.timeout	         connect-timeout
+express.vhost	         vhost
+express.csrf	         csurf
+express.directory	     serve-index
+express.static	         serve-static
+express.timeout	         connect-timeout
+
+app.use接受参数
+express 4 中，现在可以使用带有一个可变参数的路径来加载中间件，并且从路由处理器中读取参数的值，例如： 
+app.use('/book/:id', function(req, res, next) {
+  console.log('ID:', req.params.id);
+  next();
+})
+
+2、路由系统
+应用隐式加载路由中间件，所以，现在不必担心router路由中间件加载的次序问题。
+增加了两个新的特性来帮助组织路由系统
+1)新的方法route，针对一个路由路径创建链式的路由处理器。由于可以在一个地方定义路径，这样有助于创建模块话的路由规则，减少重复。
+app.route('/book')
+  .get(function(req, res) {
+    res.send('Get a random book');
+  })
+  .post(function(req, res) {
+    res.send('Add a book');
+  })
+  .put(function(req, res) {
+    res.send('Update the book');
+  })
+2)新的类 express.Router，创建模块化的路由处理器。一个Router的实例就是一个完整的中间件和路由系统，由于这个原因，它经常被称为迷你应用。
+创建一个名为 bird.js 的路由文件：
+var express = require('express');
+var router = express.Router();
+
+router.use(function timeLog(req, res, next) {
+  console.log('Time: ', Date.now());
+  next();
+})
+
+router.get('/', function(req, res) {
+  res.send('Birds home page');
+})
+
+router.get('/about', function(req, res) {
+  res.send('About birds');
+})
+module.exports = router;
+ 
+然后在应用中加载这个路由模块。
+var birds = require('./birds');
+...
+app.use('/birds', birds);
+这个应用现在可以处理请求/birds和/birds/about还可以调用 timeLog 中间件。
+
+3、其它变化
+对象                       		   	说明
+Node                       		   	Express 4 需要 Node 0.10.x 及其以上版本，已经不支持 0.8.x
+http.createServer          		   	不再需要 http 模块，应用使用 app.listen() 启动
+app.configure()            		   	app.configure()已经被移除使用 process.env.NODE_ENV 或者 app.get('env')来检测环境、配置应用
+json.spaces()              		   	在 Express 4中默认禁用了json spaces
+Req.location()             		   	不再能获取相对 url
+Req.params                 		   	原来是一个数组，现在是对象
+Res.locals                 		   	原来是函数，现在是对象
+Res.headerSent             		   	修改为 res.headersSent
+App.route                  		   	现在作为 app.mountpath 存在  //mount,安装，架置
+Res.on('header')           		   	删除
+Res.charset                		   	删除
+Res.setHeader('Set-Cookie', val)   	这个功能现在限制为设置基本的cookie值使用res.cookie()添加功能
