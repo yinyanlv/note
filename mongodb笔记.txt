@@ -77,3 +77,664 @@ mongodb中不同数据类型值的比较顺序，从低到高排列如下：
 要实现原子写操作，需将数据模型设计为反规范化文档
 
 大量集合没有重大性能问题，但有大量条目的同一集合，会有性能问题。
+
+启动mongodb
+mongod --port 28008 --dbpath ...
+mongod命令行参数
+--help,-h
+--version
+--config,-f
+--verbose,-v  增加发送到控制台
+--quiet
+--port
+--bind_ip
+--maxConns
+--logpath
+--auth
+--dbpath
+--nohttpinterface
+--nojournal  禁用日志
+--noprealloc
+--repair
+
+停止mongodb
+mongo
+use admin
+db.shutdownServer();
+
+mongodb的shell命令
+help <option>
+use <database>
+show <option>  //option参数：dbs(admin数据库自动创建),collections,profile(轮廓，用户配置文件),log [name]
+exit
+
+mongodb的shell方法
+load(script_path);  //运行shell脚步，还有另一种方法,--eval "javascript string"
+UUID(string);  //把一个32字节的十六进制字符串转换成BSON的UUID。
+db.auth(username, password);  //对当前数据库，进行身份验证
+...
+
+管理用户账户
+该用户，并非应用程序的使用者，而是应用程序的开发者。
+列出用户
+用户账户存储在每个数据库的db.system.users集合中。
+User对象包含的_id、user、pwd、roles字段，有时还包括otherDBRoles字段。
+有几种不同的方法获取User对象的列表。
+1、首先把数据库切换到你想要列出其中用户的数据库，然后执行show users命令
+use admin
+show users
+2、在相应的db.system.users集合上使用查询，如find。
+use admin
+cur = db.system.users.find();  //返回一个游标对象
+
+创建用户账户
+一旦你创建了一个用户管理员，就可以使用该账户创建可管理、读取和写入数据库的其他用户账户。
+在mongodb的shell内使用addUser()方法添加用户账户
+db.addUser()方法创建用户时使用的字段
+user  string  用户名
+roles  array  用户角色数据
+pwd  hash or string  可选，指定用户密码
+userSource  <database>  可选，代替pwd字段，指向具有相同用户定义的另一个数据库。pwd和userSource相互排斥，不能同时包含
+otherDBRoles  {<database>: array, ...}  可选，只能在admin数据库上使用，允许你指定这个用户在其他数据库中拥有的角色
+
+用户账户可分配的角色
+read
+readAnyDatabase  //只能应用到admin数据库中的用户中，因为必须适用于所有数据库
+readWrite
+readWriteAnyDatabase  //只能应用到admin数据库中的用户中，因为必须适用于所有数据库
+dbAdmin
+dbAdminAnyDatabase  //只能应用到admin数据库中的用户中，因为必须适用于所有数据库
+userAdmin
+userAdminAnyDatabase  //只能应用到admin数据库中的用户中，因为必须适用于所有数据库
+clusterAdmin
+
+删除用户
+use test
+db.removeUser(<user name>);
+
+配置访问控制
+最初，admin数据库没有分配给任何用户。当还没有在admin数据库中定义用户时，mongodb允许在本地主机上的连接有对数据库的完全管理访问权限。
+因此，设置新的mongodb实例的第一步是创建用户管理员和数据库管理员账户。
+用户管理员账户具有在admin和其他数据库中创建用户账户的功能。
+数据库管理员账户，用它来管理数据库、集群、复制和mongodb其它功能。
+
+创建用户管理员账户
+用户管理员只有创建和管理用户的权限，而没有管理数据库或其它管理功能。这是的数据库管理和用户账户管理完全分离。
+
+在mongodb的shell中创建一个用户管理员来访问admin数据库
+use admin
+db.addUser({
+	user: '<username>',
+	pwd: '<password>',
+	roles: ['userAdminAnyDatabase']
+});
+
+在mongodb的shell中创建一个数据库管理员来访问admin数据库
+use admin
+db.addUser({
+	user: '<username>',
+	pwd: '<password>',
+	roles: ['readWriteAnyDatabase', 'dbAdminAnyDatabase', 'clusterAdmin']
+});
+
+打开身份验证
+mongod --dbpath ...  --auth
+此时，客户端需要使用一个用户名和密码来访问数据库。
+对某一数据库，两种验证方法：
+1、use <database>  db.auth('username', 'password')
+2、mongo <database>  --username 'username'  --password 'password'
+
+管理数据库
+在mongodb中管理数据库，需使用具有clusterAdmin权限的用户账户。
+
+显示数据库清单
+show dbs
+
+切换当前数据库
+使用在mongodb中内置的句柄db来执行数据库操作。
+两种方法
+1、db = db.getSibingDB(database);
+2、use database
+
+创建数据库
+mongodb没有在shell中显式的创建数据库的命令。可以简单使用use database创建一个新的数据库句柄，除非把集合添加进去，否则它实际上不会被保存。
+use newDb
+db.createCollection('newCollection');
+
+删除数据库
+use newDb
+db.dropDatabase()  //它不会改变当前的数据库句柄
+
+复制数据库
+use origin
+db.copyDatabase(origin, destination, [hostname]);
+
+管理集合
+
+显示集合列表
+use test
+show collections
+
+创建集合
+db.createCollection(name, [options]);
+options可配置项
+capped  如果为true，则表示该集合是一个封顶集合，默认false
+autoIndexID  默认true  
+size
+max
+
+删除集合
+use newDb
+show collections
+coll = db.getCollection('newCollection');
+coll.drop()
+
+在集合中查找文档
+use newDb
+show collections
+coll = db.getCollection('newCollection');
+coll.find()
+coll.find({queryObj})
+
+将文档添加到集合中
+use newDb
+show collections
+coll = db.getCollection('newCollection');
+coll.insert({obj});
+coll.save({obj});
+
+从集合中删除问答
+use newDb
+show collections
+coll = db.getCollection('newCollection')
+coll.remove({queryObj})
+coll.remove()
+
+更新集合中的文档
+coll.save(obj)  可实现对某一个文档实现更新
+coll.update(query, update, options)  可对所有匹配的文档实现更新
+update参数是一个对象，指定做出更新时使用的更新字符串，如$inc,$set,$rename
+options参数是一个对象，它有两个参数，multi(是否更新所有)和upsert(没有找到时，是否创建一个新文档)
+
+nodejs中的mongodb
+访问mongodb的最佳办法，是通过mongodb模块中的MongoClient类。
+
+写入关注
+写入关注是指，在报告写操作成功的时候，mongodb连接提供的保证。
+mongodb连接的写入关注级别
+-1  网络错误被忽略
+0  写确认不必要
+1  请求写确认
+2  写确认请求跨主服务器和副本集中的一个辅助服务器
+majority  写确认是从副本集的主服务器请求的
+
+Server对象
+MongoClient连接利用了在后台的Server对象。Server对象，定义了mongodb驱动程序该怎样连接到服务器。
+Server对象包含了诸如创建连接时所用的主机、端口、池的大小、以及套接字的超时信息。
+用来创建MongoClient连接的Server对象的选项
+readPreference
+ssl
+poolSize
+socketOptions
+auto_reconnect
+
+Client对象连接到mongodb
+通过MongoClient对象连接到mongodb，首先要创建MongoClient对象的一个实例。
+var client = new MongoClient(Server, options);  //第一个参数为一个Server对象
+options参数的可配置项
+w  写入关注级别
+wtimeout
+fsync
+journal
+retryMilliSeconds  默认值5000
+numberOfRetries  默认值5
+bufferMaxEntries  默认值-1，没有限制
+示例：
+var client = new MongoClient(new Server('localhost', 27017, {poolSize: 5}), {retryMilliSeconds: 500});
+打开到mongodb数据库的连接
+client.open(function (err, client) {//如果连接成功，client表示MongoClient对象
+	
+});
+连接到特定的数据库，需要在client对象上调用db(database)方法，来创建数据库实例。
+var db = client.db('test');
+如果已启用身份验证，则访问之前还需要调用
+db.authenticate(username, password, callback);
+注销登录某数据库，使用数据库对象上的logout()方法，关闭到该数据库的连接
+db.logout();
+关闭到mongodb的连接
+client.close();
+
+通过一个连接字符串连接到mongodb
+通过调用MongoClient类的connect()方法，不需要实例。
+MongoClient.connect(connString, options, function (err, db) {//Db对象的实例作为第二个参数，关闭连接可在Db对象上调用db.close()
+	
+});
+connString字符串的语法:
+mongodb://username:password@host:port/database?options
+options参数可配置属性：
+db
+server
+rplSet  连接到某复制集
+mongos  连接mongos代理
+
+Db对象
+Db对象提供对数据库的访问。它作为数据库的代表，让你执行连接、添加用户、访问集合等任务
+Db对象上的方法
+open(callback);
+db(dbName);
+close([forceClose], callback);
+admin();
+collectionInfo([name], callback);
+collectionsNames(callback);
+collection(name, [options], callback);
+collections(callback);
+logout(callback);
+authenticate(username, password, callback);
+addUser(username, password, callback);
+removeUser(username, callback);
+createCollection(collectionName, callback);
+dropCollection(collectionName, callback);
+renameCollection(oldName, newName, callback);
+dropDatabase(dbName, callback);
+
+Admin对象
+Admin对象专门代表到admin数据库的连接，并提供不包含在Db对象的功能。让你能够ping mongodb服务器、在admin数据库中添加和删除用户、列出数据库等
+两种方法获得Admin对象
+1、var adminDb = db.admin(); 
+2、var adminDb = new Admin(db);
+Admin对象上的方法
+serverStatus(callback);
+ping(callback);
+listDatabases(callback);
+authenticate(username, password, callback);
+logout(callback);
+addUser(username, password, [options], callback);
+removeUser(username, callback);
+
+Collection对象
+Collection对象代表了mongodb的集合。可以使用Collection对象访问集合中的条目、添加文档、查询文档等等
+三种方法获得Collection对象
+var collection = db.collection();
+var collection = new Collection(db, collectionName);
+db.createColleciton(collectionName, function (err, collection) {
+	
+});
+Collection对象上的方法
+insert(docs, [callback]);
+remove([query], [options], [callback]);
+rename(newName, callback);
+save([doc], [options], [callback]);
+update(query, document, [options], [callback]);
+find(query, [options], callback);
+findOne(query, [options], callback);
+findAndModify(query, sort, update, [options], callback);
+findAndRemove(query, sort, [options], callback);
+distinct(key, [query], callback);
+count([query], callback);
+drop(callback);
+stats(callback);
+
+Cursor对象
+当使用驱动程序在mongodb中执行某些操作时，结果以Cursor(游标)对象的形式返回。Cursor对象作为一个可迭代的可在数据库中访问一组对象的指针。利用Cursor对象，可以添加和修改集合中文档、查找文档以及删除集合。
+Cursor对象的基本方法
+each(callback);
+toArray(callback);
+nextObject(callback);
+rewind();
+count(callback);
+sort(keyOrList, direction, callback);
+close(callback);
+isClosed();
+
+从nodejs访问和操作mongodb数据库
+列出数据库
+adminDb.listDatabases();
+
+创建数据库
+var newDb = db.db('name');
+newDb.createCollection();
+
+删除数据库
+db.dropDatebase();
+
+获取服务器状态
+adminDb.serverStatus(function (err, status) {
+	
+});
+
+从nodejs访问和操作mongodb集合
+列出集合
+db.collectionNames(function (err, collectionNames) {
+	
+});
+db.collections(function (err, collectionList) {
+	
+});
+
+创建集合
+db.createCollection('name', callback);
+
+删除集合
+两种方法
+1、db.dropCollection(name);
+2、coll.drop();
+
+获取集合信息
+coll.status(function (err, status) {
+	
+});
+
+从nodejs操作mongodb文档
+mongodb驱动程序需要知道如何在更改过程中处理连接。因此，每一个更改数据库的方法，都允许你传递可选的options参数。
+更改数据库时options参数的可配置项
+w
+wtimeout
+fsync
+journal
+serializeFunctions
+forceServerObjectId
+checkKeys
+upsert
+multi
+new
+
+数据库更新运算符
+在mongodb中可以实现update对象与运算符来定义如何更改文档中的数据。
+示例：
+{  //update对象
+	$inc: {countA: 5, countB: 1},
+	$set: {name: 'test'},
+	$push: {days: 'friday'},
+	$sort: {score: 1}
+}
+update对象中用来更新文档的运算符
+$inc
+$rename
+$setOnInsert
+$set
+$unset
+$
+$addToSet
+$pop
+$pullAll
+$pull
+$push
+$each
+$slice
+$sort
+$bit
+
+将文档添加到集合
+coll.inset(docs. [options], callback);
+
+从集合获取文档
+coll.find(query, [options], callback);  //返回一个可遍历的Cursor对象。要显示结果要使用toArray方法遍历该Cursor对象
+coll.findOne(query, [options], callback);  //返回单个对象
+
+更新集合中文档
+coll.upadate(query, update, [options], callback);  //如果在options选项中实现写入关注，则callback参数是必须的。
+当调用update()更新多个文档时，可以在query参数中，使用$isolate: 1来隔离写入，以防止对文档进行其它写入，这并不能提供全有或全无的原子写，而只能禁止其它写进程更新你正在写入的同一个对象。
+coll.update({type: 'test', $isolate: 1}, ...);
+
+原子地修改文档
+coll.findAndModify(query, sort, update, [options], callback);
+sort参数是一个[field, sort_order]数组，sort_order值为1表示升序，-1表示降序
+options参数，new设置为true，表示返回修改后的对象，设置为false，表示返回修改前的对象
+
+保存集合中的文档
+sava()方法可以插入或更新集合中文档，虽然它效率不如insert()或update()高，但使用方便。
+coll.save(doc, [options], [callback]);
+
+实现upsert，智能的往集合中插入文档
+在update方法的options参数中，配置upsert:true选项。实现有则更新，无则追加。
+
+从集合中删除文档
+coll.remove([query], [options], [callback]);  //callback的results参数，是被删除的文档的数量
+
+从集合中删除单个文档
+coll.findAndRemove(query, sort, [options], callback);
+sort参数是一个[field, sort_order]数组，sort_order值为1表示升序，-1表示降序
+
+从nodejs访问mongodb文档
+query对象来限制返回的文档和用来限制查询结果中的字段和文档的数量。
+query对象的属性被称为运算符，可带有mongodb驱动程序理解的特殊属性名。
+{count: {$gt: 10}, name: 'test'}  //count字段大于10，name字段值为test
+可在query对象中使用句点符号来指定子文档字段
+{stats.eyes: 'blue'}
+query对象的运算符
+field: value  普通用法
+$gt
+$gte
+$in
+$lt
+$lte
+$ne
+$nin
+$or
+$and
+$not
+$nor
+$exists
+$type
+$mod  取模运算
+$regex
+$all
+$elemMatch
+$size
+
+查询options对象
+该options对象，允许你在检索文档定义请求的行为。它允许你限制结果集，在创建结果集时对条目进行排序，以及更多其他操作。
+查询文档时，options对象可配置的选项
+limit
+sort
+fields
+skip
+hint
+explain
+snapshot
+timeout
+maxScan
+comment
+readPreference
+numberOfRetries
+partial
+
+在集合中查找特定的文档
+coll.find(query, [options], callback);
+
+清点文档数量
+在mongodb端执行计数比使用find()和其他方法获取文档的开销要小得多，那些方法会导致服务器创建并维护暂时性的对象。
+coll.count([query], [options], callback);
+
+对结果集进行限制
+有3种方法
+按大小限制结果
+coll.find(query, {limit: 5}, function () {  //在options参数使用配置limit属性，限制返回的数量
+	
+});
+限制对象返回的字段
+使用options对象中fields选项，限制返回的字段，0表示排除，1表示包括
+coll.find(query, {field: {'name': 0, 'type': 1}}, function () {
+	
+});
+对结果进行分页
+使用options对象的limit和skip选项，实现文档的分页。
+coll.find(query, {limit: 10, skip: 10}, function () {  //skip值是一个动态的值，表示要跳过的文档数
+	
+});
+
+对结果集进行排序
+使用options对象的sort选项，实现文档的排序
+coll.find(query, {sort: [[name: 1, value: -1]]}, function () {  //先对name字段降序排序，再对value字段升序排序  
+	
+});
+
+查询不同的字段值
+获得一组文档中单个字段所包含的不同值的清单
+coll.distinct(key, [query], [options], function () {  //key可以是字段名的字符串值。也可以使用句点如stats.name来指定子文档中的字段
+	
+});
+
+对结果进行分组
+基于一个文档中的一个或多个字段的不同值对结果进行分组。
+coll.group(keys, query, initial, reduce, finalize, command, [options], callback);
+keys  一个表达分组依据(group by)的键的对象、数组或函数。如{field1: true, field2: true}或['first', 'last']
+query  定义初始集中包括的文档
+initial  指定汇总数据时，为每组数据添加的初始group对象(即添加几个字段)，从而得到统计数据。
+reduce  这个函数有两个参数obj，prev。obj表示当前文档，prev是由initial参数创建的对象
+finalize  这个函数接收一个obj参数，它是从initial参数得到的最终obj，reduce函数添加的字段也包含在其中。可省略
+command  如果为true，表示该命令运行使用内部group命令，而不是eval()。默认值true
+options  此对象允许你定义readPreference
+
+通过聚合来应用MapReduce
+使用MapReduce把数据库查询的结果简化成一个与原来的集合，完全不同的结构。
+mongodb有一个MapReduce框架，允许你使用聚合来简化把一个MapReduce操作传输到另一个MapReduce操作的一系列过程。
+聚合是指，把mongodb服务器的文档汇编成一个结果集时，对它们执行一系列的操作。
+Collection对象提供了一个aggregate()方法来对数据进行聚合操作。  //aggregate,聚合
+coll.aggregate(operators, [options], callback);  //operators参数，聚合运算符数组
+注意：引用文档中的字段的值时，字段名用一个美元符号$做前缀，告诉总框架，把它作为一个字段值，而不是一个字符串。
+operators参数可配置的聚合运算符
+$project
+$match
+$limit
+$skip
+$unwind
+$group  group对象
+$sort
+聚合$group表达式运算符
+$addToSet
+$first
+$max
+$min
+$avg
+$push
+$sum
+可用在聚合表达式的字符串和算术运算符(不限制于$group)
+$add
+$divide
+$mod
+$multiply
+$subtract
+$concat
+$strcasecmp
+$substr
+$toLower
+$toUpper
+
+高级mongodb概念
+索引，可以提高数据库的性能
+副本集和分片，提供了额外的性能提升和高可用性
+GridFS，处理非常大的文件
+
+添加索引
+mongodb允许你对集合中的字段建立索引，以便更快的找到文档。当你在mongodb中添加一个索引时，后台创建了一个特殊的数据结构，其中存储集合的一小部分数据，以便能更快地找到特定的文档。
+索引的缺陷
+1、索引占用磁盘和内存空间
+2、插入和更新文档时，索引要占用处理时间
+3、集合越大，在资源和性能方面的成本就越大
+
+mongodb支持的索引类型
+_id 默认
+单字段
+复合
+多键
+地理空间
+文本
+散列
+
+给索引设置特定的属性来定义mongodb如何处理索引
+unique  不重复
+sparse  不包含多余字段 
+TTL
+
+可以利用mongodb shell、mongodb nodejs原生客户端或mongoose创建索引
+1、shell中创建
+db.myCollection.ensureIndex({name: 1}, {background: true, unique: true, sparse: true});
+background选项指定所创建的索引是应该发生在shell的前台还是后台。在前台运行完成更快，但占用更多的系统资源。
+2、原生驱动程序创建索引
+db.ensureIndex('myCollection', {name: 1}, {background: true, unique: true, sparse: true}, function () {
+	
+});
+3、利用mongoose中的schema对象创建索引
+var schema = new Schema({name: {type: String, index: true, unique: true, sparse: true}});
+or
+scheme.schema.pah('some.path').index({unique: true, sparse: true});
+
+使用封顶集合
+原生驱动程序
+db.createCollection('log', {capped: true, size: 5222222, max: 5000}, function (err, collection) {
+	
+});
+mongoose中，利用schema对象
+var schema = new Schema({name: String, value: Number}, {capped: true, size: 5222222, max: 5000});
+
+引用复制
+复制时定义多个具有相同数据的mongodb服务器的过程。
+主(primary)服务器  副本集中唯一可以写入的服务器，一个副本集只能有一台主服务器
+辅助(secondary)服务器  客户端可以从辅助服务器读取，但不能写入。与主服务器同步。
+仲裁(arbiter)服务器  可定义主服务器，不具有数据副本。
+奇数台服务器，更容易选出主服务器。
+部署一个副本集：p303  
+
+实施分片
+分片时跨越在不同机器上运行的多个mongodb服务器存储文档的过程。添加越来越多的服务器，应用程序就可以支持越大的文档数量。
+每台服务器都包含集合中文档的一部分。
+分片服务器的类型
+分片  （副本集）
+查询路由器
+配置服务器  一个生产用的分片集群应该正好有3台配置服务器
+
+分片键是必须包含在集合的每个文档中的一个索引字段或复合索引字段。
+部署分片：p307
+
+实现一个GridFS Store
+mongodb提供了一个GridFS框架，GridFS把大文档拆分成块。这些块被储存在一个集合中，而用于访问该文档的元数据被存储在另一个集合中。
+当查询GridFs中的一个文档时，这些块被重新组装并返回。
+GridFS一大特点是，利用跳过功能，你可以从文档的中间读取，而不需要从磁盘加载整个文档。这使你可以读取大文件块，而不造成内存不足状况的风险。
+可以使用shell或原生驱动程序实现GridFS
+
+在nodejs中实现Grid对象
+Grid对象充当GridFS的表示。它提供一个简单的接口来在GridFS中读取和写入二进制数据。
+MongoClient.connect('mongodb://localhost/', function (err, db) {
+	var grid = new Grid(db, 'fs');  //创建连接到fs集合的Grid对象
+});
+Grid对象提供的方法
+grid.put(data, [options], callback);  //options参数可配置项，_id、root、content_type、chunk_size、metadata
+grid.get(id, callback);
+grid.delete(id, callback);
+
+在nodejs中实现GridStore对象
+GridStore对象充当存储在MongoDB GridFS中二进制文件的表示。提供了基本的文件接口来读取和写入在GridFS中存储的文件。
+MongoClient.connect('mongodb://localhost/', function (err, db) {
+	var gridStore = new GridStore(db, 'word_file', 'w');  //wrod_file，GridFS中文件的唯一id，'w'，GridStore打开的模式
+});
+GridStore对象读取和写入文件的方法
+Properties
+open(callback);
+writeFile(path, callback);
+close(callback);
+chunkCollection(callback);
+unlink(callback);
+collection(callback);
+readlines([separator], callback);
+rewind(callback);
+read([length], [buffer], callback);
+tell(callback);
+seek([position], [location], callback);
+eof();
+getc(callback);
+puts(string, callback);
+stream(autoclose);
+write(data, [close], callback);
+
+GridStore类中可用的管理GridFS文件的静态方法
+GridStore.exist(db, name, [rootCollection], callback);
+GridStore.list(db, [rootCollection], callback);
+GridStore.read(db, name, [length], [offset], [options], callback);
+GridStore.readlines(db, name, [separator], [options], callback);
+GridStore.unlink(db, names, callback);
+
+修复mongodb
+
+备份mongodb
+

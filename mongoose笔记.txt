@@ -1,0 +1,229 @@
+mongoose是一个文档对象模型(ODM)库，它为原生的mongodb nodejs驱动程序提供了更多的功能。
+在大多数情况下，它用来把结构化的模式应用到一个mongodb集合，并提供验证和类型转换的好处。
+
+mongoose在mongodb nodejs驱动程序之上，增加了一些新的对象，如Schema、Model和Document
+Schema对象，定义结构化的模式集合中文档，可定义字段、类型、唯一性、索引和验证
+Model对象，作为集合中所有文档的表示
+Document对象，作为集合中单个文档的表示
+
+利用mongoose连接到mongodb数据库
+mongoose.connect(uri, options, [callback]);
+关闭连接
+mongoose.disconnect();
+一旦创建，底层Connection对象，就可以在mongoose模块的connection属性中访问。
+获得底层的Db对象
+mongoose.connection.db...
+
+定义模式
+受支持的字段值类型
+String
+Number
+Boolean 或 Bool
+Array
+Buffer
+Date
+ObjectId 或 Oid
+Mixed
+
+路径
+mongoose使用术语path定义访问主文档和子文档字段的路径。使用句点语法，实现路径的访问。如:name.title
+
+创建一个模式定义
+var schema = new Schema(difination, options);
+options对象的可配置项
+autoIndex
+bufferCommands
+capped
+collecion  指定用于此Schema模型的集合名称。Mongoose编译模式模型时，会自动连接到该集合
+id
+_id
+read
+safe
+strict
+
+把索引添加到模式
+可以在定义模式时或使用index(fileds)命令把索引应用到模式对象。
+var schema = new Schema({name: {type: String, index: 1}});
+或
+var schema = new Schema({name: String});
+schema.index({name: 1});
+使用indexex()方法获得一个模式对象的索引字段列表
+schema.indexes();
+
+实现字段的唯一性
+指定一个字段的值必须在一个集合中唯一，即集合中没有其他的文档可以有相同的该字段值。
+unique: true
+var schema = new Schema({name: {type: String, index: 1, unique: true}});
+
+强制字段的必须性
+required: true
+var schema = new Schema({name: {type: String, index: 1, unique: true, required: true}});
+使用requiredPaths()方法获得一个模式对象必须的字段列表
+schema.requiredPaths();
+
+添加Schema对象的方法
+mongoose模式使你能够在Schema对象中添加在文档对象中自动可用的方法。你可以利用Document对象，调用这些方法。
+通过指定一个函数到Schema.methods属性来把方法添加到schema对象。
+schema.methods.fullName = function () {  //this,Document对象
+	return this.first + ' ' + this.last;	
+};
+
+
+编译模型
+var model = mongoose.model(name, [schema], [collection], [skipinit]);
+name  以后用model(name)发现该模型可以使用的字符串
+schema  
+collection  要连接的集合名，如果Schema对象中没有指定时定义
+skipInit  默认false，如果为true，则初始化过程被跳过，并创建一个没有连接到数据库的一个简单的Model对象。
+访问编译后的Model对象
+mongoose.model(name);
+
+Query对象
+Model对象中的方法与底层的Collection对象的方法匹配。这些方法的参数在大多数情况下与Collection对象的参数完全相同，但有一个主要区别，callback参数。
+使用mongoose对象的Model对象时，你既可以传入callback参数，也可以忽略它。
+如果传入callback函数，该方法的行为会与你期望的完全一致。
+如果没有传入callback参数，mongodb请求不会发送，相反会返回一个Query对象，允许你在执行它之前添加额外的功能。当你装备好执行数据库调用时，可以在Query对象上使用exec(callback)，开始执行。
+
+可在Query对象和Model对象上执行数据库操作的方法
+create(objects, [callback]);
+count([query], [calback]);
+distinct([query], [field], [callback]);
+find([query], [options], [callback]);
+findOne([query], [options], [callback]);
+findOneAndRemove([query], [options], [callback]);
+findOneAndUpdate([query], [options], [callback]);
+remove([query], [options], [callback]);
+update([query], [update], [options], [callback]);
+aggregate(operators, [callback]);
+
+可在Query对象和Model对象上设置数据库操作选项的方法
+setOptions(options);
+limit(number);
+select(fields);
+sort(fields);
+skip(fields);
+read(preference);
+snapshot(Boolean);
+hint(hints);
+comment(string);
+
+可在Query对象中定义查询运算符的方法
+where(path, [value]);
+gt([path], value);
+gte([path], value);
+lt([path], value);
+lte([path], value);
+ne([path], value);
+in([path], array);
+nin([path], array);
+or(conditions);
+and(conditions);
+nor(conditions);
+exists([path], Boolean);
+mod([path], value, remainder);
+regex([path], expression);
+all([path], array);
+elemMatch([path], criteria);
+size([path], value);
+
+Document对象
+当使用Model对象检索数据库中文档时，这些文档都在回调函数中以mongoose Document对象的形式返回。
+可在Document对象上使用的方法和属性
+equals(doc);
+id
+get(path, [type]);
+set(path, value, [type]);
+update(update, [options], [callback]);
+save([callback]);
+remove([callback]);
+isNew
+isInit(path);
+isSelected(path);
+isModified(path);
+markModified(path);
+modifiedPaths();
+toJSON();
+toObject();
+toString();
+validate(callback);
+invalidate(path, msg, value);
+errors
+schema
+
+mongoose查找文档
+利用mongoose查找文档和原生驱动程序的主要区别：
+1、使用mongoose时，用来建立请求的语句可以通过管理连接在一起和重用。
+2、查找返回的是Document对象，而不是Cursor对象。
+
+mongoose添加文档
+model.create(objects, [callback]);
+doc.save([callback]);
+
+mongoose更新文档
+保存文档更改
+doc.save([callback]);
+更新单个文档
+doc.update(update, [options], [callback]);
+更新多个文档
+model.update(query, update, [options], [callback]);
+
+mongoose删除文档
+删除单个文档
+doc.remove(callback);
+删除多个文档
+model.remove(query, [options], [callback]);
+
+mongoose聚合文档
+Model对象提供了aggregate()方法实现聚合查询。
+Aggregate对象
+var aggregate = model.aggregate();
+可在Agreegate对象上调用的方法
+exec(callback);
+append(operations);
+group(operations);
+limit(number);
+match(operations);
+project(operations);
+read(preference);
+skip(number);
+sort(fields);
+unwind(arrFields);
+
+mongoose验证框架
+mongoose提供了一个内置的验证框架，你只需要定义在需要验证的特定字段执行的验证函数。
+实现方式
+在想要应用验证的Model对象的具体路径上调用validate()方法，并传入验证函数。
+Words.schema.path('word').validate(function (value) {  //Words是一个model对象
+	return value.length < 20
+}, 'error message');
+验证抛出的错误对象有以下字段：
+error.errors.<field>.message
+error.errors.<field>.type
+error.errors.<field>.path
+error.errors.<field>.value
+error.name
+error.message
+
+mongoose中间件函数
+Mongoose提供了一个中间件框架，它在Document对象的init()、validate()、save()、remove()方法前后调用pre和post函数。
+两种类型的中间件函数
+pre函数接收一个next参数，这是要执行的下一个中间件函数。pre函数可以被异步或同步的地调用。
+同步应用
+schema.pre('save', function (next) {
+	next();
+});
+异步应用
+schema.pre('save', true, function (next, done) {
+	next();
+	doAsync(done);
+});
+
+在init、validate、sava或remove操作已处理后调用post中间件函数。允许你在应用操作时做任何必要的清理操作。
+schema.post('save', function (doc) {
+	
+});
+
+保存文档时，执行validate和save函数
+findOne()时，执行init函数
+remove()时，执行remove函数
+除了pre init外，可以在所有中间件函数中使用this关键字来访问Document对象。
