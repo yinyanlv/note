@@ -22,7 +22,7 @@ _id字段名为数据库保留字段名，由以下几部分组成：
 
 mongodb的数据类型
 mongodb为每一种数据类型分配了从1到255的整数id号。
-1 double
+1 double  
 2 string
 3 object
 4 array
@@ -159,7 +159,7 @@ db.removeUser(<user name>);
 数据库管理员账户，用它来管理数据库、集群、复制和mongodb其它功能。
 
 创建用户管理员账户
-用户管理员只有创建和管理用户的权限，而没有管理数据库或其它管理功能。这是的数据库管理和用户账户管理完全分离。
+用户管理员只有创建和管理用户的权限，而没有管理数据库或其它管理功能。这使得数据库管理和用户账户管理完全分离。
 
 在mongodb的shell中创建一个用户管理员来访问admin数据库
 use admin
@@ -372,10 +372,10 @@ findAndRemove(query, sort, [options], callback);
 distinct(key, [query], callback);
 count([query], callback);
 drop(callback);
-stats(callback);
+status(callback);
 
 Cursor对象
-当使用驱动程序在mongodb中执行某些操作时，结果以Cursor(游标)对象的形式返回。Cursor对象作为一个可迭代的可在数据库中访问一组对象的指针。利用Cursor对象，可以添加和修改集合中文档、查找文档以及删除集合。
+当使用驱动程序在mongodb中执行某些操作时，结果以Cursor(游标)对象的形式返回。Cursor对象作为一个可迭代的可在数据库中访问一组对象的指针。利用Cursor对象，可以添加和修改集合中文档、查找文档以及删除文档。
 Cursor对象的基本方法
 each(callback);
 toArray(callback);
@@ -465,7 +465,7 @@ $sort
 $bit
 
 将文档添加到集合
-coll.inset(docs. [options], callback);
+coll.insert(docs, [options], callback);
 
 从集合获取文档
 coll.find(query, [options], callback);  //返回一个可遍历的Cursor对象。要显示结果要使用toArray方法遍历该Cursor对象
@@ -554,7 +554,7 @@ coll.find(query, {limit: 5}, function () {  //在options参数使用配置limit�
 });
 限制对象返回的字段
 使用options对象中fields选项，限制返回的字段，0表示排除，1表示包括
-coll.find(query, {field: {'name': 0, 'type': 1}}, function () {
+coll.find(query, {fields: {'name': 0, 'type': 1}}, function () {
 	
 });
 对结果进行分页
@@ -565,7 +565,7 @@ coll.find(query, {limit: 10, skip: 10}, function () {  //skip值是一个动态�
 
 对结果集进行排序
 使用options对象的sort选项，实现文档的排序
-coll.find(query, {sort: [[name: 1, value: -1]]}, function () {  //先对name字段降序排序，再对value字段升序排序  
+coll.find(query, {sort: [[name, 1], [value, -1]]}, function () {  //先对name字段升序排序，再对value字段降序排序  
 	
 });
 
@@ -611,12 +611,12 @@ $push
 $sum
 可用在聚合表达式的字符串和算术运算符(不限制于$group)
 $add
-$divide
-$mod
-$multiply
-$subtract
+$divide  除
+$mod  
+$multiply  乘
+$subtract  减
 $concat
-$strcasecmp
+$strcasecmp  忽略大小写比较
 $substr
 $toLower
 $toUpper
@@ -658,7 +658,7 @@ db.ensureIndex('myCollection', {name: 1}, {background: true, unique: true, spars
 3、利用mongoose中的schema对象创建索引
 var schema = new Schema({name: {type: String, index: true, unique: true, sparse: true}});
 or
-scheme.schema.pah('some.path').index({unique: true, sparse: true});
+scheme.schema.path('some.path').index({unique: true, sparse: true});
 
 使用封顶集合
 原生驱动程序
@@ -689,7 +689,7 @@ var schema = new Schema({name: String, value: Number}, {capped: true, size: 5222
 
 实现一个GridFS Store
 mongodb提供了一个GridFS框架，GridFS把大文档拆分成块。这些块被储存在一个集合中，而用于访问该文档的元数据被存储在另一个集合中。
-当查询GridFs中的一个文档时，这些块被重新组装并返回。
+当查询GridFS中的一个文档时，这些块被重新组装并返回。
 GridFS一大特点是，利用跳过功能，你可以从文档的中间读取，而不需要从磁盘加载整个文档。这使你可以读取大文件块，而不造成内存不足状况的风险。
 可以使用shell或原生驱动程序实现GridFS
 
@@ -706,7 +706,7 @@ grid.delete(id, callback);
 在nodejs中实现GridStore对象
 GridStore对象充当存储在MongoDB GridFS中二进制文件的表示。提供了基本的文件接口来读取和写入在GridFS中存储的文件。
 MongoClient.connect('mongodb://localhost/', function (err, db) {
-	var gridStore = new GridStore(db, 'word_file', 'w');  //wrod_file，GridFS中文件的唯一id，'w'，GridStore打开的模式
+	var gridStore = new GridStore(db, 'word_file', 'w');  //'wrod_file'，GridFS中文件的唯一id，'w'，GridStore打开的模式
 });
 GridStore对象读取和写入文件的方法
 Properties

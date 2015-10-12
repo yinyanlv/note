@@ -70,7 +70,7 @@ host
 method
 query
 fresh  一个布尔值，当最后修改与当前匹配时为true
-stale  一个布尔值，当最后修改与当前匹配时为false
+stale  一个布尔值，当最后修改与当前匹配时为false  stale，旧的
 secure  一个布尔值，当建立tls链接时为true
 acceptsCharset(charset)  如果由charset指定的字符集受支持，则返回true
 get(header)  返回对应header属性的值
@@ -198,7 +198,7 @@ req.body
 
 cookie-parser中间件
 connect 3.0发布时，cookie-parser被重命名为cookie。
-cookie中间件从一个请求解析cookie，并将它们作为JavaScript对象存储在req.cookies属性中。
+cookie中间件从一个请求解析cookie，并将它们作为JavaScript对象存储在req.cookie属性中。
 cookieParser([secret]);  //secret字符串参数，利用secret字符串在cookie内部签署，防止cookie的篡改。
 在响应中设置cookie
 res.cookie(name, value, [options]);
@@ -277,7 +277,7 @@ app.use('/book/:id', function(req, res, next) {
 2、路由系统
 应用隐式加载路由中间件，所以，现在不必担心router路由中间件加载的次序问题。
 增加了两个新的特性来帮助组织路由系统
-1)新的方法route，针对一个路由路径创建链式的路由处理器。由于可以在一个地方定义路径，这样有助于创建模块话的路由规则，减少重复。
+1)新的方法route，针对一个路由路径创建链式的路由处理器。由于可以在一个地方定义路径，这样有助于创建模块化的路由规则，减少重复。
 app.route('/book')
   .get(function(req, res) {
     res.send('Get a random book');
@@ -289,7 +289,7 @@ app.route('/book')
     res.send('Update the book');
   })
 2)新的类 express.Router，创建模块化的路由处理器。一个Router的实例就是一个完整的中间件和路由系统，由于这个原因，它经常被称为迷你应用。
-创建一个名为 bird.js 的路由文件：
+创建一个名为 birds.js 的路由文件：
 var express = require('express');
 var router = express.Router();
 
@@ -317,7 +317,7 @@ app.use('/birds', birds);
 对象                       		   	说明
 Node                       		   	Express 4 需要 Node 0.10.x 及其以上版本，已经不支持 0.8.x
 http.createServer          		   	不再需要 http 模块，应用使用 app.listen() 启动
-app.configure()            		   	app.configure()已经被移除使用 process.env.NODE_ENV 或者 app.get('env')来检测环境、配置应用
+app.configure()            		   	app.configure()已经被移除，使用 process.env.NODE_ENV 或者 app.get('env')来检测环境、配置应用
 json.spaces()              		   	在 Express 4中默认禁用了json spaces
 Req.location()             		   	不再能获取相对 url
 Req.params                 		   	原来是一个数组，现在是对象
@@ -326,4 +326,4 @@ Res.headerSent             		   	修改为 res.headersSent
 App.route                  		   	现在作为 app.mountpath 存在  //mount,安装，架置
 Res.on('header')           		   	删除
 Res.charset                		   	删除
-Res.setHeader('Set-Cookie', val)   	这个功能现在限制为设置基本的cookie值使用res.cookie()添加功能
+Res.setHeader('Set-Cookie', val)   	这个功能现在限制为设置基本的cookie值，使用res.cookie()添加功能

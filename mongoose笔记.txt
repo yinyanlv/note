@@ -2,7 +2,7 @@ mongoose是一个文档对象模型(ODM)库，它为原生的mongodb nodejs驱�
 在大多数情况下，它用来把结构化的模式应用到一个mongodb集合，并提供验证和类型转换的好处。
 
 mongoose在mongodb nodejs驱动程序之上，增加了一些新的对象，如Schema、Model和Document
-Schema对象，定义结构化的模式集合中文档，可定义字段、类型、唯一性、索引和验证
+Schema对象，定义结构化的模式来应用到集合中文档，可定义字段、类型、唯一性、索引和验证
 Model对象，作为集合中所有文档的表示
 Document对象，作为集合中单个文档的表示
 
@@ -10,7 +10,7 @@ Document对象，作为集合中单个文档的表示
 mongoose.connect(uri, options, [callback]);
 关闭连接
 mongoose.disconnect();
-一旦创建，底层Connection对象，就可以在mongoose模块的connection属性中访问。
+一旦创建，底层Connection对象(Client对象?)，就可以在mongoose模块的connection属性中访问。
 获得底层的Db对象
 mongoose.connection.db...
 
@@ -47,7 +47,7 @@ var schema = new Schema({name: {type: String, index: 1}});
 或
 var schema = new Schema({name: String});
 schema.index({name: 1});
-使用indexex()方法获得一个模式对象的索引字段列表
+使用indexes()方法获得一个模式对象的索引字段列表
 schema.indexes();
 
 实现字段的唯一性
@@ -63,7 +63,7 @@ schema.requiredPaths();
 
 添加Schema对象的方法
 mongoose模式使你能够在Schema对象中添加在文档对象中自动可用的方法。你可以利用Document对象，调用这些方法。
-通过指定一个函数到Schema.methods属性来把方法添加到schema对象。
+通过指定一个函数到schema.methods属性来把方法添加到schema对象。
 schema.methods.fullName = function () {  //this,Document对象
 	return this.first + ' ' + this.last;	
 };
