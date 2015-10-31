@@ -74,7 +74,7 @@ $ git merge dev  //将merge分支合并到master分支，合并指定分支到�
 Fast forward模式（快进模式）
 
 $ git branch -d dev  //删除dev分支
-
+45678
 $ git log --graph --pretty=oneline --abbrev-commit  //查看分支合并情况
 --graph 可以看到分支合并图
 

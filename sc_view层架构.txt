@@ -1,0 +1,180 @@
+系统级页面框架
+index.jsp
+	frame.jsp  //<!doctype html> -> <body>  //根据pageCode配置该页面需要的css
+		requirejs_config.jsp  //引入require.js,配置config  
+		global_config.jsp  //定义一个模块globalConfig(返回一个对象，包含context属性，context属性提供path和ftpPath值),定义一个全局变量pageConfig(提供pageCode和isLocal) 
+	footer.jsp  //加载bootstrap.js，加载并自动执行，该页面需要的模块
+</body></html>	
+
+
+index.jsp  //组合页面各部分，给服务器端模板引擎提供变量值
+头部示例代码:
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+	request.setAttribute("pageCode", "pyamentOnline");
+	request.setAttribute("pageTitle", "付款确认");
+	request.setAttribute("cssFiles", new String[] {"payment"});
+%>
+
+
+frame.jsp  //引入样式表，引入require.js,配置config，定义globalConfig模块，定义全局变量pageConfig
+头部示例代码:
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored ="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=Edge"> -->
+        
+        <!-- load css file-->
+    	<link rel="stylesheet" type="text/css" media="all" href="${path}/style/frame.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="${path}/style/common.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="${path}/style/dialog.css" />
+		
+		<!-- sub page css -->
+	    <c:forEach items="${cssFiles}" var="css">  //根据pagecode
+          <link rel="stylesheet" type="text/css" media="all" href="${path}/style/${css}.css" />  
+        </c:forEach>
+		
+		<!-- load config jsp -->
+		<%@ include file="../config/requirejs_config.jsp"%>
+		<%@ include file="../config/global_config.jsp"%>
+		   
+		<title>${pageTitle}</title>
+    </head>
+
+
+requirejs_config.jsp  //引入require.js,配置config  
+头部示例代码:
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<script type="text/javascript" src="${path}/js/libs/public/require.js"></script>
+<script type="text/javascript">
+	require.config({
+		baseUrl : "${path}/js/",
+		paths : {
+			//lib
+			jquery : 'libs/public/jquery-1.11.3.min.js',
+			...
+
+			//component
+			checkbox : 'component/private/form/form_checkbox.js',
+			...
+
+			//app
+			edit: "app/user/common/edit.js",
+			...
+		},
+		shim : {
+			ajax : ['jquery'],
+			...
+		}
+	});
+</script>
+
+
+global_config.jsp  //定义一个模块globalConfig(返回一个对象，包含context属性，context属性提供path和ftpPath值),定义一个全局变量pageConfig(提供pageCode和isLocal) 
+头部示例代码:
+<!-- global config -->
+<script type="text/javascript">
+    define('globalConfig', [], function(){
+    	return {
+    		context:{
+    			path: '${path}',
+    			ftppath: '${ftp_path}'
+    		}
+    	}	
+    });
+    var pageConfig = {
+            pageCode:"${pageCode}", 
+            //isLocal:${isLocal} TODO
+            isLocal:true
+    };
+</script>
+
+
+footer.jsp  //加载bootstrap.js,预加载该页面需要的模块
+头部示例代码:
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored ="false" %>
+<c:choose>
+    <c:when test="${isLocal}">
+         <script type="text/javascript" src="${path}/js/bootstrap.js"></script>
+    </c:when>
+    <c:otherwise>
+         <script type="text/javascript" src="${path}/js/release/bootstrap.min.js"></script>
+    </c:otherwise>
+</c:choose>
+
+
+bootstrap.js核心代码
+var loadScriptPaths = {
+    cart: {
+        development: ["app/cart/main.js", "app/common/sidebar.js", "app/common/menu.js"],
+        release: ["release/cart.min.js", "release/sidebar.min.js", "release/menu.min.js"]
+    },
+    goodsDetail: {
+        development: ["app/goods/detail/main.js", "app/common/sidebar.js", "app/common/menu.js"],
+        release: ["release/goodsDetail.min.js","release/sidebar.min.js", "release/menu.min.js"]
+    },
+    ...
+};
+(function() {
+    var requireConfig = require.s.contexts._.config,
+        loadModule = loadScriptPaths[pageConfig.pageCode],
+        loadScriptSrc, baseUrl = requireConfig.baseUrl, i=0;
+    
+    if(loadModule) {
+	    if (pageConfig.isLocal) {
+	    	for(; i < loadModule.development.length;i++){
+	    		loadScriptSrc = baseUrl + loadModule.development[i];
+	            require([loadScriptSrc]);  //自动执行各模块
+	    	}
+	    } else {
+	        require(["jquery"], function() {
+	        	for(; i < loadModule.release.length;i++){
+	        		loadModule.release[i] = baseUrl + loadModule.release[i];
+	        	}
+	        	require(loadModule.release);
+	        });
+	    }
+    }
+})();
+
+
+
+
+----------------------------------------------------------------------------------------------------------
+jsp页面特性：
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored ="false" %>
+isELIgnored  如果设定为true，那么JSP中的表达式被当成字符串处理。
+
+自定义变量
+<%
+	request.setAttribute("pageCode", "pyamentOnline");
+	request.setAttribute("pageTitle", "付款确认");
+	request.setAttribute("cssFiles", new String[] {"payment"});
+%>
+
+引入文件
+<%@ include file="../../common/frame.jsp" %>
+
+循环
+<c:forEach items="${cssFiles}" var="css">  //var="css"  定义下一级变量
+  <link rel="stylesheet" type="text/css" media="all" href="${path}/style/${css}.css" />
+</c:forEach>
+
+判断
+<c:choose>
+   <c:when test="${requestScope.newFlag== '1' || requestScope.newFlag== '2' || requestScope.newFlag== '3'}">  
+         作品名称: ${star.class_}<br />
+         作品编号: ${star.raceNum}<br />       
+   </c:when>
+   <c:otherwise> 
+     班级: ${star.class_}<br />
+     参赛编号: ${star.raceNum}<br /> 
+   </c:otherwise>
+</c:choose>

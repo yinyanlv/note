@@ -1,0 +1,191 @@
+requirejs以一个相对于baseUrl的地址加载所有代码。
+
+<script data-main="js/a.js" src="js/b.js"></script>
+
+module id: 文件名(可包括路径)
+
+避开常规的“baseUrl + paths”配置，直接加载为一个相对于当前html文档的脚本：
+1、以“.js”结束
+2、已“/”开始
+3、以ulr协议，如“http://”
+
+requirejs.config({
+	baseUrl: 'js/lib',
+	paths: {  //paths的路径设置是相对于baseUrl，不能包含“.js”后缀
+		app: '../app'  //该配置解析的结果，app模块的加载路径为js/app.js
+	}
+});
+
+requirejs(['jQuery', 'app/sub' ], function ($, sub)　{//解析结果：js/lib/jQuery.js  js/app/sub.js
+	
+});
+
+理想状况下，每个加载的脚步都是通过define()来定义的一个模块，但有些库并没有使用define()来定义其依赖关系，这时，需使用shim config来指明其依赖关系。
+
+requirejs的模块语法允许它尽快加载多个模块，虽然加载的顺序不定，但依赖的顺序确定。
+
+自定义一个模块：
+模块的返回值类型并没有强制为一定是个object，任何函数的返回值都是允许的。
+1、简单的键值对
+define({
+	a： 1,
+	b: 2
+});
+2、函数式的定义
+define(function ()　{
+	//todo
+	return {
+		a: 1,
+		b: 2
+	};
+});
+3、存在依赖的函数式定义
+define('./a', './b', function (a, b) {
+	return {
+		c: a + b
+	};
+});
+4、以CommonJS模式定义模块  //只是一个语法糖，该包装方法，依赖Function.prototype.toString()将函数内容赋予一个有意义的字符串。有兼容性问题
+define(function (require, exports, module) {
+	var a = require('a');
+
+	return {
+
+	};
+});
+5、定义一个明确命名的模块
+define('foo/title', ['my/a', 'my/b'], function (a, b) {  //这样的模块不具备移植性，文件结构变动，会使得该模块不可用
+	
+});
+
+注意事项：
+1、一个文件一个模块
+2、define()的回调函数中调用require  //将require作为依赖注入
+define(['require'], function (require) {
+	var a = require('./a');
+
+});
+3、生成相对于模块的url地址  //将require作为依赖注入
+define(['require'], function (require) {
+	var cssUrl = require.toUrl('./style.css');
+});
+4、控制台调试
+require('module/name').callSomeFunction();  //'module/name'模块必须之前已经加载完成
+
+循环依赖(TODO)
+
+jsonp服务依赖
+在requirejs中使用json服务，需将callback参数的值指定为'define'  //仅仅支持返回值类型为json object的jsonp服务，不适用long-polling类的jsonp连接，同一url地址，会存在缓存
+require('http://www.abc.com/data.json?callback=define', function (data) {
+	console.log(data);
+});
+
+undefining a module
+全局函数requirejs.undef();用来undefine一个模块。重置loader
+
+配置选项
+另一种配置require方式  //'require'在require.js加载之前定义，它会被自动应用
+var require = {
+	deps: ['some/module1', 'some/module2', 'a.js', 'b.js'],
+	callback: function (module1, module2) {
+
+	}
+};
+<script src="js/require.js"></script>
+
+baseUrl  //baseUrl跟requirejs页面可处于不同的域下。唯一的限制是使用text!plugins加载文本内容时，这些路径应跟页面同域。
+paths  //映射那些不直接放置于baseUrl下的 模块名。设置path的起始位置是相对于baseUrl的
+shim  //为那些没有用define声明依赖关系的库或模块，作依赖或导出配置，shim本身不会触发代码的加载
+requirejs.config({
+	shim: {
+		'backbone': {
+			deps: ['underscore', 'jquery'],
+			exports: 'Backbone',  //可以是一个函数，这种情况下启到init属性的功能
+			init: function (bar) {
+				return this.Foo.noConflict();
+			}
+		}
+	},
+	shim: {  //作为插件不导出任何变量的模块
+		'abc.abc': ['jquery']
+	}
+	//若想在IE中使用404加载检测以启用path备选(fallbacks)或备错(errbacks)，则需要给定一个字串值的exports以使loader能够检查出脚本是否实际加载了(init中的返回值不会用于enforceDefine检查)
+});
+map  对于给定的模块前缀，使用模块id来加载该模块
+requirejs.config({
+	map: {
+		'some/module1': {  //只能使用绝对模块id，可以使用通配符*
+			'foo': 'foo1.1'
+		},
+		'some/module2': {
+			'foo': 'foo1.2'
+		}
+	}
+});
+some/module1调用require('foo'),获取到foo1.1.js
+some/module2调用require('foo'),获取到foo1.2.js
+config  将配置信息传递给一个模块，要获取模块的信息，需加载特殊的依赖'module',并调用module.config();
+requirejs.config({
+	config: {
+		'bar': {
+			size: 1
+		}
+	}
+});
+若要将config传给包，需将目标设置为包的主模块而不是包id
+requirejs.config({
+    config: {
+        'pixie/index': {
+            apiKey: 'XJKDLNS'
+        }
+    },
+    packages: [
+        {
+            name: 'pixie',
+            main: 'index'
+        }
+    ]
+});
+packages  从commonjs包中加载模块
+nodeIdConpat
+waitSeconds  在放弃加载一个脚本之前等待的秒数。设为0禁用等待超时。默认为7秒
+context
+deps  指定要加载的一个依赖数组。当将require设置为一个config object在加载require.js之前使用时很有用
+callback  在deps加载完毕后执行的函数
+enforceDefine  如果设置为true，则当一个脚本不是通过define()定义且不具备可供检查的shim导出字串值时，就会抛出错误
+xhtml  如果设置为true，则使用document.createElementNS()去创建script元素
+urlArgs   requirejs获取资源时附加在URL后面的额外的query参数，可用于清除缓存
+scriptType  指定requirejs将script标签插入document时所用的type=""值
+skipDataMain  如果设置为true，跳过data-main属性扫描
+
+高级使用
+从包中加载模块 TODO
+多版本支持
+web worker
+rhino
+处理错误
+	requireType: 含有类别信息的字串值，如“timeout”，“nodefine”， “scripterror”
+	requireModules: 超时的模块名/URL数组。
+在ie中捕获加载错误
+require([]) errbacks   
+	require(['jquery'], function ($) {}, function (err) {}); 
+paths备错配置  aths配置项允许数组值
+全局 requirejs.onError
+
+加载插件
+
+指定文本文件依赖  text.js,如果一个依赖使用了text!前缀，它就会被自动加载
+
+页面加载事件及DOM Ready  requirejs加载模块速度很快，很有可能在页面DOM Ready之前脚本已经加载完毕
+require(['domReady'], function (domReady) {  //返回domReady
+  domReady(function () {
+
+  });
+});
+基于DOM Ready是个常规需求，像上述API中的嵌套调用方式，理想情况下应避免。domReady模块也实现了Loader Plugin API，因此你可以使用loader plugin语法（注意domReady依赖的!后缀）来强制require()回调函数在执行之前等待DOM Ready。当用作loader plugin时，domReady会返回当前的document
+require(['domReady!'], function (doc) {  //返回document
+
+});
+
+i18n.js插件提供i18n bundle支持。
+在模块或依赖使用了i18n!前缀的形式时它会自动加载。下载该插件并将其放置于你app主JS文件的同目录下

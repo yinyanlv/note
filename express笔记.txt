@@ -235,7 +235,7 @@ save([callback]);  保存会话数据
 touch([callback]);  为会话cookie重置maxAge计数
 cookie  指定把会话链接到浏览器的cookie对象
 crypto模块生成安全的密码来实现会话验证
-crypto.createHash('sha256').update(pwd).digset('base64').toString();
+crypto.createHash('sha256').update(pwd).digest('base64').toString();
 
 实现自定义中间件函数
 fucntion myMiddlewareFunc(req, res, next) {//next，是一个通过中间件框架传递的函数，它指向下一个要执行的中间件函数，必须在离开自定义函数前调用它。
