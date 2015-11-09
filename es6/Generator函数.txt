@@ -1,0 +1,4 @@
+Generator函数是一个状态机。
+执行Generator函数，会返回一个遍历器对象，代表Generator函数的内部指针。
+每次调用遍历器对象的next方法，会返回一个有着value和done两个属性的对象。
+
