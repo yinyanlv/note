@@ -1,0 +1,42 @@
+forEach
+arr.forEach(function(value, index, array) {
+
+}, [thisObject]);
+forEach不会遍历纯粹“占着官位吃空饷”的元素的。
+
+map  映射，callback需要有return，如果没有return，则每一项都返回undefined
+arr.map(callback, [thisObject]);
+
+filter  过滤，类似map，callback函数需要返回布尔值true或false。如果为true则表示通过
+arr.filter(callback, [thisObject]);
+
+some  指是否“某些项”合乎条件。callback函数需要返回布尔值true或false。
+array.some(callback,[ thisObject]);
+
+every  指是否所有项都合乎条件。callback函数需要返回布尔值true或false。
+array.every(callback,[ thisObject]);
+
+indexOf  返回整数索引值，如果没有匹配（严格匹配），返回-1。fromIndex默认为0
+array.indexOf(searchElement, [fromIndex]);
+
+lastIndexOf  返回整数索引值，如果没有匹配（严格匹配），返回-1。fromIndex默认为arr.length - 1
+array.lastIndexOf(searchElement[, fromIndex]);
+
+reduce  中文“减少，简约”，实际意义更像“迭代”、“递归(recursion)”，每一次迭代的返回值作为下一项的previous。
+array.reduce(callback, [initialValue]);
+callback函数接受4个参数：之前值、当前值、索引值以及数组本身。initialValue参数可选，表示初始值。若指定，则当作最初使用的previous值；如果缺省，则使用数组的第一个元素作为previous初始值，同时current往后排一位，相比有initialValue值少一次迭代。
+var sum = [1, 2, 3, 4].reduce(function (previous, current, index, array) {
+  return previous + current;
+});
+console.log(sum);  // 10
+// 初始设置
+previous = initialValue = 1, current = 2
+// 第一次迭代
+previous = (1 + 2) =  3, current = 3
+// 第二次迭代
+previous = (3 + 3) =  6, current = 4
+// 第三次迭代
+previous = (6 + 4) =  10, current = undefined (退出)
+
+reduceRight  reduceRight是从数组的末尾开始实现。
+array.reduceRight(callback[, initialValue]);

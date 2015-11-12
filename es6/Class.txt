@@ -1,0 +1,23 @@
+类的prototype属性和__proto__属性
+Class作为构造函数的语法糖，同时有prototype属性和__proto__属性，因此同时存在两条继承链。
+（1）子类的__proto__属性，表示构造函数的继承，总是指向父类。
+（2）子类prototype属性的__proto__属性，表示方法的继承，总是指向父类的prototype属性。
+
+类继承 （extends）的三种特殊情况
+第一种特殊情况，子类继承Object类。
+class A extends Object {
+}
+A.__proto__ === Object  // true
+A.prototype.__proto__ === Object.prototype  // true
+
+第二种特殊情况，不存在任何继承。与es5继承机制一致。
+class A {
+}
+A.__proto__ === Function.prototype  // true
+A.prototype.__proto__ === Object.prototype  // true
+
+第三种特殊情况，子类继承null。
+class A extends null {
+}
+A.__proto__ === Function.prototype  // true
+A.prototype.__proto__ === undefined  // true

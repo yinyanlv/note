@@ -1,0 +1,25 @@
+Promise，就是一个对象，用来传递异步操作的消息。
+三种状态：
+Pending，Resolved，Rejected
+传统的try/catch代码块不同的是，如果没有使用catch方法指定错误处理的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应。
+
+如果调用resolve函数和reject函数时带有参数，那么它们的参数会被传递给回调函数。reject函数的参数通常是Error对象的实例，表示抛出的错误；resolve函数的参数除了正常的值以外，还可能是另一个Promise实例。
+
+Promise.prototype.then();
+该方法返回的是一个新的Promise实例（注意，不是原来那个Promise实例）。因此可以采用链式写法，即then方法后面再调用另一个then方法。
+
+Promise.prototype.catch();
+该方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数。
+
+Promise.all();
+该方法用于将多个Promise实例，包装成一个新的Promise实例。
+var p = Promise.all([p1, p2, p3]);
+
+Promise.race();
+Promise.race方法同样是将多个Promise实例，包装成一个新的Promise实例。
+
+Promise.resolve();
+有时需要将现有对象转为Promise对象，Promise.resolve方法就起到这个作用。
+
+Promise.reject();
+Promise.reject(reason)方法也会返回一个新的Promise实例，该实例的状态为rejected。
