@@ -17,6 +17,9 @@ $ pwd  //查看文件目录
 $ git init
 
 $ git add test_git.txt
+$ git add -A //stages All
+$ git add . //stages new and modified, without deleted
+$ git add -u //stages modified and deleted, without new
 $ git commit -m "这是git的第一行"  //描述文字，最好用英文，否则，会报出警告。
 
 $ git status
