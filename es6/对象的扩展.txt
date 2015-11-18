@@ -1,0 +1,83 @@
+1、属性的简洁表示法
+
+2、属性名表达式  //注意，属性名表达式与简洁表示法，不能同时使用，会报错。
+
+3、方法的name属性
+函数的name属性，返回函数名。
+如果使用了取值函数，则会在方法名前加上get。如果是存值函数，方法名的前面会加上set。
+bind方法创造的函数，name属性返回“bound”加上原函数的名字。
+Function构造函数创造的函数，name属性返回“anonymous”。
+如果对象的方法是一个Symbol值，那么name属性返回的是这个Symbol值的描述。
+
+4、Object.is();
+Object.is用来比较两个值是否严格相等。
+与严格比较运算符（===）的行为基本一致。不同之处只有两个：一是+0不等于-0，二是NaN等于自身。
++0 === -0 //true
+NaN === NaN // false
+Object.is(+0, -0) // false
+Object.is(NaN, NaN) // true
+ES5下部署Object.is
+Object.defineProperty(Object, 'is', {
+	value: function (x, y) {
+		if (x === y) { //针对+0 不等于 -0
+			return x !== 0 || 1 / x === 1 / y;
+		}
+		return x !== x && y !== y;
+	},
+	configurable: true,
+	enumerable: false,
+	writeable: true
+});
+
+5、Object.assign(target, source1, source2 ...);
+Object.assign方法用来将源对象（source）的所有可枚举属性(enumerable为true)，复制到目标对象（target）。继承的属性不会被拷贝。
+对于嵌套的对象，Object.assign的处理方法是替换，而不是添加。
+克隆对象：
+function clone(origin) {
+  let originProto = Object.getPrototypeOf(origin);
+  return Object.assign(Object.create(originProto), origin);
+}
+
+6、属性的可枚举性
+对象的每个属性都有一个描述对象（Descriptor），用来控制该属性的行为。Object.getOwnPropertyDescriptor方法可以获取该属性的描述对象。
+Object.getOwnPropertyDescriptor(obj, 'foo');
+{ 
+  value: 123,
+  writable: true,
+  enumerable: true,
+  configurable: true 
+}
+ES5有三个操作会忽略enumerable为false的属性。
+for...in //会返回继承的属性
+Object.keys() //不会返回继承的属性
+JSON.stringify() 
+ES6新增了两个操作，会忽略enumerable为false的属性。
+Object.assign()  
+Reflect.enumerate()  //会返回继承的属性
+ES6规定，所有Class的原型的方法都是不可枚举的。
+
+7、属性的遍历
+for...in
+Object.keys(obj)
+Object.getOwnPropertyNames(obj) //不含Symbol属性，但是包括不可枚举属性
+Object.getOwnPropertySymbols(obj) //包含对象自身的所有Symbol属性
+Reflect.ownKeys(obj) //包含对象自身的所有属性，不管是属性名是Symbol或字符串，也不管是否可枚举。
+Reflect.enumerate(obj)  //遍历对象自身的和继承的所有可枚举属性（不含Symbol属性），与for...in循环相同
+
+8、__proto__属性，Object.setPrototypeOf()，Object.getPrototypeOf()
+ES6
+Object.setPrototypeOf(object, prototype)
+Object.getPrototypeOf(object)
+
+9、Object.observe()，Object.unobserve()
+ES7，chrome33已实现
+Object.observe(o, observer, ['delete']);
+Object.unobserve(o, observer);
+add：添加属性
+update：属性值的变化
+delete：删除属性
+setPrototype：设置原型
+reconfigure：属性的attributes对象发生变化
+preventExtensions：对象被禁止扩展（当一个对象变得不可扩展时，也就不必再监听了）
+
+10、对象的扩展运算符 ...(ES7,Stage 2)
