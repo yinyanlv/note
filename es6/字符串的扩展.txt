@@ -1,0 +1,58 @@
+1、字符的Unicode表示法
+在“\u”后面跟上超过0xFFFF的数值（比如\u20BB7），JavaScript会理解成“\u20BB+7”。由于\u20BB是一个不可打印字符，所以只会显示一个空格，后面跟着一个7。
+ES6，只要将码点放入大括号，就能正确解读该字符。如\u{20BB7}
+ES6中JavaScript共有6种方法可以表示一个字符。
+'\z' === 'z'  // true
+'\172' === 'z' // true
+'\x7A' === 'z' // true  UTF-16编码
+'\u007A' === 'z' // true
+'\u{7A}' === 'z' // true  大括号表示法与四字节的UTF-16编码是等价的
+
+2、codePointAt()
+JavaScript内部，字符以UTF-16的格式储存，每个字符固定为2个字节(\uffff)。
+codePointAt方法会正确返回32位的UTF-16字符的码点。
+codePointAt方法返回的是码点的十进制值，如果想要十六进制的值，可以使用toString方法转换一下。
+s.codePointAt(0).toString(16) // "20bb7"
+
+3、String.fromCodePoint()
+String.fromCodePoint(0x78, 0x1f680, 0x79);
+fromCodePoint方法定义在String对象上，而codePointAt方法定义在字符串的实例对象上。
+
+4、字符串的遍历器接口
+for...of遍历器最大的优点是可以识别大于0xFFFF的码
+
+5、at() ES7提供了字符串实例的at方法
+
+6、normalize()
+ES6提供字符串实例的normalize()方法，用来将字符的不同表示方法统一为同样的形式，这称为Unicode正规化。
+
+7、includes(), startsWith(), endsWith()
+s.startsWith('world', 6) //从6开始
+s.endsWith('Hello', 5) //前五个字符
+s.includes('Hello', 6) //从6开始
+
+8、repeat()
+'x'.repeat(3) // "xxx"
+
+9、模板字符串
+`${basket.count}`
+如果使用模板字符串表示多行字符串，所有的空格和缩进都会被保留在输出之中。
+
+10、标签模板
+模板字符串的功能，可以紧跟在一个函数名后面，该函数将被调用来处理这个模板字符串。这被称为“标签模板”功能（tagged template）。
+tag`Hello ${ a + b } world ${ a * b }`; //不一定叫tag
+function tag(stringArr, ...values){
+  // ...
+}
+“标签模板”的一个重要应用，就是过滤HTML字符串，防止用户输入恶意内容。
+标签模板的另一个应用，就是多语言转换（国际化处理）。
+tag函数的第一个参数stringArr，有一个raw属性，也指向一个数组。该数组的成员与strings数组完全一致。比如，strings数组是["First line\nSecond line"]，那么strings.raw数组就是["First line\\nSecond line"]。两者唯一的区别，就是字符串里面的斜杠都被转义了。
+
+11、String.raw()
+String.raw方法，往往用来充当模板字符串的处理函数，返回一个斜杠都被转义（即斜杠前面再加一个斜杠）的字符串，对应于替换变量后的模板字符串。
+String.raw`Hi\u000A!`;
+// 'Hi\\u000A!'
+String.raw({ raw: 'test' }, 0, 1, 2);
+// 等同于
+String.raw({ raw: ['t','e','s','t'] }, 0, 1, 2);
+// 't0e1s2t
