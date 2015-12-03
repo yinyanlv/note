@@ -129,8 +129,8 @@ cur = db.system.users.find();  //返回一个游标对象
 
 创建用户账户
 一旦你创建了一个用户管理员，就可以使用该账户创建可管理、读取和写入数据库的其他用户账户。
-在mongodb的shell内使用addUser()方法添加用户账户
-db.addUser()方法创建用户时使用的字段
+在mongodb的shell内使用createUser()方法添加用户账户
+db.createUser()方法创建用户时使用的字段
 user  string  用户名
 roles  array  用户角色数据
 pwd  hash or string  可选，指定用户密码
@@ -163,7 +163,7 @@ db.removeUser(<user name>);
 
 在mongodb的shell中创建一个用户管理员来访问admin数据库
 use admin
-db.addUser({
+db.createUser({
 	user: '<username>',
 	pwd: '<password>',
 	roles: ['userAdminAnyDatabase']
@@ -171,7 +171,7 @@ db.addUser({
 
 在mongodb的shell中创建一个数据库管理员来访问admin数据库
 use admin
-db.addUser({
+db.createUser({
 	user: '<username>',
 	pwd: '<password>',
 	roles: ['readWriteAnyDatabase', 'dbAdminAnyDatabase', 'clusterAdmin']
