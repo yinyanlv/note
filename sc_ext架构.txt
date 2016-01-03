@@ -1,0 +1,73 @@
+事成extjs架构
+页面view层
+view
+	common
+		common.jsp   //引入样式表，bootstrap.js，app.js，globalConfig.jsp，extjsConfig.jsp等...
+	config
+		extjsConfig.jsp
+			Ext.define("CRM.extjsConfig", {
+			statics : {
+				pageCode : "${pageCode}",
+				appFolder : "${path}/js/app",
+				uxFolder : "${path}/js/extjs/ux",
+				pages : {
+					"login" : {
+						controller : "account.Login", //模块名，省略了前缀CRM.controller
+						viewport : "account.login.Viewport" //模块名，省略了前缀CRM.view
+					},
+					...
+				}
+			};	
+
+		globalConfig.jsp
+		    Ext.define("CRM.globalConfig", {
+		        statics: {
+		            path: '${path}',
+		            restpath: '${rest_path}',
+		            ftppath: '${ftp_path}',
+		            namespace: "CRM"
+		        }
+		    });
+
+		permissionConfig.jsp  // 验证权限
+
+	... 
+		//控制页面结构
+
+js结构
+	app
+		controller
+			//
+		model
+			 //定义字段
+		store
+			//定义数据来源
+		view
+		app.js
+			Ext.onReady(function() {
+			    var extjsConfig = CRM.extjsConfig,
+			        namespace = CRM.globalConfig.namespace,
+			        startPage = extjsConfig.pages[extjsConfig.pageCode];
+
+			    Ext.QuickTips.init();
+
+			    Ext.Loader.setConfig({
+			        enabled: true,
+			        paths: {
+			            'Ext.ux': extjsConfig.uxFolder
+			        }
+			    });
+
+			    Ext.application({
+			        name: CRM.globalConfig.namespace,
+			        appFolder: extjsConfig.appFolder,
+			        controllers: [startPage.controller],
+			        launch: function() {
+			            Ext.create(namespace + ".view." + startPage.viewport);
+			        }
+			    });
+			});
+
+
+
+
