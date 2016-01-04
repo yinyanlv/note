@@ -8,3 +8,9 @@ tar [-cxtzjvfpPN]
 -v： 显示详细信息
 -f： 要处理的文件
 tar -zxvf 
+
+osx查看命令或文件的安装路径
+1、查看运行文件所在的路径
+which node
+2、查看文件安装路径
+whereis android
