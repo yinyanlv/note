@@ -1,0 +1,268 @@
+dom操作
+
+Ext.Element类
+Ext.Element.get(id); => Ext.get(id); 返回Ext.Element实例。Ext.get().dom得到原生dom对象
+
+Ext.DomHelper类
+Ext.DomHelper.append(id, '<a>aaa</a>');
+Ext.DomHelper.append(id, {tag: ul, children: [tag: li, html: 'aaaa']});
+Ext.DomHelper.insertHtml(position, dom, '<a>aaa</a>'); //position:beforeBegin, afterBegin, beforeEnd, afterEnd
+Ext.DomHelper.overwrite(id, '<a>aaa</a>'); //相当于原生的innerHTML
+var tpl = Ext.DomHelper.createTemplate('<li>{content}</li>');
+tpl.overwrite(id, {content: '内容'});
+
+Ext.DomQuery类
+Ext.DomQuery.select(); => Ext.query(); 返回原生dom对象
+Ext.query('div');
+Ext.query('[id="domid"]');
+
+Ext.ComponentQuery类，查找容器内的组件
+window.down('form');
+form.up('window');
+window.down('treep'); //xtype
+window.down('button[action=save]');
+
+form
+默认布局： layout: 'anchor'
+From和FormBasic
+form.getForm(); => formBasic
+加载数据：
+record
+form.loadRecord(record);
+json
+form.getForm().setValues(data);
+获取或更新数据
+record
+form.getRecord();
+form.updateRecord();
+json
+form.getForm().getValues();
+异步加载
+form.getForm().load({
+	url: ...
+});
+异步提交
+form.submit({
+	url: '...',
+	success: function (form, action) {
+
+	}
+});
+数据验证：
+vtype
+
+Ext.apply(Ext.form.field.VTypes, {
+    IPAddress: function (v) {
+        return /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v);
+    },
+    IPAddressText: '只能输入ip地址',
+    IPAddressMask: /[\d\.]/i
+});
+
+
+
+常规开发模式：
+Ext.onReady(function () {
+    //1.定义Model
+    Ext.define("MyApp.model.User", {
+        extend: "Ext.data.Model",
+        fields: [
+            { name: 'name', type: 'string', mapping: 'test', convert: function (val) {return val;}}, //mapping，对应服务器字段名
+            { name: 'age', type: 'int' },
+            { name: 'phone', type: 'string' }
+        ]
+    });
+
+    //2.创建store
+    var store = Ext.create("Ext.data.Store", {
+        model: "MyApp.model.User",
+        data: [
+            { name: "Tom", age: 5, phone: "123456" },
+            { name: "Jerry", age: 3, phone: "654321" }
+        ]
+    });
+
+    //3.创建grid
+    var viewport = Ext.create("Ext.container.Viewport", {
+        layout: "fit",
+        items: {
+            xtype: "grid",
+            model: "MyApp.model.User", //可不加
+            store: store,
+            columns: [
+                { text: '姓名', dataIndex: 'name' },
+                { text: '年龄', dataIndex: 'age', xtype: 'numbercolumn', format: '0' },
+                { text: '电话', dataIndex: 'phone' }
+            ]
+        }
+    });
+
+    //4.添加双击编辑
+    var grid = viewport.down("grid");
+    grid.on("itemdblclick", function (me, record, item, index, e, eopts) {
+        //5.创建编辑表单
+        var win = Ext.create("Ext.window.Window", {
+            title: "编辑用户",
+            width: 300,
+            height: 200,
+            layout: "fit",
+            items: {
+                xtype: "form",
+                margin: 5,
+                border: false,
+                fieldDefaults: {
+                    labelAlign: 'left',
+                    labelWidth: 60
+                },
+                items: [
+                    { xtype: "textfield", name: "name", fieldLabel: "姓名" },
+                    { xtype: "numberfield", name: "age", fieldLabel: "年龄" },
+                    { xtype: "textfield", name: "phone", fieldLabel: "电话" }
+                ]
+            },
+            buttons: [
+                {
+                    text: "保存", 
+                    handler: function () {
+                        win.down("form").updateRecord();
+                        record.commit();
+                        win.close();
+                    }
+                }
+            ]
+        });
+        win.down("form").loadRecord(record);
+        win.show();
+    });
+});
+
+
+mvc开发模式
+1、宿主页面，引用入口文件
+2、入口文件
+app.js
+
+//Ext.Loader.setConfig({
+//    enabled: true,
+//    paths: {
+//        'Ext.ux': extjsConfig.uxFolder
+//    }
+//});
+
+Ext.application({
+    name: 'MyApp',
+    appFolder: 'app',
+    controllers: ["User"],
+    autoCreateViewport: true,
+    launch: function () {
+        //Ext.create('viewportName'); 手动加载viewport 
+    }
+});
+
+model层
+model
+app/model/User.js 
+Ext.define('MyApp.model.User', {
+    extend: 'Ext.data.Model',
+    fields: [
+        { name: 'name', type: 'string' },
+        { name: 'age', type: 'int' },
+        { name: 'phone', type: 'string' }
+    ]
+});
+store
+app/store/user.js 
+Ext.define("MyApp.store.User", {
+    extend: "Ext.data.Store",
+    model: "MyApp.model.User",
+    data: [
+        { name: "Tom", age: 5, phone: "123456" },
+        { name: "Jerry", age: 3, phone: "654321" }
+    ]
+});
+
+view层
+viewport
+app/view/viewport.js
+Ext.define("MyApp.view.Viewport", {
+    extend: "Ext.container.Viewport",
+    layout: "fit",
+    items: {
+        xtype:"userlist"
+    }
+});
+part1
+app/view/user/List.js
+Ext.define("MyApp.view.user.List", {
+    extend: "Ext.grid.Panel",
+    alias: 'widget.userlist',
+    store: "User",
+    initComponent: function () {
+        this.columns = [
+            { text: '姓名', dataIndex: 'name' },
+            { text: '年龄', dataIndex: 'age', xtype: 'numbercolumn', format: '0' },
+            { text: '电话', dataIndex: 'phone' }
+        ];
+        this.callParent(arguments);
+    }
+});
+part2
+app/view/user/edit.js
+Ext.define("MyApp.view.user.Edit", {
+    extend: "Ext.window.Window",
+    alias: "widget.useredit",
+    title: "编辑用户",
+    width: 300,
+    height: 200,
+    layout: "fit",
+
+    items: {
+        xtype: "form",
+        margin: 5,
+        border: false,
+        fieldDefaults: {
+            labelAlign: 'left',
+            labelWidth: 60
+        },
+        items: [
+            { xtype: "textfield", name: "name", fieldLabel: "姓名" },
+            { xtype: "numberfield", name: "age", fieldLabel: "年龄" },
+            { xtype: "textfield", name: "phone", fieldLabel: "电话" }
+        ]
+    },
+    buttons: [
+        { text: "保存", action: "save" }
+    ]
+});
+
+controller层
+app/controller/user.js 
+Ext.define('MyApp.controller.User', {
+    extend: 'Ext.app.Controller',
+    stores: ['User'],
+    models: ['User'],
+    views: ['Viewport', 'user.List', 'user.Edit'],
+    init: function () {
+        this.control({
+            'userlist': {
+                itemdblclick: this.editUser
+            },
+            'useredit button[action=save]': {
+                click: this.saveUser
+            }
+        });
+    },
+    editUser: function (grid, record) {
+        var win = Ext.widget("useredit"); 
+        win.down("form").loadRecord(record);
+        win.show();
+    },
+    saveUser: function (btn) {
+        var win = btn.up("window"),
+            form = win.down("form"),
+            record = form.getRecord();
+        form.updateRecord();
+        record.commit();
+        win.close();
+    }
+});
