@@ -1,7 +1,53 @@
 dom操作
 
-Ext.Element类
-Ext.Element.get(id); => Ext.get(id); 返回Ext.Element实例。Ext.get().dom得到原生dom对象
+Ext.Element类 ExtJs对dom对象的封装
+Ext.Element.get(id); => Ext.get(id); 返回Ext.Element实例。Ext.get(id).dom得到原生dom对象
+Ext.fly(id); //作用与Ext.get(id)一样，但是它不开辟新内存空间，每次调用都会覆盖前一次的信息
+Ext.getBody();
+Ext.getDoc();
+Ext.getDom(id); //原生dom
+
+Ext.CompositeElement类 ExtJs对dom对象集合的封装
+Ext.select('#div1');
+Ext.select('div[title=abc]');
+e.first().getAttribute('title');
+e.getValue();
+e.set({value: 111});
+e.first().set({title: 'abc'});
+e.addCls('a');
+e.removeCls('a');
+e.toggleCls('a');
+e.hasCls('a');
+e.first().dom.innerHTML;
+e.first().update('<b>更新后的Html</b>');
+e.item(num);
+e.filter('div[title=aaa]');
+e.first();
+e.last();
+e.prev();
+e.next();
+e.wrap({tag: 'p'});
+e.replaceElement(4, 'text1', true); //用text1，替换集合中的第四个元素
+e.removeElement(2, true); //移除第三个元素
+e.first().replace('div2', true);
+e.first().remove();
+e.setStyle('width', '550px');
+e.applyStyles({height: '500px', color: 'red'});
+e.setHeight(100, true);
+e.setLeft('50px');
+e.setTop('10px');
+e.setLeftTop('50px', '10px');
+e.setSize('100px', '200px');
+e.setXY([10, 10]);
+e.getWidth();
+e.getXY();
+e.on('click', function () {});
+e.un('click', function () {});
+
+Ext.DomQuery类
+Ext.DomQuery.select(); => Ext.query(); 返回原生dom对象
+Ext.query('div');
+Ext.query('[id="domid"]');
 
 Ext.DomHelper类
 Ext.DomHelper.append(id, '<a>aaa</a>');
@@ -10,11 +56,6 @@ Ext.DomHelper.insertHtml(position, dom, '<a>aaa</a>'); //position:beforeBegin, a
 Ext.DomHelper.overwrite(id, '<a>aaa</a>'); //相当于原生的innerHTML
 var tpl = Ext.DomHelper.createTemplate('<li>{content}</li>');
 tpl.overwrite(id, {content: '内容'});
-
-Ext.DomQuery类
-Ext.DomQuery.select(); => Ext.query(); 返回原生dom对象
-Ext.query('div');
-Ext.query('[id="domid"]');
 
 Ext.ComponentQuery类，查找容器内的组件
 window.down('form');
@@ -60,6 +101,21 @@ Ext.apply(Ext.form.field.VTypes, {
 });
 
 
+布局
+border布局: 常用作页面整体布局，region: north, south, east, west, center
+column布局: columnWidth: .7
+fit布局: 子容器会自适应于父容器（用了fit布局子容器设置宽度无效），注意，如果父容器有多个子容器，只会显示第一个
+table布局: layoutConfig:{columns:3}  rowspan: 2 //合并行  colspan: 2 //合并列  合并行列的时候记得指明高和宽
+form布局: 一行一控件的形式
+accordion布局: 手风琴布局，在任何时间里，只有一个面板处于激活状态
+card布局： 类似向导，上一步，下一步 setActiveItem setDisabled getNext() getPrev()
+anchor布局： anchor布局将使组件固定于父容器的某一个位置，使用anchor布局的子组件尺寸相对于容器的尺寸，其子组件都有一个anchor属性
+	anchor:'75% 25%'，表示宽度为父容器的75%，高度为父容器的25%
+    anchor:'-295 -300'，表示组件相对于父容器右边距为295，相对于父容器的底部位300
+    anchor:'-250 10%'，混合模式，表示组件党对于如容器右边为250，高度为父容器的10%
+absolute布局: absolute布局继承Ext.layout.container.Anchor布局方式，并增加了x，y配置选项对子组件进行定位
+vbox布局: 所有的子元素纵向排列
+hbox布局: 所有的子元素横向排列
 
 常规开发模式：
 Ext.onReady(function () {
