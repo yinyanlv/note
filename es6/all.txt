@@ -30,3 +30,46 @@ var x;
 函数参数默认值
 遍历map
 引入其它模块指定方法
+
+字符串的扩展
+unicode表示
+es5 \u20BB7 => \u20BB + 7 => 不可打印字符空格和7
+es6 \u{20BB7}
+js表示一个字符有6种方法：
+'z'
+'\z' === 'z'  // true
+'\u007A' === 'z' // true
+'\u{7A}' === 'z' // true
+'\x7A' === 'z' // true
+'\172' === 'z' // true  十进制表示法，码点
+es5 chatAt(); charCodeAt(); String.fromCharCode();
+es6 at(); codePointAt(); String.fromCodePoint();
+codePointAt(); //返回十进制的码点，可通过toString(16)转换成十六进制
+字符串实现了Iterator接口，for...of可以正确的识别32位utf-16字符
+normalize(); 将字符的不同表示方法统一为一样的形式，即unicode正规化，目前只适用于欧洲文字，解决法语的重音符号之类的问题，且不能识别三个或三个以上字符的合成
+参数：
+NFC 标准等价合成
+NFD 标准等价分解
+NFKC 兼容等价合成 
+NFKD 兼容等价分解
+includes(str, index);
+startWidth(str, index);
+endWith(str, index); //此时index表示前index个字符 
+repeat(num);
+es7 字符串补全长度
+padStart(len, str);
+padEnd(len, str);
+模板字符串 ``
+变量 ${} 大括号内部，可以放任意js表达式，包括调用函数，如果是一个字符串，直接原样输出
+es6 String.raw(str); 返回一个斜杠都被转义（即斜杠前面再加一个斜杠）的字符串。如果原字符串的斜杠已经转义，那么String.raw不会做任何处理。
+标签模板
+模板字符串，可以紧跟在一个函数名后面，该函数将被调用来处理这个模板字符串。
+var a = 5;
+var b = 10;
+function tag(stringArr, value1, value2) {//...}
+tag `Hello ${ a + b } world ${ a * b }`; 等同于 tag(['Hello ', ' world ', ''], 15, 50);
+第一个参数都一个raw属性，也指向该字符串数组，区别是raw属性里面的字符串斜杠都被转义了,strings.raw数组会将\n视为\和n两个字符，而不是换行符。
+应用：
+过滤html字符串，防止用户输入恶意内容
+多语言转换（国际化处理）
+在js语言之中嵌入其他语言
