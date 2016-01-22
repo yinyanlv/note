@@ -1,0 +1,32 @@
+let和const命令
+es6中声明变量的方法
+var function let const class import
+不存在变量名提升
+暂时性死区
+不允许重复声明
+let、const、class、import声明的变量不是全局对象的属性
+
+变量的解构赋值
+模式匹配，模式和变量
+= 指定默认值
+[x, y = 'b'] = ['a', undefined] //x='a', y='b'
+var { message: msg = "Something went wrong" } = {};  msg //"Something went wrong"
+如果默认值是一个表达式，那么这个表达式是惰性求值的，即只有在用到的时候，才会求值。
+变量声明语句中，模式不能带有圆括号。
+var [(a)] = [1]; //error
+不能将整个模式，或嵌套模式中的一层，放在圆括号之中。
+({ p: a }) = { p: 42 }; //error
+赋值语句的非模式部分，可以使用圆括号。
+({ p: (d) } = {}); //ok
+如果要将一个已经声明的变量用于解构赋值，必须非常小心。JavaScript引擎会将{x}理解成一个代码块，从而发生语法错误。
+var x;
+{x} = {x: 1}; //error
+({x} = {x: 1}); //ok
+用途：
+交换变量的值
+从函数返回多个值
+函数参数的定义
+提取json数据
+函数参数默认值
+遍历map
+引入其它模块指定方法
