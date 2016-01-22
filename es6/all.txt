@@ -73,3 +73,9 @@ tag `Hello ${ a + b } world ${ a * b }`; 等同于 tag(['Hello ', ' world ', '']
 过滤html字符串，防止用户输入恶意内容
 多语言转换（国际化处理）
 在js语言之中嵌入其他语言
+
+正则的扩展
+es6,regexp构造函数可直接传入正则，第二个参数指定的修饰符会替换之前定义的修饰符
+var a = new RegExp(/abc/ig, 'i').flags; //'i'
+flags属性
+u修饰符 unicode模式，用来正确处理大于\uFFFF的unicode字符
