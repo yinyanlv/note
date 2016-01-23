@@ -83,3 +83,41 @@ y修饰符  粘连修饰符，与g修饰类似，y修饰符号隐含了头部匹
 sticky属性 表示是否设置了y修饰符，返回ture或false
 RegExp.escape() 将普通字符串转义，使之正则化。未列入es7
 
+数值的扩展
+二进制 0b
+八进制 0o  es5 严格模式不能使用0
+转换成十进制 Number('0b11111');
+Number.isFinite(); //只对数值有效  
+Number.isNaN(); //只对数值有效
+与传统的全局方法isFinite()和isNaN()的区别在于，传统方法先调用Number()将非数值的值转为数值，再进行判断
+Number.parseInt();
+Number.parseFloat();
+Number.isInteger();  //只对数值有效，注意Number.isInteger(3.0);返回true
+Number.EPSILON es6新增的一个极小常量 ，用作定义一个可接受的误差范围
+Number.isSafeInteger(); //js可正确表示的整数范围，-2~53 ~ 2^53 （不包含两个端点）
+Number.MAX_SAFE_INTEGER
+Number.MIN_SAFE_INTEGER
+Math.trunc(); //去除小数部分
+Math.sign(); //判断一个数是正数、负数或是0，分别返回 ＋1，－1， 0
+Math.cbrt(); //计算一个数的立方根
+Math.clz32(); //返回一个32位无符号整数有多少个前导零
+Math.imul(a, b); //返回两个数以32位带符号整数形式相乘的结果，返回的也是一个32位的带符号整数
+Math.fround(); //返回一个数的单精度浮点数形式
+Math.hypot(a, b, ...); //返回所有参数的平方和的平方根
+Math.expm1(x); //返回ex/*x为下标*/ - 1，即Math.exp(x) - 1
+Math.log1p(x); //返回1 + x的自然对数，即Math.log(1 + x)
+Math.log10(x); //返回以10为底的x的对数
+Math.log2(x); //返回以2为底的x的对数
+Math.sinh(x); //返回x的双曲正弦
+Math.cosh(x); //返回x的双曲余弦
+Math.tanh(x); //返回x的双曲正切
+Math.asinh(x); //返回x的反双曲正弦
+Math.acosh(x); //返回x的反双曲余弦
+Math.atanh(x); //返回x的反双曲正切
+es7指数运算符 ** 
+a ** 3  =>  a * a* a
+
+
+
+
+
