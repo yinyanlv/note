@@ -117,7 +117,21 @@ Math.atanh(x); //返回x的反双曲正切
 es7指数运算符 ** 
 a ** 3  =>  a * a* a
 
-
-
-
-
+数组的扩展
+Array.from(); //将类似数组的对象（array-like object）和可遍历（iterable）的对象（包括es6新增的数据结构Set和Map）准换为数组，可正确处理4字节unicode字符
+Array.from可以有第二个参数，类似map方法，Array.from([1, 2, 3], (x) => x * x);
+扩展运算符 ...  可以将某些数据结构转为数组，背后调用的是遍历器接口（Symbol.iterator）
+Array.of(); //用于将一组值，转换为数组，弥补，数组构造函数Array()因为参数个数的不同，而导致的行为差异
+copyWithin(target, start = 0, end = this.length); //target，从该位置开始替换数据，start，从该位置开始读取数据
+find(function (item, index, array) {}); //返回第一个符合条件的成员，可以发现NaN，弥补IndexOf方法的不足
+findIndex(function (item, index, array) {});
+fill(value, startIndex, endIndex); //不包括endIndex
+entries();
+keys();
+values();
+es7 includes(); //可以正确处理NaN(NaN === NaN)，弥补IndexOf方法的不足
+es6明确将空位转为undefined
+es7 数组推导，数组推导需要注意的地方是，新数组会立即在内存中生成。如果原数组是一个很大的数组，将会非常耗费内存
+var a1 = [1, 2, 3, 4];
+var a2 = [for (i of a1) i * 2];
+a2 //[2, 4, 6, 8]
