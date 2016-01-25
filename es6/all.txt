@@ -161,3 +161,45 @@ foo::bar; 等同于 bar.bind(foo);
 纯粹的函数式编程语言没有循环操作命令，所有的循环都用递归实现
 es7提案，允许函数的最后一个参数有尾逗号，利于git等版本控制
 
+对象的扩展
+属性的简洁表示法，es6允许直接写入变量和函数，作为对象的属性和方法
+setter 属性的赋值器,set
+getter 属性的取值器,get
+Generator *
+属性名表达式，[]
+注意，属性名表达式与简洁表示法，不能同时使用，会报错
+方法的name属性，如果使用了取值函数，则会在方法名前加上‘get ’。如果是存值函数，方法名的前面会加上'set '。如果是一个Symbol值，那么name属性返回的是这个Symbol值的描述
+Object.is(); 比较两个值是否严格相等，+0不等于-0，NaN等于自身
+Object.assign(); 用来将源对象（source）的所有可枚举属性，复制到目标对象（target）,只拷贝自身属性，不可枚举的属性（enumerable为false）和继承的属性不会被拷贝，对于嵌套的对象，Object.assign的处理方法是替换，而不是添加
+属性的可枚举性
+对象的每个属性都有一个描述对象（Descriptor），用来控制该属性的行为
+let obj = { foo: 123 }; Object.getOwnPropertyDescriptor(obj, 'foo'); => { value: 123, writable: true, enumerable: true, configurable: true }
+for...in 循环, 只遍历对象自身的和继承的可枚举的属性
+Object.keys(); //返回对象自身的所有可枚举的属性的键名
+JSON.stringify(); //只串行化对象自身的可枚举的属性
+Object.assign(); //只拷贝对象自身的可枚举的属性
+Reflect.enumerate(); //返回所有for...in循环会遍历的属性
+es6规定，所有Class的原型的方法都是不可枚举的
+属性的遍历，6种方法
+for...in  //for...in循环遍历对象自身的和继承的可枚举属性（不含Symbol属性）
+Object.keys(obj); //Object.keys返回一个数组，包括对象自身的（不含继承的）所有可枚举属性（不含Symbol属性）
+Object.getOwnPropertyNames(obj); //Object.getOwnPropertyNames返回一个数组，包含对象自身的所有属性（不含Symbol属性，但是包括不可枚举属性）
+Object.getOwnPropertySymbols(obj); //Object.getOwnPropertySymbols返回一个数组，包含对象自身的所有Symbol属性
+Reflect.ownKeys(obj); //Reflect.ownKeys返回一个数组，包含对象自身的所有属性，不管是属性名是Symbol或字符串，也不管是否可枚举
+Reflect.enumerate(obj); //Reflect.enumerate返回一个Iterator对象，遍历对象自身的和继承的所有可枚举属性（不含Symbol属性），与for...in循环相同
+__proto__属性，只有浏览器必须部署这个属性，其他运行环境不一定部署
+Object.setPrototypeOf();
+Object.getPrototypeOf();
+Object.create();
+es7提案，对象的扩展运算符，...
+
+
+
+
+
+
+
+
+
+
+
