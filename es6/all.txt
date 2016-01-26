@@ -266,3 +266,79 @@ Reflect.getOwnPropertyDescriptor(target, name);
 Reflect.getPrototypeOf(target);
 Reflect.setPrototypeOf(target, prototype);
 
+二进制数组
+二进制数组由三类对象组成，ArrayBuffer对象，TypedArray视图，DataView视图
+通过“视图”进行操作二进制数据，“视图”部署了数组接口，视图的作用是以指定格式解读二进制数据
+ArrayBuffer对象代表原始的二进制数据，TypedArray视图用来读写简单类型的二进制数据，DataView视图用来读写复杂类型的二进制数据
+二进制数组并不是真正的数组，而是类似数组的对象
+ArrayBuffer.prototype.byteLength //返回所分配的内存区域的字节长度
+ArrayBuffer.prototype.slice(startByteIndex, endByteIndex); //不包括endByteIndex
+ArrayBuffer.isView(); //表示参数是否为ArrayBuffer的视图实例
+TypedArray视图，9种视图类型，每一种视图都是一种构造函数
+Int8Array：8位有符号整数，长度1个字节
+Uint8Array：8位无符号整数，长度1个字节
+Uint8ClampedArray：8位无符号整数，长度1个字节，溢出处理不同
+Int16Array：16位有符号整数，长度2个字节
+Uint16Array：16位无符号整数，长度2个字节
+Int32Array：32位有符号整数，长度4个字节
+Uint32Array：32位无符号整数，长度4个字节
+Float32Array：32位浮点数，长度4个字节
+Float64Array：64位浮点数，长度8个字节
+TypedArray数组的成员是连续的，不会有空位
+普通数组的操作方法和属性，对TypedArray数组完全适用，注意，TypedArray数组没有concat方法
+var a = new {TypedArray}(buffer, byteOffset=0, length?);
+构造函数的参数也可以是一个普通数组，然后直接生成TypedArray实例。
+TypedArray数组也可以转换回普通数组。
+var normalArray = Array.prototype.slice.call(typedArray);
+字节序指的是数值在内存中的表示方式，即大端还是小端格式存储的
+TypedArray数组的最大优点就是可以直接操作内存，不需要数据类型转换，所以速度快得多
+BYTES_PER_ELEMENT属性，表示这种数据类型占据的字节数
+ArrayBuffer与字符串的互相转换
+溢出
+正向溢出（overflow），输入值大于当前数据类型的最大值，最后得到的值就等于当前数据类型的最小值加上余值，再减去1
+负向溢出（underflow），等于当前数据类型的最大值减去余值，再加上1
+Uint8ClampedArray视图的溢出，负向溢出都等于0，正向溢出都等于255
+TypedArray.prototype.buffer //返回整段内存区域对应的ArrayBuffer对象
+TypedArray.prototype.byteLength //返回TypedArray数组占据的内存长度，单位为字节
+TypedArray.prototype.byteOffset //返回TypedArray数组从底层ArrayBuffer对象的哪个字节开始
+TypedArray.prototype.length //表示TypedArray数组含有多少个成员
+TypedArray.prototype.set(); //用于复制数组，将一段内容完全复制到另一段内存，它是整段内存的复制，比一个个拷贝成员的那种复制快得多
+TypedArray.prototype.subarray(); //对于TypedArray数组的一部分，再建立一个新的视图
+TypedArray.prototype.slice(); //返回一个指定位置的新的TypedArray实例
+TypedArray.of(); //TypedArray数组的所有构造函数，都有一个静态方法of，用于将参数转为一个TypedArray实例
+TypedArray.from(); //接受一个可遍历的数据结构（比如数组）作为参数，返回一个基于这个结构的TypedArray实例，from会将第一个参数指定的TypedArray数组，拷贝到另一段内存之中
+复合视图
+TypedArray视图，是用来向网卡、声卡之类的本机设备传送数据，所以使用本机的字节序就可以了
+DataView视图
+DataView视图的设计目的，是用来处理网络设备传来的数据，所以大端字节序或小端字节序是可以自行设定的
+var buffer = new ArrayBuffer(24);
+var dv = new DataView(buffer);
+DataView.prototype.buffer //返回对应的ArrayBuffer对象
+DataView.prototype.byteLength //返回占据的内存字节长度
+DataView.prototype.byteOffset //返回当前视图从对应的ArrayBuffer对象
+DataView实例读取内存
+getInt8(); //读取1个字节，返回一个8位整数
+getUint8(); //读取1个字节，返回一个无符号的8位整数
+getInt16(); //读取2个字节，返回一个16位整数
+getUint16(); //读取2个字节，返回一个无符号的16位整数
+getInt32(); //读取4个字节，返回一个32位整数
+getUint32(); //读取4个字节，返回一个无符号的32位整数
+getFloat32(); //读取4个字节，返回一个32位浮点数
+getFloat64(); //读取8个字节，返回一个64位浮点数
+默认情况下，DataView的get方法使用大端字节序解读数据，如果需要使用小端字节序解读，必须在get方法的第二个参数指定true
+DataView实例写入内存
+setInt8(); //写入1个字节的8位整数
+setUint8(); //写入1个字节的8位无符号整数
+setInt16(); //写入2个字节的16位整数
+setUint16(); //写入2个字节的16位无符号整数
+setInt32(); //写入4个字节的32位整数
+setUint32(); //写入4个字节的32位无符号整数
+setFloat32(); //写入4个字节的32位浮点数
+setFloat64(); //写入8个字节的64位浮点数
+二进制数组的应用
+ajax //xhr.responseType = 'arraybuffer';
+canvas //它的视图类型是一种针对Canvas元素的专有类型Uint8ClampedArray
+webSocket 
+fetch API
+file API
+
