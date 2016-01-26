@@ -442,5 +442,12 @@ Promise.resolve();
 Promise.reject();
 Promise.reject(reason)方法也会返回一个新的Promise实例，该实例的状态为rejected。
 
-
+异步操作和Async函数
+es7 async函数
+async函数就是Generator函数的语法糖
+内置执行器
+co模块约定，yield命令后面只能是Thunk函数或Promise对象，而async函数的await命令后面，可以是Promise对象和原始类型的值（数值、字符串和布尔值，但这时等同于同步操作）
+async函数的返回值是Promise对象，这比Generator函数的返回值是Iterator对象方便多了。你可以用then方法指定下一步的操作
+async函数完全可以看作多个异步操作，包装成的一个Promise对象，而await命令就是内部then命令的语法糖
+await命令只能用在async函数之中，如果用在普通函数，就会报错
 
