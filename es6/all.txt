@@ -392,5 +392,37 @@ return(); //如果for...of循环提前退出（通常是因为出错，或者有
 throw(); //主要是配合Generator函数使用，一般的遍历器对象用不到这个方法
 for...of //不同用于forEach方法，它可以与break、continue和return配合使用
 
+Generator函数
+Generator函数是一个状态机。
+执行Generator函数，会返回一个遍历器对象，代表Generator函数的内部指针。
+每次调用遍历器对象的next方法，会返回一个有着value和done两个属性的对象。
+yield
+yield语句如果用在一个表达式之中，必须放在圆括号里面。
+console.log('Hello' + (yield 123));  // OK
+yield语句用作函数参数或赋值表达式的右边，可以不加括号。
+foo(yield 'a', yield 'b'); // OK
+let input = yield;  // OK
+任意一个对象的Symbol.iterator方法，等于该对象的遍历器对象生成函数，调用该函数会返回该对象的一个遍历器对象。
+遍历器对象本身也有Symbol.iterator方法，执行后返回自身。
+yield句本身没有返回值，或者说总是返回undefined。next方法可以带一个参数，该参数就会被当作上一个yield语句的返回值。
+for...of循环可以自动遍历Generator函数返回的遍历器对象，且此时不再需要调用next方法。
+注意，一旦next方法的返回对象的done属性为true，for...of循环就会中止，且不包含该返回对象。
+Generator.prototype.throw();
+Generator函数返回的遍历器对象，都有一个throw方法，可以在函数体外抛出错误，然后在Generator函数体内捕获。throw方法有next方法的功能，会向下执行遍历器对象。
+如果Generator函数内部没有部署try...catch代码块，那么throw方法抛出的错误，将被外部try...catch代码块捕获。
+如果Generator函数内部部署了try...catch代码块，那么遍历器的throw方法抛出的错误，不影响下一次遍历，否则遍历直接终止，如果此后还调用next方法，将返回一个value属性等于undefined、done属性等于true的对象。
+Generator.prototype.return();
+Generator函数返回的遍历器对象，还有一个return方法，会向下执行遍历器对象，可以返回给定的值，并且终结遍历Generator函数。
+g.return("foo");  //{ value: "foo", done: true }
+如果Generator函数内部有try...finally代码块，那么return方法会推迟到finally代码块执行完再执行。
+yield*语句，在yield命令后面加上星号，表明它返回的是一个遍历器对象。任何数据结构只要有Iterator接口，就可以被yield*遍历。
+yield* foo();
+如果被代理的Generator函数有return语句，那么就可以向代理它的Generator函数返回数据，相当于用next方法注入参数。
+Generator与协程
+协程与子例程的差异，在内存中，子例程只使用一个栈（stack），而协程是同时存在多个栈，但只有一个栈是在运行状态。
+协程与普通线程的差异，普通线程同一时间可以有多个线程处于运行状态，但是运行的协程只能有一个，其他协程都处于暂停状态。此外，普通的线程是抢先式的，到底哪个线程优先得到资源，必须由运行环境决定，但是协程是合作式的，执行权由协程自己分配。
+
+
+
 
 
