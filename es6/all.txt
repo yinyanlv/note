@@ -180,8 +180,9 @@ JSON.stringify(); //只串行化对象自身的可枚举的属性
 Object.assign(); //只拷贝对象自身的可枚举的属性
 Reflect.enumerate(); //返回所有for...in循环会遍历的属性
 es6规定，所有Class的原型的方法都是不可枚举的
-属性的遍历，6种方法
-for...in  //for...in循环遍历对象自身的和继承的可枚举属性（不含Symbol属性）
+属性的遍历，7种方法
+for...in //for...in循环遍历对象自身的和继承的可枚举属性（不含Symbol属性）
+for...of //不含Symbol属性
 Object.keys(obj); //Object.keys返回一个数组，包括对象自身的（不含继承的）所有可枚举属性（不含Symbol属性）
 Object.getOwnPropertyNames(obj); //Object.getOwnPropertyNames返回一个数组，包含对象自身的所有属性（不含Symbol属性，但是包括不可枚举属性）
 Object.getOwnPropertySymbols(obj); //Object.getOwnPropertySymbols返回一个数组，包含对象自身的所有Symbol属性
@@ -191,15 +192,30 @@ __proto__属性，只有浏览器必须部署这个属性，其他运行环境�
 Object.setPrototypeOf();
 Object.getPrototypeOf();
 Object.create();
+Object.defineProperty(obj, mySymbol, { value: 'Hello!'});
 es7提案，对象的扩展运算符，...
 
-
-
-
-
-
-
-
-
+Symbol
+js的数据类型
+undefined，null，boolean，string，number，object，boolean
+Symbol函数前不能使用new命令，因为它不是对象，它是一种类似于数组的数据类型
+Symbol函数可以接受一个字符串作为参数，表示对Symbol实例的描述
+Symbol值不能与其他类型的值进行运算，Symbol值可以显式转为字符串，也可以转为布尔值，但是不能转为数值
+Symbol值作为对象属性名时，不能用点运算符
+Symbol.for('str'); //重新使用同一个Symbol值，会被登记在全局环境中供搜索，Symbol()不会，Symbol.for()不会每次调用就返回一个新的Symbol类型的值，而是会先检查给定的key是否已经存在，如果不存在才会新建一个值
+Symbol.keyFor(); //返回一个已登记(使用Symbol.for()而不是使用Symbol())的Symbol类型值的描述
+内置的Symbol值
+es6提供了11个内置的Symbol值，指向语言内部使用的方法
+Symbol.hasInstance //instanceof运算符
+Symbol.isConcatSpreadable //属性等于一个布尔值，表示该对象使用Array.prototype.concat()时，是否可以展开
+Symbol.species //指向一个方法。该对象作为构造函数创造实例时，会调用这个方法
+Symbol.match //当执行str.match(myObject)时，如果该属性存在，会调用它
+Symbol.replace //该对象被String.prototype.replace方法调用时，会返回该方法的返回值
+Symbol.search //当该对象被String.prototype.search方法调用时，会返回该方法的返回值
+Symbol.split //当该对象被String.prototype.split方法调用时，会返回该方法的返回值
+Symbol.iterator //指向该对象的默认遍历器方法，即该对象进行for...of循环时，会调用这个方法，返回该对象的默认遍历器
+Symbol.toPrimitive //该对象被转为原始类型的值时，会调用这个方法，返回该对象对应的原始类型值
+Symbol.toStringTag //在该对象上面调用Object.prototype.toString方法时，如果这个属性存在，它的返回值会出现在toString方法返回的字符串之中，表示对象的类型
+Symbol.unscopables //该对象指定了使用with关键字时，哪些属性会被with环境排除
 
 
