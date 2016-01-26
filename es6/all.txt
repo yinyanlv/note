@@ -451,6 +451,26 @@ async函数的返回值是Promise对象，这比Generator函数的返回值是It
 async函数完全可以看作多个异步操作，包装成的一个Promise对象，而await命令就是内部then命令的语法糖
 await命令只能用在async函数之中，如果用在普通函数，就会报错
 
+
+Module
+静态化加载
+es6的module不是对象，而是通过export命令显式指定输出需要的代码，输入时也采用静态命令的形式，这种加载称为“编译时加载”，即es6可以在编译时就完成模块加载，效率要比CommonJS模块的加载方式高。当然，这也导致了没法引用ES6模块本身，因为它不是对象
+export命令 //export命令可以出现在模块的任何位置，只要处于模块顶层就可以
+as关键字 //重命名
+import命令 //import命令可以出现在模块的任何位置，import命令具有提升效果，会提升到整个模块的头部，首先执行
+export { es6 as default } from './someModule'; //import,export二合一
+import语句会执行所加载的模块
+import 'lodash'; //仅仅执行lodash模块，但是不输入任何值
+模块的整体加载 
+import * as circle from './circle';
+export * from 'circle';
+export default命令
+import customName, { otherMethod } from './export-default'; //在一条import语句中，同时输入默认方法和其他变量
+es6模块加载的机制，与CommonJS模块完全不同。CommonJS模块输出的是一个值的拷贝，而es6模块输出的是值的引用
+ES6模块不会缓存运行结果，而是动态地去被加载的模块取值，并且变量总是绑定其所在的模块
+由于ES6输入的模块变量，只是一个”符号连接“，所以这个变量是只读的，对它进行重新赋值会报错
+循环加载 //a脚本的执行依赖b脚本，而b脚本的执行又依赖a脚本
+
 Decorator
 @readonly...
 es7 修饰器（Decorator）是一个表达式，用来修改类的行为。这是ES7的一个提案
