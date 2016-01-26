@@ -393,54 +393,54 @@ throw(); //主要是配合Generator函数使用，一般的遍历器对象用不
 for...of //不同用于forEach方法，它可以与break、continue和return配合使用
 
 Generator函数
-Generator函数是一个状态机。
-执行Generator函数，会返回一个遍历器对象，代表Generator函数的内部指针。
-每次调用遍历器对象的next方法，会返回一个有着value和done两个属性的对象。
+Generator函数是一个状态机
+执行Generator函数，会返回一个遍历器对象，代表Generator函数的内部指针
+每次调用遍历器对象的next方法，会返回一个有着value和done两个属性的对象
 yield
-yield语句如果用在一个表达式之中，必须放在圆括号里面。
+yield语句如果用在一个表达式之中，必须放在圆括号里面
 console.log('Hello' + (yield 123));  // OK
-yield语句用作函数参数或赋值表达式的右边，可以不加括号。
+yield语句用作函数参数或赋值表达式的右边，可以不加括号
 foo(yield 'a', yield 'b'); // OK
 let input = yield;  // OK
-任意一个对象的Symbol.iterator方法，等于该对象的遍历器对象生成函数，调用该函数会返回该对象的一个遍历器对象。
-遍历器对象本身也有Symbol.iterator方法，执行后返回自身。
-yield句本身没有返回值，或者说总是返回undefined。next方法可以带一个参数，该参数就会被当作上一个yield语句的返回值。
-for...of循环可以自动遍历Generator函数返回的遍历器对象，且此时不再需要调用next方法。
-注意，一旦next方法的返回对象的done属性为true，for...of循环就会中止，且不包含该返回对象。
+任意一个对象的Symbol.iterator方法，等于该对象的遍历器对象生成函数，调用该函数会返回该对象的一个遍历器对象
+遍历器对象本身也有Symbol.iterator方法，执行后返回自身
+yield句本身没有返回值，或者说总是返回undefined。next方法可以带一个参数，该参数就会被当作上一个yield语句的返回值
+for...of循环可以自动遍历Generator函数返回的遍历器对象，且此时不再需要调用next方法
+注意，一旦next方法的返回对象的done属性为true，for...of循环就会中止，且不包含该返回对象
 Generator.prototype.throw();
-Generator函数返回的遍历器对象，都有一个throw方法，可以在函数体外抛出错误，然后在Generator函数体内捕获。throw方法有next方法的功能，会向下执行遍历器对象。
-如果Generator函数内部没有部署try...catch代码块，那么throw方法抛出的错误，将被外部try...catch代码块捕获。
-如果Generator函数内部部署了try...catch代码块，那么遍历器的throw方法抛出的错误，不影响下一次遍历，否则遍历直接终止，如果此后还调用next方法，将返回一个value属性等于undefined、done属性等于true的对象。
+Generator函数返回的遍历器对象，都有一个throw方法，可以在函数体外抛出错误，然后在Generator函数体内捕获。throw方法有next方法的功能，会向下执行遍历器对象
+如果Generator函数内部没有部署try...catch代码块，那么throw方法抛出的错误，将被外部try...catch代码块捕获
+如果Generator函数内部部署了try...catch代码块，那么遍历器的throw方法抛出的错误，不影响下一次遍历，否则遍历直接终止，如果此后还调用next方法，将返回一个value属性等于undefined、done属性等于true的对象
 Generator.prototype.return();
-Generator函数返回的遍历器对象，还有一个return方法，会向下执行遍历器对象，可以返回给定的值，并且终结遍历Generator函数。
+Generator函数返回的遍历器对象，还有一个return方法，会向下执行遍历器对象，可以返回给定的值，并且终结遍历Generator函数
 g.return("foo");  //{ value: "foo", done: true }
-如果Generator函数内部有try...finally代码块，那么return方法会推迟到finally代码块执行完再执行。
-yield*语句，在yield命令后面加上星号，表明它返回的是一个遍历器对象。任何数据结构只要有Iterator接口，就可以被yield*遍历。
+如果Generator函数内部有try...finally代码块，那么return方法会推迟到finally代码块执行完再执行
+yield*语句，在yield命令后面加上星号，表明它返回的是一个遍历器对象。任何数据结构只要有Iterator接口，就可以被yield*遍历
 yield* foo();
-如果被代理的Generator函数有return语句，那么就可以向代理它的Generator函数返回数据，相当于用next方法注入参数。
+如果被代理的Generator函数有return语句，那么就可以向代理它的Generator函数返回数据，相当于用next方法注入参数
 Generator与协程
-协程与子例程的差异，在内存中，子例程只使用一个栈（stack），而协程是同时存在多个栈，但只有一个栈是在运行状态。
-协程与普通线程的差异，普通线程同一时间可以有多个线程处于运行状态，但是运行的协程只能有一个，其他协程都处于暂停状态。此外，普通的线程是抢先式的，到底哪个线程优先得到资源，必须由运行环境决定，但是协程是合作式的，执行权由协程自己分配。
+协程与子例程的差异，在内存中，子例程只使用一个栈（stack），而协程是同时存在多个栈，但只有一个栈是在运行状态
+协程与普通线程的差异，普通线程同一时间可以有多个线程处于运行状态，但是运行的协程只能有一个，其他协程都处于暂停状态。此外，普通的线程是抢先式的，到底哪个线程优先得到资源，必须由运行环境决定，但是协程是合作式的，执行权由协程自己分配
 
 Promise对象
-Promise，就是一个对象，用来传递异步操作的消息。
+Promise，就是一个对象，用来传递异步操作的消息
 三种状态：
 Pending，Resolved，Rejected
-传统的try/catch代码块不同的是，如果没有使用catch方法指定错误处理的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应。
-如果调用resolve函数和reject函数时带有参数，那么它们的参数会被传递给回调函数。reject函数的参数通常是Error对象的实例，表示抛出的错误；resolve函数的参数除了正常的值以外，还可能是另一个Promise实例。
+传统的try/catch代码块不同的是，如果没有使用catch方法指定错误处理的回调函数，Promise对象抛出的错误不会传递到外层代码，即不会有任何反应
+如果调用resolve函数和reject函数时带有参数，那么它们的参数会被传递给回调函数。reject函数的参数通常是Error对象的实例，表示抛出的错误；resolve函数的参数除了正常的值以外，还可能是另一个Promise实例
 Promise.prototype.then();
-该方法返回的是一个新的Promise实例（注意，不是原来那个Promise实例）。因此可以采用链式写法，即then方法后面再调用另一个then方法。
+该方法返回的是一个新的Promise实例（注意，不是原来那个Promise实例）。因此可以采用链式写法，即then方法后面再调用另一个then方法
 Promise.prototype.catch();
-该方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数。
+该方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数
 Promise.all();
-该方法用于将多个Promise实例，包装成一个新的Promise实例。
+该方法用于将多个Promise实例，包装成一个新的Promise实例
 var p = Promise.all([p1, p2, p3]);
 Promise.race();
-Promise.race方法同样是将多个Promise实例，包装成一个新的Promise实例。
+Promise.race方法同样是将多个Promise实例，包装成一个新的Promise实例
 Promise.resolve();
-有时需要将现有对象转为Promise对象，Promise.resolve方法就起到这个作用。
+有时需要将现有对象转为Promise对象，Promise.resolve方法就起到这个作用
 Promise.reject();
-Promise.reject(reason)方法也会返回一个新的Promise实例，该实例的状态为rejected。
+Promise.reject(reason)方法也会返回一个新的Promise实例，该实例的状态为rejected
 
 异步操作和Async函数
 es7 async函数
@@ -451,6 +451,52 @@ async函数的返回值是Promise对象，这比Generator函数的返回值是It
 async函数完全可以看作多个异步操作，包装成的一个Promise对象，而await命令就是内部then命令的语法糖
 await命令只能用在async函数之中，如果用在普通函数，就会报错
 
+Class
+typeof ClassName === 'function'; // true
+类的所有方法都定义在类的prototype属性上面
+name属性，ES6的Class只是ES5的构造函数的一层包装，所以函数的许多特性都被Class继承，包括name属性
+Class表达式
+const MyClass = class Me { //这个类的名字是MyClass而不是Me，Me只在Class的内部代码可用，指代当前类
+  getClassName() {
+    return Me.name;
+  }
+};
+不存在变量提升
+extends关键字
+super关键字，它指代父类的实例（即父类的this对象）
+super(x, y); // 调用父类的constructor(x, y);
+ES5的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6的继承机制完全不同，实质是先创造父类的实例对象this（所以必须先调用super方法），然后再用子类的构造函数修改this。
+es5中，每一个对象都有__proto__属性，指向对应的构造函数的prototype属性
+Class作为构造函数的语法糖，同时有prototype属性和__proto__属性，因此同时存在两条继承链
+（1）子类的__proto__属性，表示构造函数的继承，总是指向父类
+（2）子类prototype属性的__proto__属性，表示方法的继承，总是指向父类的prototype属性
+类继承 （extends）的三种特殊情况
+第一种特殊情况，子类继承Object类。
+class A extends Object {
+}
+A.__proto__ === Object  // true
+A.prototype.__proto__ === Object.prototype  // true
+第二种特殊情况，不存在任何继承。与es5继承机制一致
+class A {
+}
+A.__proto__ === Function.prototype  // true
+A.prototype.__proto__ === Object.prototype  // true
+第三种特殊情况，子类继承null
+class A extends null {
+}
+A.__proto__ === Function.prototype  // true
+A.prototype.__proto__ === undefined  // true
+ES6允许继承原生构造函数定义子类，因为ES6是先新建父类的实例对象this，然后再用子类的构造函数修饰this，使得父类的所有行为都可以继承
+get关键字
+set关键字
+static关键字
+* 关键字
+new.target属性 //如果构造函数不是通过new命令调用的，new.target会返回undefined，子类继承父类时，new.target会返回子类
+Mixin模式的实现
+function mix() {}
+class DistributedEdit extends mix(Loggable, Serializable) {
+  //...
+}
 
 Module
 静态化加载
