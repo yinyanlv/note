@@ -382,3 +382,15 @@ get();
 set();
 has();
 delete();
+
+Iterator和for...of循环
+默认的Iterator接口部署在数据结构的Symbol.iterator属性，或者说，一个数据结构只要具有Symbol.iterator属性，就可以认为是“可遍历的”（iterable）
+es6中，有三类数据结构原生具备Iterator接口：数组、某些类似数组的对象、Set和Map结构
+遍历器对象
+next(); //必须部署
+return(); //如果for...of循环提前退出（通常是因为出错，或者有break语句或continue语句），就会调用return方法。如果一个对象在完成遍历前，需要清理或释放资源，就可以部署return方法
+throw(); //主要是配合Generator函数使用，一般的遍历器对象用不到这个方法
+for...of //不同用于forEach方法，它可以与break、continue和return配合使用
+
+
+
