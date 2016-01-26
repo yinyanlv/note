@@ -193,6 +193,7 @@ Object.setPrototypeOf();
 Object.getPrototypeOf();
 Object.create();
 Object.defineProperty(obj, mySymbol, { value: 'Hello!'});
+Object.isExtensible(); //是否可向对象添加新属性
 es7提案，对象的扩展运算符，...
 
 Symbol
@@ -218,4 +219,50 @@ Symbol.toPrimitive //该对象被转为原始类型的值时，会调用这个�
 Symbol.toStringTag //在该对象上面调用Object.prototype.toString方法时，如果这个属性存在，它的返回值会出现在toString方法返回的字符串之中，表示对象的类型
 Symbol.unscopables //该对象指定了使用with关键字时，哪些属性会被with环境排除
 
+Proxy和Reflect
+元编程，即对编程语言进行编程
+Proxy用于修改某些操作的默认行为，等同于在语言层面做出修改
+var proxy = new Proxy(target, handler); //handler是一个对象 
+要使得Proxy起作用，必须针对Proxy实例进行操作，而不是针对目标对象进行操作
+Proxy实例也可以作为其他对象的原型对象
+Proxy支持的拦截操作，在handler对象中定义 
+get(target, propKey, receiver); //用于拦截某个属性的读取操作，receiver可选，用于绑定this
+set(target, propKey, value, receiver); //用来拦截某个属性的赋值操作
+apply(target, object, args); //拦截函数的调用、call和apply等操作
+has(target, propKey); //隐藏某些属性，不被in操作符发现，用来拦截in操作符，对for...in循环无效
+enumerate(target); //用来拦截for...in循环
+construct(target, args, proxy); //用于拦截new命令，如果construct方法返回的不是对象，会抛出错误
+deleteProperty(target, propKey); //用于拦截delete操作，如果这个方法抛出错误或者返回false，当前属性就无法被delete命令删除
+defineProperty(target, propKey, propDesc); //拦截Object.defineProperty操作
+getOwnPropertyDescriptor(target, propKey); //拦截Object.getOwnPropertyDescriptor，返回一个属性描述对象或者undefined
+getPrototypeOf(target); //拦截Object.getPrototypeOf()运算符
+setPrototypeOf(target, proto); //拦截Object.setPrototypeOf方法
+ownKeys(target); //拦截Object.keys()操作
+isExtensible(target); //拦截Object.isExtensible操作
+preventExtensions(target); //Object.preventExtensions();该方法必须返回一个布尔值，该方法有一个限制，只有当Object.isExtensible(proxy)为false时，proxy.preventExtensions才能返回true
+Proxy.revocable(); //返回一个可取消的Proxy实例
+let target = {};
+let handler = {};
+let {proxy, revoke} = Proxy.revocable(target, handler);
+proxy.foo = 123;
+proxy.foo //123
+revoke();
+proxy.foo //TypeError: Revoked
+Reflect对象，将Object对象的一些明显属于语言内部的方法（比如Object.defineProperty），放到Reflect对象上，修改某些Object方法的返回结果（发生错误时，返回false），让其变得更合理
+Reflect对象的方法与Proxy对象的方法一一对应，只要是Proxy对象的方法，就能在Reflect对象上找到对应的方法，因此，不管Proxy怎么修改默认行为，你总可以在Reflect上获取默认行为
+Reflect对象的方法
+Reflect.apply(fun,thisArg,args); //等同于Function.prototype.apply.call(fun,thisArg,args);
+Reflect.construct(target,args);
+Reflect.get(target,name,receiver);
+Reflect.set(target,name,value,receiver);
+Reflect.defineProperty(target,name,desc);
+Reflect.deleteProperty(target,name);
+Reflect.has(target,name);
+Reflect.ownKeys(target);
+Reflect.enumerate(target);
+Reflect.isExtensible(target);
+Reflect.preventExtensions(target);
+Reflect.getOwnPropertyDescriptor(target, name);
+Reflect.getPrototypeOf(target);
+Reflect.setPrototypeOf(target, prototype);
 
