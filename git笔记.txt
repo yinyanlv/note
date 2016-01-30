@@ -63,6 +63,13 @@ $ git commit -m "remove test_git2.txt"
 
 $ ssh-keygen -t rsa -C "1761869346@qq.com"  //创建ssh key
 
+提示错误:ssh: connect to host github.com port 22: Connection timed out
+原因:The reason could be the firewall modification as you are under a network.(In which case they may deliberately block some ports)
+解决方案:
+ssh -T git@github.com //检测ssh连接是否超时
+git config --local -e //文本编辑器打开git本地配置文件
+url = git@github.com:username/repo.git => url = https://github.com/username/repo.git //更改连接方式为https
+
 $ git remote add origin git@github.com:woodjs/learn_git.git  //origin是默认远程仓库的名字，可更改。
 
 $ git push -u origin master  //第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令。
