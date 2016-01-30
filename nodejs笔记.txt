@@ -13,11 +13,15 @@ pack  //把package.json文件中定义的模块封装成.tgz文件
 view  //显示模块的详细信息  npm view express
 publish 
 unpublish  //--force 强制删除，npm注册表中清除和删除该模块
+whoami
 owner  //添加、删除、列出作者  add  rm  ls
-adduser 
+adduser
+login
 –save参数表示将该模块写入dependencies属性，
 –save-dev表示将该模块写入devDependencies属性。
-波浪号~+指定版本：比如~1.2.2，表示安装1.2.x的最新版本（不低于1.2.2），但是不安装1.3.x，也就是说安装时不改变大版本号和次要版本号。 
+波浪号~+指定版本：比如~1.2.2，表示安装1.2.x的最新版本（不低于1.2.2），但是不安装1.3.x，也就是说安装时不改变大版本号和次要版本号。
+使用cnpm时publish注意报错：no_perms Private mode enable, only admin can publish this module
+解决方案:npm config set registry http://registry.npmjs.org
 
 package.json
 //网络资源参考地址：http://realwall.cn/blog/?p=120
