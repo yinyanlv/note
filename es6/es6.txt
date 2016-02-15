@@ -94,7 +94,7 @@ Number.parseInt();
 Number.parseFloat();
 Number.isInteger();  //只对数值有效，注意Number.isInteger(3.0);返回true
 Number.EPSILON es6新增的一个极小常量 ，用作定义一个可接受的误差范围
-Number.isSafeInteger(); //js可正确表示的整数范围，-2~53 ~ 2^53 （不包含两个端点）
+Number.isSafeInteger(); //js可正确表示的整数范围，-2^53 ~ 2^53 （不包含两个端点）
 Number.MAX_SAFE_INTEGER
 Number.MIN_SAFE_INTEGER
 Math.trunc(); //去除小数部分
