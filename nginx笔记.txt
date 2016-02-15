@@ -1,0 +1,4 @@
+start nginx
+nginx -s stop
+nginx -s reload
+nginx -s quit

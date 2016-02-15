@@ -42,7 +42,7 @@ js表示一个字符有6种方法：
 '\u{7A}' === 'z' // true
 '\x7A' === 'z' // true
 '\172' === 'z' // true  十进制表示法，码点
-es5 chatAt(); charCodeAt(); String.fromCharCode();
+es5 charAt(); charCodeAt(); String.fromCharCode();
 es6 at(); codePointAt(); String.fromCodePoint();
 codePointAt(); //返回十进制的码点，可通过toString(16)转换成十六进制
 字符串实现了Iterator接口，for...of可以正确的识别32位utf-16字符

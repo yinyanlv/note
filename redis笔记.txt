@@ -1,0 +1,13 @@
+redis-server.exe --service-install redis.conf --loglevel verbose
+
+redis-server.exe --service-uninstall
+
+redis-cli.exe -h 127.0.0.1 -p 3002
+
+常用命令
+keys *
+exists name
+del name
+get name
+set name value
+select 0 //选择0数据库，redis默认的数据库是0~15，16个数据库
