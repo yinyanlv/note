@@ -178,7 +178,7 @@ Ext.onReady(function () {
             },
             buttons: [
                 {
-                    text: "保存", 
+                    text: "保存",
                     handler: function () {
                         win.down("form").updateRecord();
                         record.commit();
@@ -211,13 +211,13 @@ Ext.application({
     controllers: ["User"],
     autoCreateViewport: true,
     launch: function () {
-        //Ext.create('viewportName'); 手动加载viewport 
+        //Ext.create('viewportName'); 手动加载viewport
     }
 });
 
 model层
 model
-app/model/User.js 
+app/model/User.js
 Ext.define('MyApp.model.User', {
     extend: 'Ext.data.Model',
     fields: [
@@ -227,7 +227,7 @@ Ext.define('MyApp.model.User', {
     ]
 });
 store
-app/store/user.js 
+app/store/user.js
 Ext.define("MyApp.store.User", {
     extend: "Ext.data.Store",
     model: "MyApp.model.User",
@@ -292,7 +292,7 @@ Ext.define("MyApp.view.user.Edit", {
 });
 
 controller层
-app/controller/user.js 
+app/controller/user.js
 Ext.define('MyApp.controller.User', {
     extend: 'Ext.app.Controller',
     stores: ['User'],
@@ -309,7 +309,7 @@ Ext.define('MyApp.controller.User', {
         });
     },
     editUser: function (grid, record) {
-        var win = Ext.widget("useredit"); 
+        var win = Ext.widget("useredit");
         win.down("form").loadRecord(record);
         win.show();
     },
