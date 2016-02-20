@@ -1,0 +1,8 @@
+变量绑定
+模式（patterns）
+类型注解（type annotations）
+可变性（mutability）
+初始化绑定（initializing bindings） //使用之前必须初始化
+作用域（scope）
+隐藏（shadowing） //重新声明并初始化变量，来覆盖前一个变量绑定
+
