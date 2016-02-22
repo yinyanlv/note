@@ -175,3 +175,11 @@ match msg {
   Message::Move { x: x, y: y } => move_cursor(x, y),
   Message::Write(s) => println!("{}", s),
 };
+
+模式
+常用于let，match
+多重模式，'|'
+match x {
+  1 | 2 => println!("one or two"),
+  _ => println!("anything")
+}
