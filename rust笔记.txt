@@ -183,3 +183,22 @@ match x {
   1 | 2 => println!("one or two"),
   _ => println!("anything")
 }
+解构
+.. 代表省略的部分
+忽略绑定，在模式中使用_来忽视它的类型和值，从而匹配某个分支，也可以在模式中用..来忽略多个值
+ref和ref mut //在模式中创建一个引用
+范围，可以用...匹配一个范围的值，范围经常用在整数和char上
+绑定，可以使用@把值绑定到变量上
+let x = 5;
+match x {
+  e @ 1 ... 5 | e @ 8 ... 10 => println!("got a range element {}", e),
+  _ => println!("anything"),
+}
+守卫（guards），可以用if来引入匹配守卫
+let x = 4;
+let y = false;
+match x {
+  4 | 5 if y => println!("yes"),
+  _ => println!("no"),
+}
+混合与匹配，可以对上面的多种匹配方法进行组合
