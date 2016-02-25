@@ -6,12 +6,12 @@ npm命令行选项
 init
 search
 install  //npm install express@0.1.1
-install -g 
+install -g
 update
 remove
 pack  //把package.json文件中定义的模块封装成.tgz文件
 view  //显示模块的详细信息  npm view express
-publish 
+publish
 unpublish  //--force 强制删除，npm注册表中清除和删除该模块
 whoami
 owner  //添加、删除、列出作者  add  rm  ls
@@ -66,7 +66,7 @@ nodejs线程模型
 setTimeout(func, time, [args]);
 setInterval(func, time, [args]);
 setImmediate(func, [args]);  //即时定时器用来在io事件的回调函数开始执行后（有机会被调用时），但任何超时时间或时间间隔事件被执行之前，立刻开始执行
-timeId.unref();  //当定时器事件回调，是事件队列中仅有的事件时，unref可使得事件循环不要继续  
+timeId.unref();  //当定时器事件回调，是事件队列中仅有的事件时，unref可使得事件循环不要继续
 timeId.ref();
 
 nextTick()
@@ -110,7 +110,7 @@ Buffer模块是全局性，不需要require。
 当对缓冲区与字符串进行转换时，需要指定明确的编码方法。
 
 大端编码（BE）：高位字节放在内存中的低位
-0x0A 0x0B 0x0C  =>  [0x0A, 0x0B, 0x0C] 
+0x0A 0x0B 0x0C  =>  [0x0A, 0x0B, 0x0C]
 小端编码（LE）：高位字节放在内存中的高位
 0x0A 0x0B 0x0C  =>  [0x0C, 0x0B, 0x0A]
 
@@ -318,7 +318,7 @@ fs.readdir(path, callback);
 fs.readdirSync(path);
 
 删除文件
-fs.unlink(path, callback);  //callback,返回true或false
+fs.unlink(path, callback);  //第一个参数为err对象
 fs.unlinkSync(path);
 
 截断文件
@@ -351,15 +351,15 @@ resource/path/?query=string  路径,路径名
 
 nodejs提供url模块，把一个url字符串换成一个url对象
 url.parse(urlStr, [parseQueryString], [slashesDenoteHost]);
-parseQueryString参数默认为false，如果为true，则将url中的查询字符串部分，转换成对象字面量。  
+parseQueryString参数默认为false，如果为true，则将url中的查询字符串部分，转换成对象字面量。
 slashesDenoteHost参数默认为false，如果为true，则将//host/path解析为{host: 'host', pathname: '/path'}，而不是{pathname: '//host/path'}
 url对象属性
-href  
+href
 protocol
 host
 auth
 hostname
-port 
+port
 pathname
 search
 path
@@ -387,7 +387,7 @@ http.ClientRequest对象
 http.request(options, callback);  //实现一个ClientRequest对象,callback回调函数唯一的参数是一个IncomingMessage对象，该对象时来自服务器的响应。
 
 clientReq = http.request(options, function (response) {
-	
+
 });
 clientReq.end();
 
@@ -422,7 +422,7 @@ setSocketKeepAlive([enable], [initialDelay]);
 http.ServerResponse对象
 当http服务器，接收到一个request请求时，会创建一个ServerResponse对象。这个对象作为第二个参数被传递到request请求的处理程序。使用ServerResponse对象制定并发送到客户端的响应。ServerResponse对象，实现了一个writable流。
 http.createServer(function (req, res) {  //res即http.ServerResponse对象
-	
+
 });
 
 ServerResponse对象的事件和属性
@@ -467,7 +467,7 @@ upgrade
 clientError
 启动http服务器，得到HTTP Server对象
 server = http.createServer(function (req, res) {//req:IncomingMessage对象，res:ServerResponse对象
-	
+
 });
 server对象的方法
 server.listen(port, [hostname], [backlog], [callback]);  //backlog(积压)，指定允许进行排队的最大待处理连接数。默认511
@@ -490,12 +490,12 @@ openssl x509 -req -days 365 -in server.csr -signkey server.pen -out server.crt
 
 HTTPS客户端
 var clientRequest = https.request(options, function () {
-	
+
 });
 创建自定义的Agent对象来实现https协议下的代理,options.agent = new https.Agent(options);
 HTTPS服务器
 var server = https.createServer(options, function (req, res) {
-	
+
 });
 https.request()和https.createServer()中options的配置项
 key  私钥,用于指定SSL私钥
@@ -623,7 +623,7 @@ var options = {
 	ca: fs.readFileSync('test/keys/server.crt')  //如果使用的是自签名证书，需要在ca属性上指出服务器的证书
 };
 var socket = tls.connect(options, function (res) {
-	
+
 };
 tls.connect()的options的其他配置项
 key
@@ -642,7 +642,7 @@ var options = {
 	ca: fs.readFileSync('test/keys/client.crt')  //如果使用的是自签名证书，需要在ca属性上指出客户端的证书
 };
 var server = tls.createServer(options, function (socket) {
-	
+
 });
 tls.createServer()的options的其他配置项
 key
@@ -684,7 +684,7 @@ process模块的stdout和stderr属性是可以相应处理的Writable流。
 
 进程信号，process模块的一个特点是，它允许你注册监听器来处理操作系统发送给一个进程的信号。
 process.on('SIGBREAK', function () {
-	
+
 });
 操作系统可以发送给nodejs进程的事件
 SIGUSR1
@@ -750,7 +750,7 @@ disconnect();
 
 ChildProcess对象上的属性
 stdin
-stdout 
+stdout
 stderr
 pid
 connected
