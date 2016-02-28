@@ -202,3 +202,27 @@ match x {
   _ => println!("no"),
 }
 混合与匹配，可以对上面的多种匹配方法进行组合
+
+方法语法
+rust通过impl关键字，可以实现链式调用，impl关键字定义的函数又称为方法
+struct Circle {
+  x: f64,
+  y: f64,
+  radius: f64,
+}
+
+impl Circle {
+  fn area(&self) -> f64 {
+    std::f64::consts::PI * (self.radius * self.radius)
+  }
+}
+
+fn main() {
+  let c = Circle { x: 0.0, y: 0.0, radius: 2.0 };
+  println!("{}", c.area());
+}
+方法的第一参数比较特殊，&self。它有3种变体：self，&self和&mut self
+链式方法调用，通过在方法内部返回self来做到这点
+关联函数（Associated functions）
+可以定义一个不带self参数的关联函数，关联函数构建了一个新的Struct，通过Struct::method()语法调用
+创建者模式（Builder Pattern），通过一个Struct构建另一个Struct
