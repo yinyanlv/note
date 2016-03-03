@@ -226,3 +226,15 @@ fn main() {
 关联函数（Associated functions）
 可以定义一个不带self参数的关联函数，关联函数构建了一个新的Struct，通过Struct::method()语法调用
 创建者模式（Builder Pattern），通过一个Struct构建另一个Struct
+
+vectors（向量）
+vector，是一个动态，可增长的数组，被实现为标准库类型Vec<T>
+可以使用vec!宏来创建它
+let v = vec![1, 2, 3, 4, 5]; //v: Vec<i32>
+let v = vec![0; 10]; //十个0
+访问元素
+[]，必须用usize类型的值来索引
+越界访问
+尝试访问并不存在的索引，前的线程会panic，如果想处理越界错误而不是panic，可以使用像get或get_mut这样的方法，他们在给出一个无效的索引时返回None
+迭代
+for var in vector
