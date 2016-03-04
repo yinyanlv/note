@@ -210,13 +210,11 @@ struct Circle {
   y: f64,
   radius: f64,
 }
-
 impl Circle {
   fn area(&self) -> f64 {
     std::f64::consts::PI * (self.radius * self.radius)
   }
 }
-
 fn main() {
   let c = Circle { x: 0.0, y: 0.0, radius: 2.0 };
   println!("{}", c.area());
@@ -238,3 +236,120 @@ let v = vec![0; 10]; //十个0
 尝试访问并不存在的索引，前的线程会panic，如果想处理越界错误而不是panic，可以使用像get或get_mut这样的方法，他们在给出一个无效的索引时返回None
 迭代
 for var in vector
+
+字符串
+可变大小的数据结构
+两种字符串类型，&str和String
+&str，字符串切片（string slices）
+字符串常量是&’static str类型
+字符串常量是静态分配的字符串切片，也就是说它储存在我们编译好的程序中，并且整个程序的运行过程中一直存在
+String，是一个在堆上分配的字符串，通常通过一个字符串切片调用to_string方法转换而来
+String可以通过一个&强制转换为&str
+String转换为&str的代价很小，不过从&str转换到String涉及到分配内存
+索引（Indexing），因为字符串是有效UTF-8编码的，它不支持索引
+as_bytes()
+chars().nth()
+切片（Slicing），是字节偏移，而不是字符偏移
+let dog = "hachiko";
+let hachi = &dog[0..5];
+连接（Concatenation）
+如果你有一个String，你可以在它后面接上一个&str，不过如果你有两个String，你需要使用&来转换其中的一个Sting为&str
+
+泛型
+泛型在类型理论中叫做参数多态
+泛型函数
+fn takes_anything<T>(x: T) {
+  // do something with x
+}
+泛型结构体
+impl<T> Point<T> { //给泛型struct增加一个实现
+  fn swap(&mut self) {
+    std::mem::swap(&mut self.x, &mut self.y);
+  }
+}
+
+traits
+trait，告诉 Rust 编译器一个类型必须提供哪些功能
+struct Circle {
+  x: f64,
+  y: f64,
+  radius: f64,
+}
+trait HasArea {
+  fn area(&self) -> f64;
+}
+impl HasArea for Circle {
+  fn area(&self) -> f64 {
+    std::f64::consts::PI * (self.radius * self.radius)
+  }
+}
+泛型函数的trait bound（限制）
+trait HasArea {
+  fn area(&self) -> f64;
+}
+fn print_area<T: HasArea>(shape: T) {
+  println!("This shape has an area of {}", shape.area());
+}
+泛型结构体的trait bound
+struct Rectangle<T> {
+  x: T,
+  y: T,
+  width: T,
+  height: T,
+}
+impl<T: PartialEq> Rectangle<T> {
+  fn is_square(&self) -> bool {
+    self.width == self.height
+  }
+}
+可以为任何类型实现一个trait
+带有trait限制的泛型函数是单态（monomorphization）（mono：单一，morph：形式）的，所以它是静态分发（statically dispatched）的
+多trait bound
+如果需要多于1个限定，可以使用+
+fn foo<T: Clone + Debug>(x: T) {
+  x.clone();
+  println!("{:?}", x);
+}
+where 从句（Where clause）
+fn bar<T, K>(x: T, y: K) where T: Clone, K: Clone + Debug {
+  x.clone();
+  y.clone();
+  println!("{:?}", y);
+}
+默认方法（Default methods）
+在trait中实现方法，可以使该方法成为默认方法
+继承（Inheritance）
+trait Foo {
+  fn foo(&self);
+}
+trait FooBar : Foo {
+  fn foobar(&self);
+}
+Deriving（获得）
+让Rust为我们自动实现trait
+#[derive(Debug)]
+struct Foo;
+fn main() {
+  println!("{:?}", Foo);
+}
+deriving限制为一些特定的 trait：
+Clone
+Copy
+Debug
+Default
+Eq
+Hash
+Ord
+PartialEq
+PartialOrd
+
+Drop
+一个由Rust标准库提供的特殊trait，Drop。Drop trait提供了一个当一个值离开作用域后运行一些代码的方法
+struct HasDrop;
+impl Drop for HasDrop {
+  fn drop(&mut self) {
+    println!("Dropping!");
+  }
+}
+有一些细节，例如，值会以与它们声明相反的顺序被丢弃
+Drop用来清理任何与struct关联的资源
