@@ -353,3 +353,17 @@ impl Drop for HasDrop {
 }
 有一些细节，例如，值会以与它们声明相反的顺序被丢弃
 Drop用来清理任何与struct关联的资源
+
+if let
+if let允许你合并if和let来减少特定类型模式匹配的开销
+if let Some(x) = option {
+  foo(x);
+} else {
+}
+如果一个模式匹配成功，它绑定任何值的合适的部分到模式的标识符中，并计算这个表达式。如果模式不匹配，执行else
+while let
+while let Some(x) = v.pop() {
+  println!("{}", x);
+}
+
+trait对象
