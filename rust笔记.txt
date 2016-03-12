@@ -429,3 +429,64 @@ static，以静态量的方式提供了类似“全局变量”的功能，在�
 type别名
 type关键字让你定义另一个类型的别名
 type Name = String;
+
+类型转换
+as用于安全转换，transmute允许任意的转换
+自定义强转可以用Deref定义，强转是可传递的
+指针转换，裸指针与整型之间的转换是安全的
+transmute，transmute做了非常少的检查，至少它确保了这些类型是相同大小的
+use std::mem;
+unsafe {
+  let a = [0u8, 0u8, 0u8, 0u8];
+
+  let b = mem::transmute::<[u8; 4], u64>(a);
+}
+
+关联类型
+类型族，就是把多种类型归于一类
+trait Graph {
+  type N;
+  type E;
+
+  fn has_edge(&self, &Self::N, &Self::N) -> bool;
+  fn edges(&self, &Self::N) -> Vec<Self::E>;
+}
+关联类型使用type关键字，并出现在trait体和函数中
+
+不定长类型
+?Sized，这个?，读作“T可能是Sized的”，意味着这个限制是特殊的：它让我们的匹配更宽松
+struct Foo<T: ?Sized> {
+  f: T,
+}
+
+运算符与重载
+
+Deref强制多态
+Deref，它一般用来重载*，解引用运算符
+Deref和方法调用，当调用一个方法时Deref也会出现
+
+宏
+宏允许我们在句法水平上进行抽象。宏是一个“展开后的”句法形式的速记。这个展开发生在编译的早期
+vec!宏，用来初始化一个任意数量元素的vector
+macro_rules! vec { ... } //定义宏
+卫生宏，一些语言使用简单的文本替换来实现宏
+常用宏
+panic!，这个宏导致当前线程恐慌
+vec!，它也让你可以用重复值创建vector
+assert!和assert_eq!
+try!，try!用来进行错误处理
+unreachable!，这个宏用于当你认为一些代码不应该被执行的时候
+unimplemented!，unimplemented!宏可以被用来当你尝试去让你的函数通过类型检查，同时你又不想操心去写函数体的时候
+
+裸指针
+Rust的安全大多来源于编译时检查，不过裸指针并没有这样的保证，使用它们是unsafe的
+*const T和*mut T在Rust中被称为“裸指针”
+解引用 *T，当解引用一个裸指针时，要为它并不指向正确的地方负责，为此，需要使用unsafe
+外部函数接口(FFI，Foreign Function Interface)
+
+不安全代码
+unsafe关键字，使用unsafe的代码比正常代码有更少的限制
+常见用途：
+访问和更新一个静态可变变量
+解引用一个裸指针
+调用不安全函数
