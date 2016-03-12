@@ -375,4 +375,57 @@ trait对象有时被称为“类型清除”（type erasure），通过as或&转
 rust默认不用指针来存放数据，使用trait对象时，是用指针来储存值
 虚表（Representation）
 虚函数表（由编译器创建和管理），在一个trait对象上通过一个特殊的函数指针记录调用的特性函数
-并不是所有 trait 都可以被用来作为一个 trait 对象，只有对象安全的 trait 才能成为 trait 对象，除了特殊情况，如果你的 trait 的方法使用了Self，它就不是对象安全的
+并不是所有trait都可以被用来作为一个 trait 对象，只有对象安全的 trait 才能成为 trait 对象，除了特殊情况，如果你的 trait 的方法使用了Self，它就不是对象安全的
+
+闭包
+let plus_two = |x| {
+  let mut result: i32 = x;
+  result += 1;
+  result += 1;
+
+  result
+};
+闭包，可以省略接收和返回参数的类型
+move关键字，强制使我们的闭包取得它环境的所有权，它给出了一个拥有自己栈帧的闭包。没有move，一个闭包可能会绑定在创建它的栈帧上
+闭包实际上是trait的语法糖
+闭包作为参数
+一个函数指针有点像一个没有环境的闭包
+返回闭包，通过把内部闭包变为move Fn，我们为闭包创建了一个新的栈帧。通过Box装箱，我们提供了一个已知大小的返回值，并允许它离开我们的栈帧
+
+通用函数调用语法
+Trait::method(args);
+尖括号形式，<Type as Trait>::method(args);
+
+包装箱（crate）和模块（module）
+包装箱，类似于lib和package
+定义模块，用mod关键字来定义我们的每一个模块
+导入外部的包装箱，extern crate name;
+Rust，默认一切都是私有的
+定义公有模块，pub mod name;
+用use导入模块，允许我们导入名字到我们本地的作用域中
+use phrases::english::{greetings, farewells};
+使用pub use重导出，可以在包装箱内用它重导出函数到另一个模块中
+复杂的导入
+extern crate phrases as sayings;
+use sayings::japanese::greetings as ja_greetings;
+use sayings::japanese::farewells::*;
+use sayings::english::{self, greetings as en_greetings, farewells as en_farewells};
+
+const和static
+const和static，与let绑定不同，必须指定类型
+const，常量贯穿于整个程序的生命周期。实际上它们会被内联到用到它们的地方，为此对同一常量的引用并不能保证引用到相同的内存地址
+static，以静态量的方式提供了类似“全局变量”的功能，在使用时并不内联。这意味着对每一个值只有一个实例，并且位于内存中的固定位置
+
+属性
+属性，以某种方式改变它们附加到的项的意义
+#[test]，作用于下一个项
+#![test]，作用于包含它的项
+属性可以有附加数据
+#[inline(always)]
+属性也可以有键值
+#[cfg(target_os = "macos")]
+目前，不能创建自己的属性，Rust编译器定义了它们
+
+type别名
+type关键字让你定义另一个类型的别名
+type Name = String;
