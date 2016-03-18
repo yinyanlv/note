@@ -43,3 +43,6 @@ sudo apt-get install redis-server
 
 安装nginx
 sudo apt-get install nginx
+
+安装pm2
+npm install -g pm2
