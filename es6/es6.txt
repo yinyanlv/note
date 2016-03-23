@@ -79,7 +79,7 @@ es6,regexp构造函数可直接传入正则，第二个参数指定的修饰符�
 var a = new RegExp(/abc/ig, 'i').flags; //'i'
 flags属性
 u修饰符 unicode模式，用来正确处理大于\uFFFF的unicode字符
-y修饰符  粘连修饰符，与g修饰类似，y修饰符号隐含了头部匹配的标志ˆ，y修饰符的设计本意，就是让头部匹配的标志ˆ在全局匹配中都有效
+y修饰符 粘连修饰符，与g修饰类似，y修饰符号隐含了头部匹配的标志ˆ，y修饰符的设计本意，就是让头部匹配的标志ˆ在全局匹配中都有效
 sticky属性 表示是否设置了y修饰符，返回ture或false
 RegExp.escape() 将普通字符串转义，使之正则化。未列入es7
 
@@ -120,9 +120,10 @@ a ** 3  =>  a * a* a
 数组的扩展
 Array.from(); //将类似数组的对象（array-like object）和可遍历（iterable）的对象（包括es6新增的数据结构Set和Map）准换为数组，可正确处理4字节unicode字符
 Array.from可以有第二个参数，类似map方法，Array.from([1, 2, 3], (x) => x * x);
-扩展运算符 ...  可以将某些数据结构转为数组，背后调用的是遍历器接口（Symbol.iterator）
+扩展运算符 ... 可以将某些数据结构转为数组，背后调用的是遍历器接口（Symbol.iterator）
 Array.of(); //用于将一组值，转换为数组，弥补，数组构造函数Array()因为参数个数的不同，而导致的行为差异
 copyWithin(target, start = 0, end = this.length); //target，从该位置开始替换数据，start，从该位置开始读取数据
+[1, 2, 3, 4, 5].copyWithin(0, 3, 4); //[4, 2, 3, 4, 5]
 find(function (item, index, array) {}); //返回第一个符合条件的成员，可以发现NaN，弥补IndexOf方法的不足
 findIndex(function (item, index, array) {});
 fill(value, startIndex, endIndex); //不包括endIndex
@@ -174,15 +175,23 @@ Object.assign(); 用来将源对象（source）的所有可枚举属性，复制
 属性的可枚举性
 对象的每个属性都有一个描述对象（Descriptor），用来控制该属性的行为
 let obj = { foo: 123 }; Object.getOwnPropertyDescriptor(obj, 'foo'); => { value: 123, writable: true, enumerable: true, configurable: true }
+1. value：值，默认是undefined
+2. writable：是否是只读property，默认是false
+3. enumerable：是否可以被枚举(for in)，默认false
+4. configurable：是否可以被删除，默认false
+5. get：返回property的值的方法，默认是undefined
+6. set：为property设置值的方法，默认是undefined
 for...in 循环, 只遍历对象自身的和继承的可枚举的属性
 Object.keys(); //返回对象自身的所有可枚举的属性的键名
+Object.values();
+Object.entries();
 JSON.stringify(); //只串行化对象自身的可枚举的属性
-Object.assign(); //只拷贝对象自身的可枚举的属性
+Object.assign(); //只拷贝源对象自身的可枚举的属性
 Reflect.enumerate(); //返回所有for...in循环会遍历的属性
 es6规定，所有Class的原型的方法都是不可枚举的
 属性的遍历，7种方法
 for...in //for...in循环遍历对象自身的和继承的可枚举属性（不含Symbol属性）
-for...of //不含Symbol属性
+for...of //不含Symbol属性，不遍历原型对象
 Object.keys(obj); //Object.keys返回一个数组，包括对象自身的（不含继承的）所有可枚举属性（不含Symbol属性）
 Object.getOwnPropertyNames(obj); //Object.getOwnPropertyNames返回一个数组，包含对象自身的所有属性（不含Symbol属性，但是包括不可枚举属性）
 Object.getOwnPropertySymbols(obj); //Object.getOwnPropertySymbols返回一个数组，包含对象自身的所有Symbol属性
@@ -198,12 +207,12 @@ es7提案，对象的扩展运算符，...
 
 Symbol
 js的数据类型
-undefined，null，boolean，string，number，object，boolean
+undefined，null，boolean，string，number，object
 Symbol函数前不能使用new命令，因为它不是对象，它是一种类似于数组的数据类型
 Symbol函数可以接受一个字符串作为参数，表示对Symbol实例的描述
 Symbol值不能与其他类型的值进行运算，Symbol值可以显式转为字符串，也可以转为布尔值，但是不能转为数值
 Symbol值作为对象属性名时，不能用点运算符
-Symbol.for('str'); //重新使用同一个Symbol值，会被登记在全局环境中供搜索，Symbol()不会，Symbol.for()不会每次调用就返回一个新的Symbol类型的值，而是会先检查给定的key是否已经存在，如果不存在才会新建一个值
+Symbol.for('str'); //重新使用同一个Symbol值，会被登记在全局环境中供搜索，Symbol.for()不会每次调用就返回一个新的Symbol类型的值，而是会先检查给定的key是否已经存在，如果不存在才会新建一个值
 Symbol.keyFor(); //返回一个已登记(使用Symbol.for()而不是使用Symbol())的Symbol类型值的描述
 内置的Symbol值
 es6提供了11个内置的Symbol值，指向语言内部使用的方法
