@@ -2,8 +2,12 @@ redis-server.exe --service-install redis.conf --loglevel verbose
 
 redis-server.exe --service-uninstall
 
-redis-cli.exe -h 127.0.0.1 -p 3002
+redis-server --service-start
 
+redis-server --service-stop
+
+
+redis-cli客户端
 常用命令
 keys *
 exists name
@@ -11,3 +15,132 @@ del name
 get name
 set name value
 select 0 //选择0数据库，redis默认的数据库是0~15，16个数据库
+基本参数
+-h 设置检测主机IP地址，默认为127.0.0.1
+-p 设置检测主机的端口号，默认为6379
+-s<socket> 服务器套接字(压倒主机和端口)
+-a 连接到Master服务器时使用的密码
+-r 执行指定的N次命令
+-i 执行命令后等待N秒，如–i 0.1 info(执行后等0.1秒)
+-n 指定连接N号ID数据库，如 –n 3(连接3号数据库)
+-x 从控制台输入的信息中读取最后一个参数
+-d 定义多个定界符为默认输出格式（默认: \n）
+--raw 使用原数据格式返回输出内容
+--latency 进入一个不断延时采样的特殊模式
+--slave 模拟一个从服务器到主服务器的命令显示反馈
+--pipe 使用管道协议模式
+--bigkeys 监听显示数据量大的key值，--bigkeys -i 0.1
+--help 显示命令行帮助信息
+--version 显示版本号
+
+
+redis.conf配置参数
+
+daemonize //是否以后台daemon（守护神）方式运行
+pidfile //pid文件位置，当运行多个redis服务时，需要指定不同的pid文件和端口
+port //监听端口号，如果端口设置为0，Redis就不会监听TCP套接字
+bind //指定redis只接收来自于该IP地址的请求，如果不进行设置，默认将处理所有请求
+timeout //设置客户端连接时的超时时间，单位为秒，默认值：0代表禁用，永不关闭
+unixsocket //指定用来监听连接的unix套接字的路径，如果不指定的话，Redis就不会通过unix套接字来监听
+unixsocketperm
+loglevel //指定日志记录级别，总共支持四个级别：debug、verbose、notice、warning，默认为verbose
+# debug 记录很多信息，用于开发和测试
+# varbose 很多精简的有用信息，不像debug会记录那么多
+# notice 普通的verbose，常用于生产环境
+# warning 只有非常重要或者严重的信息会记录到日志
+logfile //log文件位置
+databases //开启数据库的数量，默认值为16，默认数据库存储在DB 0号ID库中，无特殊需求，建议仅设置一个数据库databases 1
+save * * //保存快照的频率，第一个*表示多长时间，第二个*表示执行多少次写操作
+rdbcompression //是否使用压缩
+dbfilename //数据快照文件名（只是文件名，不包括目录）
+dir //数据快照的保存目录
+
+#APPEND ONLY MODE 纯累加模式
+appendonly //是否开启appendonlylog，开启的话每次写操作会记一条log，这会提高数据抗风险能力，但影响效率
+appendfilename //设置纯累加文件名字及保存路径
+appendfsync //appendonlylog如何同步到磁盘（三个选项，分别是每次写都强制调用fsync、每秒启用一次fsync、不调用fsync等待系统自己同步）
+# no：不要立刻刷，只有在操作系统需要刷的时候再刷。比较快
+# always：每次写操作都立刻写入到aof文件。慢，但是最安全
+# everysec（ 默认值）：每秒写一次。折衷方案
+no-appendfsync-on-rewrite //有延迟的问题那就把这个设为 "yes"，否则就保持 "no"，这是保存持久数据的最安全的方式
+
+
+#REPLICATION 同步
+slaveof <masterip> <masterport> //主从同步。通过slaveof配置来实现Redis实例的备份
+masterauth <master-password> //当本机为从服务时，设置主服务的连接密码
+slave-serve-stale-data //当一个slave失去和master的连接，或者同步正在进行中，设置为"yes" (默认值)，slave会继续响应客户端请求，"no"，slave会回复"正在从master同步
+repl_ping_slave_period //设置slave根据指定的时间间隔向服务器发送ping请求，默认10秒
+repl-timeout //设置大块数据I/O、向master请求数据和ping响应的过期时间，默认值60秒，确保这个值比 repl-ping-slave-period 大，否则master和slave之间的传输过期时间比预想的要短
+
+#SECURITY 安全
+requirepass foobared //设置连接密码
+命令重命名，在共享环境下，可以为危险命令改变名字，甚至也可以通过给命令赋值一个空字符串来完全禁用这条命令
+rename-command CONFIG b840fc02d524045429941cc15f59e41cb7be6c52 //为CONFIG命令重命名
+
+#LIMITS 限制
+maxclients //设置最大同时连接客户端数量，特殊值"0"表示没有限制
+maxmemmory-policy //设置内存使用达到上限，Redis会使用的回收策略
+# volatile-lru（默认值） -> 根据LRU算法生成的过期时间来删除
+# allkeys-lru -> 根据LRU算法删除任何key
+# volatile-random -> 根据过期设置来随机删除key
+# allkeys->random -> 无差别随机删
+# volatile-ttl -> 根据最近过期时间来删除(辅以TTL)
+# noeviction -> 谁也不删，直接在写操作时返回错误
+maxmemory //设置最大内存，256000000 = 256M
+maxmemory-samples //设置样本的个数，在其中选择最旧的删除
+
+#自动重写AOF文件
+auto-aof-rewrite-percentage //指定百分比为0会禁用AOF自动重写特性
+auto-aof-rewrite-min-siz //64mb
+
+#SLOW LOG 慢查询日志
+Redis慢查询日志可以记录超过指定时间的查询
+slowlog-log-slower-than //单位是微秒，所以1000000就是1秒。注意，负数时间会禁用慢查询日志，而0则会强制记录所有命令
+slowlog-max-len //128
+
+#VIRTUAL MEMORY 虚拟内存
+警告！虚拟内存在Redis 2.4是反对的，因性能问题，2.4版本 VM机制彻底废弃，不建议使用此配置！
+vm-enabled //设置是否使用虚拟内存，yes | no
+vm-swap-file //创建一个Redis用户可写的目录，并配置Redis在这里创建交换文件
+vm-max-memory //配置虚拟内存可用的最大内存容量，0表示系统会用掉所有可用内存，建议设置为剩余内存的60%-80%
+vm-page-size //设置每个数据页的byte大小，交换文件分成的多个数据页
+vm-pages //数据页个数
+vm-max-threads //访问swap文件的线程数
+
+#ADVANCED CONFIG 高级配置
+hash-max-zipmap-entries //当value这个Map内部不超过多少个成员时会采用线性紧凑格式存储，默认是64,即value内部有64个以下的成员就是使用线性紧凑存储，超过该值自动转成真正的HashMap
+hash-max-zipmap-value //当value这个Map内部的每个成员值长度不超过多少字节就会采用线性紧凑存储来节省空间
+list-max-ziplist-entries //list数据类型多少节点以下会采用去指针的紧凑存储格式
+list-max-ziplist-value //list数据类型节点值大小小于多少字节会采用紧凑存储格式
+set-max-intset-entries //针对数据全是64位无符号整型数字构成的字符串
+zset-max-ziplist-entries //针对有序序列
+zset-max-ziplist-value //针对有序序列
+activerehashing //yes | no，如果对延迟比较在意的话就用 "activerehashing no"，如果不太在意延迟而希望尽快释放内存的话就设置 "activerehashing yes"
+
+#INCLUDES 包含
+include /path/to/local.conf //包含一个或多个其他配置文件
+
+
+redis-benchmark性能测试工具
+-h <hostname> 主机名 (默认 127.0.0.1)
+-p <port> 主机端口 (默认 6379)
+-s <socket> 主机套接字 (覆盖主机和端口)
+-c <clients> 并发连接的数量 (默认 50)
+-n <requests> 请求总数 (默认 10000)
+-d <size> SET/GET数据的字节大小(默认 2)
+-k <boolean> 1=keep alive 0=reconnect (默认 1)
+-r <keyspacelen> SET/GET/INCR使用随机产生的key, SADD使用随机值使用这个选项 get/set keys时会用mykey_rand:000000012456代替常量key， <keyspacelen>参数决定了随机数产生的最大值，比如，设置参数为10，那么产生的随机数范围是rand:000000000000 -rand:000000000009
+-P <numreq> Pipeline请求的数量. 默认 1 (不使用pipeline)
+-q 展示query/sec值
+--csv 以CSV格式输出
+-l 本地循环. 一直运行测试
+-t <tests> 在运行逗号分割列表的测试. 测试的名字与产生输出的名字一样
+-I 空闲模式. 打开 N 个空闲连接，然后等待
+
+
+redis-check-aof
+检查本地日志信息，加--fix参数修复log文件
+
+
+redis-check-dump
+检查数据库文件，会输出该文件大小、使用情况
