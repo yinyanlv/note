@@ -2,3 +2,139 @@ start nginx
 nginx -s stop
 nginx -s reload
 nginx -s quit
+
+nginx配置文件
+nginx.conf
+  main //全局设置，将影响其它所有设置
+    events //设定nginx的工作模式及连接数上限
+    http
+      upstream //主要用于负载均衡，设置一系列的后端服务器，既不被继承也不继承其它设置
+      server //主要用于指定主机和端口，继承main
+        location //用于匹配网页的位置，继承server
+      ...
+      server
+
+全局配置
+user  nobody;
+worker_processes  2; //指定nginx要开启的进程数，每个nginx进程平均耗费10M~12M，一般指定与cpu数量一致即可
+error_log  logs/error.log  notice; //用来定义全局错误日志文件，日志输出级别有debug（日志最详细）、info、notice、warn、error、crit（日志最少）
+pid        logs/nginx.pid; //指定进程pid的存储文件位置
+worker_rlimit_nofile 65535; //用于绑定worker进程和cpu，linux内核2.4以上可用
+
+events { //设定nginx的工作模式及连接数上限
+     use epoll; //指定nginx的工作模式，支持的工作模式有select、poll、kquue、epoll、rtsig和/dev/poll，select和poll都是标准的工作模式，kqueue（BSD系统）和epoll（linux系统首选）是高效的工作模式
+     worker_connections      65536; //定义nginx每个进程的最大连接数，默认是1024
+}
+最大客户端连接数
+Max_client = worker_processes * worker_connections;
+作为反向代理时，Max_client = worker_processes * worker_connections / 4;
+进程的最大连接数受linux系统进程的最大打开文件数限制，在执行操作系统命令“ulimit -n 65536”后，worker_connections的设置才能生效
+
+http服务器配置
+http {
+	include      conf/mime.types; //定义配置文件需导入的外置文件
+	default_type  application/octet-stream; //设定默认类型为二进制流，即当文件类型未定义时使用这种方式
+	log_format main '$remote_addr - $remote_user [$time_local] '  //设定日志的格式
+                	'"$request" $status $bytes_sent '
+                	'"$http_referer" "$http_user_agent" '
+                	'"$gzip_ratio"';
+	log_format download '$remote_addr - $remote_user [$time_local] ' //设定日志的格式
+                    	'"$request" $status $bytes_sent '
+                    	'"$http_referer" "$http_user_agent" '
+                    	'"$http_range" "$sent_http_content_range"';
+	client_max_body_size  20m; //设置允许客户端请求的最大的单个文件字节数
+	client_header_buffer_size    32K; //指定来自客户端请求头的headerbuffer大小，对于大多数请求1k即可
+	large_client_header_buffers  4 32k; //指定客户端请求中较大的消息头的缓存最大数量和大小，4 * 32k
+	Sendfile  on; //开启高效文件传输模式。将tcp_nopush和tcp_nodelay两个指令设置为on用于防止网络阻塞
+	tcp_nopush     on;
+	tcp_nodelay    on;
+	keepalive_timeout 60; //设置客户端连接保持活动的超时时间
+	client_header_timeout  10; //设置客户端请求头读取超时时间，如果超时，返回“Request time out（408）”错误
+	client_body_timeout    10; //设置客户端请求主体读取超时时间，如果超时，返回“Request time out（408）”错误
+	send_timeout          10; //设置响应客户端的超时时间
+}
+
+HttpGzip模块配置
+用来支持在线实时压缩输出数据流，需要自定义安装
+gzip  on; //设置开启或者关闭gzip模块
+gzip_min_length  1k; //设置允许压缩的页面最小字节数，建议设置成大于1K的字节数，小于1K可能会越压越大
+gzip_buffers     4  16k; //表示申请4个单位为16K的内存作为压缩结果流缓存
+gzip_http_version  1.1; //设置识别HTTP协议版本，默认是1.1
+gzip_comp_level  2; //设定GZIP压缩比，1 压缩比最小，处理速度最快；9 压缩比最大，传输速度快，但处理最慢，也比较消耗cpu资源
+gzip_types  text/plain application/x-javascript text/css application/xml; //指定压缩的类型，无论是否指定，“text/html”类型总是会被压缩的
+gzip_vary  on; //设置是否让前端的缓存服务器缓存经过GZIP压缩的页面
+
+负载均衡配置
+该模块通过一个简单的调度算法来实现客户端IP到后端服务器的负载均衡
+upstream cszhi.com { //指定了一个负载均衡器的名称cszhi.com。这个名称可以任意指定，在后面需要的地方直接调用即可
+	ip_hash;
+	server 192.168.8.11:80;
+	server 192.168.8.12:80  down;
+	server 192.168.8.13:8009  max_fails=3  fail_timeout=20s;
+	server 192.168.8.146:8080;
+}
+
+nginx的负载均衡模块目前支持4种调度算法
+1、轮询（默认），每个请求按时间顺序逐一分配到不同的后端服务器
+2、Weight，指定轮询权值，Weight值越大，分配到的访问机率越高
+3、ip_hash，每个请求按访问IP的hash结果分配，这样来自同一个IP的访客固定访问一个后端服务器，有效解决了动态网页存在的session共享问题
+4、fair，可以依据页面大小和加载时间长短智能地进行负载均衡，也就是根据后端服务器的响应时间来分配请求，响应时间短的优先分配，要使用这种调度算法，必须下载Nginx的upstream_fair模块
+5、url_hash，按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，可以进一步提高后端缓存服务器的效率，要使用这种调度算法，必须安装Nginx 的hash软件包
+
+设定每个后端服务器在负载均衡调度中的状态
+1、down，表示当前的server暂时不参与负载均衡
+2、backup，预留的备份机器
+3、max_fails，允许请求失败的次数，默认为1
+4、fail_timeout，经历了max_fails次失败后，暂停服务的时间
+注意，当负载调度算法为ip_hash时，后端服务器在负载均衡调度中的状态不能是weight和backup
+
+server虚拟主机配置
+server {
+  listen          80; //指定虚拟主机的服务端口
+  server_name    192.168.8.18  cszhi.com; //指定IP地址或者域名，多个域名之间用空格分开
+  index index.html index.htm index.php; //设定访问的默认首页地址
+  root  /wwwroot/www.cszhi.com //用于指定虚拟主机的网页根目录，这个目录可以是相对路径，也可以是绝对路径
+  charset gb2312; //设置网页的默认编码格式
+  access_log  logs/www.ixdba.net.access.log  main; //指定此虚拟主机的访问日志存放路径，最后的main用于指定访问日志的输出格式
+}
+
+location URL匹配配置
+location支持正则表达式匹配，也支持条件判断匹配，用户可以通过location指令实现Nginx对动、静态网页进行过滤处理。使用location URL匹配配置还可以实现反向代理
+反向代理，反向代理（Reverse Proxy）方式是指以代理服务器来接受internet上的连接请求，然后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给internet上请求连接的客户端，此时代理服务器对外就表现为一个服务器
+location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$  { //所有扩展名以.gif、.jpg、.jpeg、.png、.bmp、.swf结尾的静态文件都交给nginx处理，而expires用来指定静态文件的过期时间，这里是30天
+  root    /wwwroot/www.cszhi.com;
+  expires 30d;
+}
+location ~ ^/(upload|html)/  { //将upload和html下的所有文件都交给nginx来处理，当然，upload和html目录包含在/web/wwwroot/www.cszhi.com目录中
+  root    /web/wwwroot/www.cszhi.com;
+  expires 30d;
+}
+location ~ .*.php$ { //对此虚拟主机下动态网页过滤处理，即将所有以.php为后缀的文件都交给本机的8080端口处理
+  index index.php;
+  proxy_pass http://localhost:8080;
+}
+location ~ /index\.py { //反向代理，不需要新增额外的模块，默认自带proxy_pass指令
+  proxy_pass_header Server; //设置主机头和客户端真实地址，以便服务器获取客户端真实IP
+  proxy_set_header Host $http_host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Scheme $scheme;
+  proxy_buffering off; //禁用缓存
+  proxy_pass http://localhost:8080; //设置反向代理的地址
+}
+
+
+stubStatus模块配置
+stubStatus模块能够获取Nginx自上次启动以来的工作状态，该模块需要手工指定安装
+location /NginxStatus {
+  stub_status      on; //表示启用StubStatus的工作状态统计功能
+  access_log       logs/NginxStatus.log; //用来指定stubStatus模块的访问日志文件
+  auth_basic       "NginxStatus"; //Nginx的一种认证机制
+  auth_basic_user_file    ../htpasswd; //指定认证的密码文件
+}
+
+设置虚拟主机的错误信息返回页面，这些错误信息的返回页面大小一定要超过512K，否者会被ie浏览器替换为ie默认的错误页面
+error_page  404   /404.html;
+error_page   500 502 503 504  /50x.html;
+location = /50x.html {
+    root   html;
+}
