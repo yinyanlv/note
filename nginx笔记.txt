@@ -122,7 +122,6 @@ location ~ /index\.py { //反向代理，不需要新增额外的模块，默认
   proxy_pass http://localhost:8080; //设置反向代理的地址
 }
 
-
 stubStatus模块配置
 stubStatus模块能够获取Nginx自上次启动以来的工作状态，该模块需要手工指定安装
 location /NginxStatus {
