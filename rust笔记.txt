@@ -1,3 +1,10 @@
+基础命令
+rustc main.rs
+cargo --version
+cargo build
+cargo run
+cargo new hello_rust --bin
+
 变量绑定
 模式（patterns）
 类型注解（type annotations）
