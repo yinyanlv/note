@@ -298,8 +298,8 @@ fs.exists(path, callback);  //callback第一个参数返回true或false
 fs.existsSync(path);
 
 获取文件信息
-fs.stats(path, callback);  //callback第二参数返回一个Stats对象
-fs.statsSync(path);
+fs.stat(path, callback);  //callback第二参数返回一个Stats对象
+fs.statSync(path);
 Stats对象的属性和方法
 isFile()
 isDirectory()
