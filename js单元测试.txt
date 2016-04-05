@@ -1,0 +1,88 @@
+karma
+npm install karma --save-dev
+npm install mocha --save-dev
+npm install chai --save-dev
+npm install karma-browserify --save-dev
+npm install karma-mocha --save-dev
+npm install karma-chrome-launcher --save-dev
+npm install -g karma-cli
+npm install karma-coverage --save-dev
+karma init
+karma start karma.conf.js
+
+
+mocha
+mocha本身不带断言库
+describe块称为"测试套件"（test suite），表示一组相关的测试。它是一个函数，第一个参数是测试套件的名称，第二个参数是一个实际执行的函数
+it块称为"测试用例"（test case），表示一个单独的测试，是测试的最小单位。它也是一个函数，第一个参数是测试用例的名称，第二个参数是一个实际执行的函数
+mocha init
+执行子目录测试文件
+mocha --recursive
+通配符
+mocha 'test/**/*.@(js|jsx)'
+测试报告，--reporter, -R
+mocha --reporter // 指定测试报告的格式，默认是spec格式
+mocha --reporters // 显示所有内置的报告格式
+使用mochawesome模块，可以生成漂亮的HTML格式的报告
+--growl, -G // 将测试结果在桌面显示
+--watch，-w // 监视指定的测试脚本
+--bail, -b // 只要有一个测试用例没有通过，就停止执行后面的测试用例
+--grep, -g //搜索测试用例的名称（即it块的第一个参数），然后只执行匹配的测试用例
+--invert, -i //只运行不符合条件的测试脚本，必须与--grep参数配合使用，mocha --grep "1 加 1" --invert
+mocha允许在test目录下面，放置配置文件mocha.opts，把命令行参数写在里面
+es6
+--compilers参数指定测试脚本的转码器
+mocha --compilers js:babel-core/register
+--compilers参数后面紧跟一个用冒号分隔的字符串，冒号左边是文件的后缀名，右边是用来处理这一类文件的模块名
+异步测试
+-t或--timeout参数指定超时门槛
+mocha默认会高亮显示超过75毫秒的测试用例，可以用-s或--slow调整这个参数
+done， done()
+mocha内置对Promise的支持，允许直接返回Promise，等到它的状态改变，再执行断言，而不用显式调用done方法
+钩子
+before(function() {
+  // 在本区块的所有测试用例之前执行
+});
+after(function() {
+  // 在本区块的所有测试用例之后执行
+});
+beforeEach(function() {
+  // 在本区块的每个测试用例之前执行
+});
+afterEach(function() {
+  // 在本区块的每个测试用例之后执行
+});
+只运行其中的几个，这时可以用only方法。describe块和it块都允许调用only方法，表示只运行某个测试套件或测试用例
+it.only('1 加 1 应该等于 2', function() {
+  expect(add(1, 1)).to.be.equal(2);
+});
+还有skip方法，表示跳过指定的测试套件或测试用例
+it.skip('任何数加0应该等于自身', function() {
+  expect(add(1, 0)).to.be.equal(1);
+});
+
+
+chai.js
+var expect = require('chai').expect;
+expect断言的写法都是一样的。头部是expect方法，尾部是断言方法，比如equal、a/an、ok、match等。两者之间使用to或to.be连接
+// 相等或不相等
+expect(4 + 5).to.be.equal(9);
+expect(4 + 5).to.be.not.equal(10);
+expect(foo).to.be.deep.equal({ bar: 'baz' });
+// 布尔值为true
+expect('everthing').to.be.ok;
+expect(false).to.not.be.ok;
+// typeof
+expect('test').to.be.a('string');
+expect({ foo: 'bar' }).to.be.an('object');
+expect(foo).to.be.an.instanceof(Foo);
+// include
+expect([1,2,3]).to.include(2);
+expect('foobar').to.contain('foo');
+expect({ foo: 'bar', hello: 'universe' }).to.include.keys('foo');
+// empty
+expect([]).to.be.empty;
+expect('').to.be.empty;
+expect({}).to.be.empty;
+// match
+expect('foobar').to.match(/^foo/);
