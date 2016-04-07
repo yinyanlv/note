@@ -16,11 +16,11 @@ module.exports = {
 		loaders: [
 			{test: /\.js$/, loader: 'babel'},
 			{test: /\.(png|jpg|gif)$/, loader: 'url?limit=8192'},
-			{test: /\.css$/, loader: 'style!css'}, 
+			{test: /\.css$/, loader: 'style!css'},
 			//{test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader')},  //以css为后缀的文件，用ExtractTextPlugin插件提取出来,不能简写
 			//{test: /\.scss$/, loader: 'style!css!sass'}
 			{test: /\.scss$/, loader: ExtractTextPlugin.extract('css!sass')}  //以scss为后缀的文件，用ExtractTextPlugin插件提取出来
-			
+
 		]
 	},
 	plugins: [
