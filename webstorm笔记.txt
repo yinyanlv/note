@@ -1,0 +1,7 @@
+配置scss
+'Arguments': --no-cache --update --sourcemap --watch $FileName$:$FileParentDir$\css\$FileNameWithoutExtension$.css
+'Output paths to refresh': $FileNameWithoutExtension$.css:$FileNameWithoutExtension$.css.map
+
+--style，表示解析后的css是什么格式，如：--style compressed，有四种取值分别为：nested，expanded，compact，compressed
+--sourcemap，表示开启sourcemap调试。开启sourcemap调试后，会生成一个后缀名为.css.map文件。 webstorm是默认开启sourcemap的，所以可以不填写
+--debug-info，表示开启debug信息，升级到3.3.0之后因为sourcemap更高级，这个debug-info就不太用了
