@@ -64,7 +64,7 @@ switch () { // 判断值必须是数值或字符类型
 	default:
 }
 
-while () { // 判断值必须是boolean类型 ""
+while () { // 判断值必须是boolean类型
 }
 
 do {
