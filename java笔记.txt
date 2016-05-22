@@ -1,1 +1,96 @@
+jvm (java virtual machine)
+jre (java runtime environment)
+jdk (java development kit)
 
+*.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
+
+													 --- java ee 企业应用 (jsp, ejb, service)
+													 |
+基础核心 java se (api, jvm) -
+													 |
+													 --- java me 移动设备，游戏，通信
+
+windows配置环境变量
+JAVA_HOME（新增） jdk文件夹目录
+PATH jdk，bin文件夹目录
+CLASSPATH（新增） jdk，lib文件夹目录
+
+myEclipse，集成了一些优秀的插件
+
+java数据类型
+					           --- 整数类型 (byte, short, int(4), long)
+										 |
+					 --- 数值型 -
+					 |         |
+           |         --- 浮点类型 (float(4), double(8))
+基本数据类型 --- 字符型 (char(2))
+           |
+           --- 布尔型 (boolean(1))
+
+					 --- 类 (class), 如, 字符串(String)
+					 |
+引用数据类型 --- 接口 (interface)
+					 |
+					 --- 数组
+
+自动类型转换，小内存类型可自动转为大内存类型
+强制类型转换
+double a = 1.300;
+int b = (int)a;
+
+常量，程序运行过程中不可改变
+final String ABC = "hello java!"; // 变量名，全部大写
+
+通过javadoc命令，可将注释生成api帮助文档，javadoc -d out test.java
+
+运算符
+算术运算符,  +, -, *, /, %, ++, --
+赋值运算符, =, +=, -=, *=, /=, %=
+比较运算符, >, <, >=, <=, ==, !=
+逻辑运算符, &&, ||, !, ^
+条件运算符, a ? b : c
+
+流程控制语句
+if () { // 判断值必须是boolean类型
+} else if () {
+} else {
+}
+
+switch () { // 判断值必须是数值或字符类型
+	case 'a': // 可以是表达式，但不可是带变量的表达式
+		...
+	break;
+	...
+	default:
+}
+
+while () { // 判断值必须是boolean类型 ""
+}
+
+do {
+} while ();
+
+for (int a = 0; a < 10; i++) {
+}
+
+continue;
+break;
+
+数组
+int[] list = {1, 2, 3}; or int list2[] = {1, 2, 3}; // 注意，字面量用{}
+int[] a = new int[5];
+int[] b = {1, 2, 3, 4, 5}; 等价于 int[] c = new int[]{1, 2, 3, 4, 5}; // 此时不能指定元素个数
+
+for
+foreach:
+for (int i : arr) {
+}
+
+二维数组
+int[][] a = {{1, 2, 3}, {1, 2, 3}};
+int[][] b = new int[2][3]; // 2行3列
+
+Arrays类
+import java.util.Arrays;
+Arrays.sort(arr);
+Arrays.toString(arr);
