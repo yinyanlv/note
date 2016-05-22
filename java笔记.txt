@@ -4,11 +4,11 @@ jdk (java development kit)
 
 *.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
 
-													 --- java ee 企业应用 (jsp, ejb, service)
-													 |
+                           --- java ee 企业应用 (jsp, ejb, service)
+                           |
 基础核心 java se (api, jvm) -
-													 |
-													 --- java me 移动设备，游戏，通信
+                           |
+                           --- java me 移动设备，游戏，通信
 
 windows配置环境变量
 JAVA_HOME（新增） jdk文件夹目录
@@ -18,20 +18,20 @@ CLASSPATH（新增） jdk，lib文件夹目录
 myEclipse，集成了一些优秀的插件
 
 java数据类型
-					           --- 整数类型 (byte, short, int(4), long)
-										 |
-					 --- 数值型 -
-					 |         |
+                     --- 整数类型 (byte, short, int(4), long)
+                     |
+           --- 数值型 -
+           |         |
            |         --- 浮点类型 (float(4), double(8))
 基本数据类型 --- 字符型 (char(2))
            |
            --- 布尔型 (boolean(1))
 
-					 --- 类 (class), 如, 字符串(String)
-					 |
+           --- 类 (class), 如, 字符串(String)
+           |
 引用数据类型 --- 接口 (interface)
-					 |
-					 --- 数组
+           |
+           --- 数组
 
 自动类型转换，小内存类型可自动转为大内存类型
 强制类型转换
@@ -74,6 +74,7 @@ for (int a = 0; a < 10; i++) {
 }
 
 continue;
+
 break;
 
 数组
