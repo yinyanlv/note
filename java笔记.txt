@@ -95,3 +95,19 @@ Arrays类
 import java.util.Arrays;
 Arrays.sort(arr);
 Arrays.toString(arr);
+
+方法
+public class Test {
+	public int print(String a, int b) { // 方法名驼峰
+		return b;
+	}
+}
+Test test = new Test();
+int a = test.print();
+
+重载
+一个类中包含了两个或两个以上同名但参数不一致的方法，调用时，可根据传入的参数，调用对应的方法。
+
+
+
+
