@@ -4,11 +4,11 @@ jdk (java development kit)
 
 *.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
 
-                           --- java ee 企业应用 (jsp, ejb, service)
-                           |
+                  --- java ee 企业应用 (jsp, ejb, service)
+                  |
 基础核心 java se (api, jvm) -
-                           |
-                           --- java me 移动设备，游戏，通信
+                  |
+                  --- java me 移动设备，游戏，通信
 
 windows配置环境变量
 JAVA_HOME（新增） jdk文件夹目录
@@ -18,11 +18,11 @@ CLASSPATH（新增） jdk，lib文件夹目录
 myEclipse，集成了一些优秀的插件
 
 java数据类型
-                     --- 整数类型 (byte, short, int(4), long)
-                     |
+                  --- 整数类型 (byte, short, int(4), long)
+                  |
            --- 数值型 -
-           |         |
-           |         --- 浮点类型 (float(4), double(8))
+           |       |
+           |       --- 浮点类型 (float(4), double(8))
 基本数据类型 --- 字符型 (char(2))
            |
            --- 布尔型 (boolean(1))
@@ -184,3 +184,76 @@ equals();
 Animal a = new Animal();
 Animal a = new Dog();
 方法的多态,父类引用本类对象时调用的方法为父类方法,父类引用子类对象时,调用的方法为子类继承或重写的方法,注意,该方法父类必须含有,否则报错
+
+引用类型转换
+Dog a = new Dog();
+Animal b = a; // 自动类型转换,向上类型转换,无风险
+Dog c = b; // 向下类型转换,存在安全性风险,编译器不会通过
+instanceof运算符
+解决引用类型转换的安全性问题
+if (b instanceof Dog) {
+  Dog d = (Dog)b; // 强制向下类型转换,且无风险
+}
+
+抽象类
+abstract关键字
+作用:不关注子类的实现,但约束子类有哪些特征
+public abstract class A { // 抽象类不能直接创建,定义抽象方法的类必须是抽象类
+  public abstract void call();
+}
+
+接口
+接口,定义类的规范,接口的内容为常量和抽象方法
+interface关键字,一般是public,不可以被private或protected修饰,因为其需要被继承
+接口可以继承多个父接口,和类不同
+abstract interface {name} extends [interface1, interface2, ...] {
+}
+implements关键字,实现接口
+public class A extends B implements inter1, inter2, ... {
+}
+可以通过匿名内部类实现接口
+
+UML(unified modeling language)
+统一建模语言
+类图
+-,表示私有
++,表示公有
+实线,表示类
+虚线,表示接口
+
+异常
+      - Error 硬伤,终结程序
+      |
+Throwable -
+      |
+      - Exception 可处理
+try {
+
+} catch (Exception1 e) {
+
+} catch (Exception2 e) {
+
+} finally {
+
+}
+如果try-catch代码块中,存在return
+try -> catch -> finally -> finally.return -> catch.return -> try.return，没有相应的阶段忽略该阶段，任何阶段的return被执行，则整个语句块结束。
+异常链
+throws关键字
+throw关键字
+public void test() throws AException {
+  throw new AException('test error!');
+}
+
+字符串
+java中的字符串一旦创建,就不可改变,如果要创建一个可改变的字符串,需要使用StringBuffer和StringBuilder类
+通过字面量声明的相同字符串,其内存地址一致,其它方式生成的相同字符串,内存地址不一致
+String a = 'abc';
+String b = 'abc';
+a == b; // true
+String c = new String('abc');
+String d = new String('abc');
+c == d; // false
+
+StringBuffer是线程安全的，而StringBuilder没有实现线程安全功能，所以性能略高
+StringBuilder a = new StringBuilder('abc');
