@@ -206,10 +206,10 @@ public abstract class A { // 抽象类不能直接创建,定义抽象方法的�
 接口,定义类的规范,接口的内容为常量和抽象方法
 interface关键字,一般是public,不可以被private或protected修饰,因为其需要被继承
 接口可以继承多个父接口,和类不同
-abstract interface {name} extends [interface1, interface2, ...] {
+abstract interface {name} extends interface1, interface2, ... {
 }
 implements关键字,实现接口
-public class A extends B implements inter1, inter2, ... {
+public class A extends B implements interface1, interface2, ... {
 }
 可以通过匿名内部类实现接口
 
