@@ -257,3 +257,37 @@ c == d; // false
 
 StringBuffer是线程安全的，而StringBuilder没有实现线程安全功能，所以性能略高
 StringBuilder a = new StringBuilder('abc');
+
+包装类
+基本类型不具备对象的特性,可以通过包装类,使基本类型拥有对象的特性
+jdk1.5,引入了自动装箱拆箱机制
+byte Byte
+short Short
+int Integer
+long Long
+float Float
+double Double
+char Character
+boolean Boolean
+
+集合
+存储任意数量具有共同属性的对象,在类的内部,对数据进行组织
+集合长度可自动增长,数组的长度是固定的
+
+       --- List --- ArrayList
+       |
+Collection --- Queue --- LinkedList(链表)
+       |
+       --- Set --- HashSet
+
+Map --- HashMap(哈希表,存储值类型为Entry类<key, value>)
+
+泛型
+规定了某集合只能存储特定类型的对象,会在编译时,检查类型
+public List<ABC> a; // ABC为泛型约束的类型
+
+Comparable接口
+定义默认比较规则
+
+Comparator接口
+定义临时比较规则
