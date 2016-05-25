@@ -4,7 +4,7 @@ jdk (java development kit)
 
 *.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
 
-                            --- java ee 企业应用 (jsp, ejb, service
+                            --- java ee 企业应用 (jsp, ejb, service)
                             |
 基础核心 java se (api, jvm) -
                             |
