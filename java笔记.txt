@@ -4,11 +4,11 @@ jdk (java development kit)
 
 *.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
 
-                  --- java ee 企业应用 (jsp, ejb, service)
-                  |
+                            --- java ee 企业应用 (jsp, ejb, service
+                            |
 基础核心 java se (api, jvm) -
-                  |
-                  --- java me 移动设备，游戏，通信
+                            |
+                            --- java me 移动设备，游戏，通信
 
 windows配置环境变量
 JAVA_HOME（新增） jdk文件夹目录
@@ -18,11 +18,11 @@ CLASSPATH（新增） jdk，lib文件夹目录
 myEclipse，集成了一些优秀的插件
 
 java数据类型
-                  --- 整数类型 (byte, short, int(4), long)
-                  |
+                      --- 整数类型 (byte, short, int(4), long)
+                      |
            --- 数值型 -
-           |       |
-           |       --- 浮点类型 (float(4), double(8))
+           |          |
+           |          --- 浮点类型 (float(4), double(8))
 基本数据类型 --- 字符型 (char(2))
            |
            --- 布尔型 (boolean(1))
@@ -222,11 +222,11 @@ UML(unified modeling language)
 虚线,表示接口
 
 异常
-      - Error 硬伤,终结程序
-      |
+          --- Error 硬伤,终结程序
+          |
 Throwable -
-      |
-      - Exception 可处理
+          |
+          --- Exception 可处理
 try {
 
 } catch (Exception1 e) {
