@@ -18,20 +18,20 @@ CLASSPATH（新增） jdk，lib文件夹目录
 myEclipse，集成了一些优秀的插件
 
 java数据类型
-                      --- 整数类型 (byte, short, int(4), long)
-                      |
-           --- 数值型 -
-           |          |
-           |          --- 浮点类型 (float(4), double(8))
+                       --- 整数类型 (byte, short, int(4), long)
+                       |
+            --- 数值型 -
+            |          |
+            |          --- 浮点类型 (float(4), double(8))
 基本数据类型 --- 字符型 (char(2))
-           |
-           --- 布尔型 (boolean(1))
+            |
+            --- 布尔型 (boolean(1))
 
-           --- 类 (class), 如, 字符串(String)
-           |
+            --- 类 (class), 如, 字符串(String)
+            |
 引用数据类型 --- 接口 (interface)
-           |
-           --- 数组
+            |
+            --- 数组
 float型变量赋值时要加f，否则默认浮点数是double型
 
 自动类型转换，小内存类型可自动转为大内存类型
