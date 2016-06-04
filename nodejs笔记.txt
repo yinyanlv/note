@@ -114,33 +114,51 @@ Buffer模块是全局性，不需要require。
 小端编码（LE）：高位字节放在内存中的高位
 0x0A 0x0B 0x0C  =>  [0x0C, 0x0B, 0x0A]
 
+初始化buffer对象
+var buffer1 = new Buffer(['0x5e', '0x5e']);
+var buffer2 = new Buffer('nodejs', 'utf8'); // 常见的编码方式，utf8(nodejs默认),ascii, utf16le, base64, binary, hex ...
+var buffer3 = new Buffer(16);
+buffer3.write('this is buffer', 0, 'utf8');
+
+属性
+length // buffer对象的长度，与实际大小无关，因为该buffer对象，可能未被完全使用
+
+判断是否是Buffer对象
+Buffer.isBuffer(buffer);
+
+确定缓冲区实际长度
+Buffer.byteLength(string, [encoding]);
+
 写入缓冲区
-buffer.write(string, [offset], [length], [encoding]);
+buffer.write(string, [offset], [length], [encoding]); // 返回一个数字
 buffer[offset] = value;
-buffer.fill(value, [offset], [end]);
+buffer.fill(value, [offset], [end]); // 不包括end
 buffer.writeInt8(value, offset, [noAssert]);
 buffer.writeInt16LE(value, offset, [noAssert]);
 buffer.writeInt16BE(value, offset, [noAssert]);
+buffer.writeInt32LE(value, offset, [noAssert]);
+buffer.writeInt32BE(value, offset, [noAssert]);
+// 还支持UInt, float, double
 
 从缓冲区读取
-buffer.toString([encoding], [start], [end]);
-stringDecoder.write(buffer);  //nodejs提供StringDecoder对象，读取缓冲区数据，返回缓冲区的解码字符串版本
+buffer.toString([encoding], [start], [end]); // 不包括end
+stringDecoder.write(buffer);  // nodejs提供StringDecoder对象，读取缓冲区数据，返回缓冲区的解码字符串版本
 buffer[offset]
 buffer.readInt8(offset, [noAssert]);
 buffer.readInt16LE(offset, [noAssert]);
 buffer.readInt16BE(offset, [noAssert]);
-
-确定缓冲区长度
-Buffer.byteLength(string, [encoding]);
+buffer.readInt32LE(offset, [noAssert]);
+buffer.readInt32BE(offset, [noAssert]);
+// 还支持UInt, float, double
 
 复制缓冲区
-buffer.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd]);  //[sourceEnd]不包含
+buffer.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd]);  // 不包括sourceEnd，没有直接拷贝副本的方法，只能先新建一个等长的buffer对象，然后在原buffer对象上调用copy()方法
 
 对缓冲区切片
-buffer.slice([start], [end]);  //切片与副本不同，切片指向原始的buffer对象
+buffer.slice([start], [end]);  // 不包括end，切片与副本不同，切片指向原始的buffer对象
 
 拼接缓冲区
-Buffer.concat(list, [totalLength]);  //[totalLength]定义缓冲区的最大字节数，指定totalLength执行更快
+Buffer.concat(list, [totalLength]);  // totalLength，定义缓冲区的最大字节数，指定totalLength执行更快，但比直接拼接字符串慢，Buffer的强项在于操作字节流
 
 Stream模块传送数据
 Stream模块需要require
