@@ -848,19 +848,19 @@ disconnect()
 os模块
 nodejs的os模块，可以使你获取有关操作系统的信息，如操作系统类型和版本、平台体系结构，还能获取编程信息，如可用内存、临时文件夹位置，以及行尾字符。
 os模块的方法
-tepdir();
+type(); // 当前操作系统类型，首字母大写，如：Windows_NT(一般认为windows7是NT系统的延续)、Linux
+platform(); // 当前操作系统平台，如：win32、linux
+tmpdir(); // 当前操作系统默认的临时文件目录
+hostname(); // 当前操作系统主机名，如：'bugong-pc'
+arch(); // 当前操作系统cpu指令集架构，如：'ia32'
+release(); // 当前操作系统的发行版本，如'6.1.7601'
+uptime(); // 当前操作系统自开机后的运行时间，以秒为单位
+totalmem(); // 当前操作系统的内存总量，以字节(byte)为单位
+freemem();  // 当前操作系统的空闲内存，以字节为单位
+cpus(); // 当前操作系统cpu内核信息，返回一个数组，数组中的每项包含对应cpu的详细信息
+networkInterfaces(); // 当前操作系统网络接口信息
 endianness();
-hostname();
-type();
-platform();
-arch();
-release();
-uptime();
 loadavg();
-totalmem();
-freemen();
-cpus();
-networkInterfaces();
 EOL
 
 util模块
