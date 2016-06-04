@@ -714,7 +714,7 @@ SIGSTOP
 process模块上被调用来影响进程执行的方法
 abort();
 kill(pid, [signal]); // 与unix和linux系统命令kill不同，该方法只是一个信号发送器，且发送信号的目的不仅仅是用来杀死目标进程
-exit([code]); // 真正的杀死当前进程，code并非pid，可自定义，如：0
+exit([code]); // 真正的杀死当前进程，code并非pid，可自定义，如：0，在nodejs中正常退出时退出码为0，非正常退出时退出码均不为0，一般为1~3的数字
 nextTick(callback);
 
 process模块获取信息的属性和方法
@@ -753,8 +753,8 @@ child_process模块提供了一个ChildProcess的新类，它作为可以从父�
 ChildProcess对象上的事件
 message
 error
-exit
-close
+exit // 子进程的标准输入、输出流可能仍为开启状态
+close // 子进程的所有标准输入、输出流被终止时触发，因为多进程时有时候会共享同一个标准输入、输出流
 disconnect
 
 ChildProcess对象上的方法
@@ -766,26 +766,14 @@ ChildProcess对象上的属性
 stdin
 stdout
 stderr
-pid
+pid // 当前子进程的id
 connected
 
-使用child_process.exec()在另一进程上执行一个系统命令,返回一个ChildProcess对象。使用了子shell，几乎可以执行任何可执行的东西。
-var childProcess = child_process.exec(command, [options], callback);  //callback3个参数,error,stdout,stderr
+spawn()是最原始的创建子进程的方法，exec(),execFile(),fork()都是通过进一步封装spawn()实现的
 
-使用child_process.execFile()在另一个进程上执行一个可执行文件，返回一个ChildProcess对象。未使用子shell，执行的命令必须是一个二进制的可执行文件。
-var childProcess = child_process.execFile(file, args, options, callback);  //callback3个参数,error,stdout,stderr
-
-exec()和execFile()中options可配置项
-cwd
-env
-encoding
-maxBuffer
-timeout
-killSignal
-
-使用chile_process.spawn()在另一个nodejs实例中产生一个进程,返回一个ChildProcess对象。  //spawn,大量生产
+使用chile_process.spawn()在另一个nodejs实例中产生一个进程,返回一个ChildProcess对象  // spawn,大量生产
 spawn()和exec()/execFile()的主要区别是。产生的进程中的stdio可以进行配置，并且stdout和stderr都是父进程中的Readable流。这意味着exec()/execFile()必须先执行完成才能读取缓冲区输出。但是一旦一个spawn()进程的输出数据已被写入，你就可以读出它。
-var childProcess = child_process.spawn(command, [args], [options]);  //无callback
+var childProcess = child_process.spawn(command, [args], [options]);  // 无callback，args为该命令参数数组，如：child_process.spawn('ls', ['-a']);
 spawn()中options可配置项
 cwd
 env
@@ -794,15 +782,30 @@ uid
 gid
 stdio
 
-使用子派生child_process.fork()，在一个单独的处理器上运行另一个v8引擎实例中的nodejs模块代码。每个v8实例需要大约10MB的内存。不能从创建比系统CPU数更多的进程来获得性能收益，返回一个ChildProcess对象。
-不同于spawn(),在派生时，不能为子进程配置stdio。相反，应使用ChildProcess对象中的send()机制，在父进程和子进程之间通信。
-var childProcess = child_process.fork(modulePath, [args], [options]);    //无callback
+使用child_process.exec()在另一进程上执行一个系统命令,返回一个ChildProcess对象。使用了子shell，几乎可以执行任何可执行的东西
+var childProcess = child_process.exec(command, [options], callback);  // command，可以直接将该命令的参数放置其中，callback，3个参数,error,stdout,stderr，error.code子进程的退出码，error.signal结束子进程的信号名
+
+使用child_process.execFile()在另一个进程上执行一个可执行文件，返回一个ChildProcess对象。未使用子shell，执行的文件必须是一个二进制的可执行文件
+var childProcess = child_process.execFile(file, args, options, callback);  // file，二进制可执行文件，如：'／bin/ls'，args，类似spawn()，callback，3个参数,error,stdout,stderr
+
+exec()和execFile()中options可配置项
+cwd
+env
+encoding
+maxBuffer // 如：200 * 1024
+timeout
+killSignal // 如：'SIGTERM'
+
+使用子派生child_process.fork()，在一个单独的处理器上启动另一个v8引擎实例来运行nodejs模块代码。每个v8实例需要大约10MB的内存和30ms的启动时间。不能从创建比系统CPU数更多的进程来获得性能收益，返回一个ChildProcess对象
+不同于spawn(),在派生时，不能为子进程配置stdio。fork()方法，会在主进程和子进程之间直接建立一个IPC管道，应使用ChildProcess对象中的send()方法，在父进程和子进程之间通信。send()方法是同步方法
+var childProcess = child_process.fork(modulePath, [args], [options]);    // modulePath，只能是javascript代码文件，无callback
+
 fork()中options可配置项
 cwd
 env
 encoding
 execPath
-silent
+silent // 缺省时，所派生的node进程的stdout、stderr会关联到父进程，可将silent设置为true，更改该行为
 
 进程集群(可通过child_process.fork()手动实现)
 cluster模块  //cluster 群
