@@ -703,31 +703,32 @@ exit([code]);
 kill(pid, [signal]);
 nextTick(callback);
 
-process模块获取信息的方法和属性
-version
-versions
-config
-argv
-execpath
-exexArgv
-chdir(directory)
-cwd()
-env
-pid
-title
-arch
-platform
-memoryUsage()
+process模块获取信息的属性和方法
+pid // 获取当前进程id
+title // 获取当前进程名称，如：'/usr/local/bin/node'
+version // 获取nodejs版本号，如：'v4.2.2'
+versions // 获取nodejs各功能模块版本属性，如：{node: '4.2.2', v8: '3.14.5.9', zlib: '1.2.3', ...}
+config // 获取nodejs配置信息，即当前nodejs实例各功能模块的启用与配置情况
+execPath // 获取运行当前进程的nodejs可执行文件的绝对路径，如：'/usr/local/bin/node'
+execArgv // 获取当前进程的命令行详细参数数组
+argv // 获取当前进程的命令行参数数组
+platform // 获取当前系统平台，如：'linux'或'win32'...
+arch // 获取当前cpu指令集架构，如：'ia32'，ia32(Intel Architecture,32-bit,英特尔32位元架构)，architecture（体系结构）
+env // 获取当前shell的环境变量参数，该信息为系统级别，如：PATH,LANGUAGE,OS等
 maxTickDepath
-uptime()
-hrtime()
-gitgid()
-setgid(id)
-gituid()
-setuid(id)
-getgroups()
-setgroups(groups)
-initgroups(user, extra_group)
+
+cwd(); // 获取应用程序当前目录　
+chdir(directoryName); // 改变应用程序目录，directoryName必须是完整路径，如：'/home/test'
+memoryUsage();
+uptime();
+hrtime();
+gitgid();
+setgid(id);
+gituid();
+setuid(id);
+getgroups();
+setgroups(groups);
+initgroups(user, extra_group);
 
 
 子进程
