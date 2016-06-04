@@ -681,6 +681,20 @@ process.stdin.on('data', function (data) {
 	console.log('hi:' + data);
 });
 process模块的stdout和stderr属性是可以相应处理的Writable流。
+实现标准输出流：
+process.stdout.write('hello nodejs! \n');
+实现标准错误流：
+process.stderr.write('hello, this is a error! \n');
+实现标准输入流：
+process.stdin.setEncoding('utf8');
+process.stdin.on('readable', function () {
+	let chunk = process.stdin.read();
+	if (chunk !== null) {
+		// TODO
+	}
+});
+process.stdin.on('end', function () { // 用户可以通过ctrl + d，触发end事件，结束控制台输入流
+});
 
 进程信号，process模块的一个特点是，它允许你注册监听器来处理操作系统发送给一个进程的信号。
 process.on('SIGBREAK', function () {
@@ -699,8 +713,8 @@ SIGSTOP
 
 process模块上被调用来影响进程执行的方法
 abort();
-exit([code]);
-kill(pid, [signal]);
+kill(pid, [signal]); // 与unix和linux系统命令kill不同，该方法只是一个信号发送器，且发送信号的目的不仅仅是用来杀死目标进程
+exit([code]); // 真正的杀死当前进程，code并非pid可自定义，如：0
 nextTick(callback);
 
 process模块获取信息的属性和方法
@@ -729,7 +743,6 @@ setuid(id);
 getgroups();
 setgroups(groups);
 initgroups(user, extra_group);
-
 
 子进程
 要使nodejs应用程序能利用服务器多个处理器的优势，就需要把工作分包给子进程。child_process模块使你可以在其他进程上产生、派生并执行工作。子进程不能直接访问彼此或父进程中的全局内存。
