@@ -1,0 +1,37 @@
+node-mysql模块
+
+连接mysql数据库
+var connection = mysql.createConnection({
+  host: 'localhost',
+  port: 3306,
+  user: 'root',
+  password: '111111',
+  database: 'test'
+});
+connection.connect(function (err) {});
+
+释放数据库连接
+connection.release();
+
+查询
+connection.query('select * from table', function (err, rows, fields) {});
+
+插入
+connection.query('insert into table (id, name, pwd) values (7, "test", "111111")', function (err, insertInfo) { // insertInfo，插入操作返回的信息
+});
+
+删除
+connection.query('delete from table where id=7', function (err, deleteInfo) { // deleteInfo，删除操作返回的信息
+});
+
+更新
+connection.query('update table set pwd="222222" where pwd="111111"', function (err, updateInfo) { // updateInfo，更新操作返回的信息
+});
+
+操作mysql数据库连接池
+数据库连接池，负责分配、管理和释放数据库连接，将数据库连接作为对象存储在内存中，以便重复利用数据库连接
+pool.getConnection(function () { // 建立数据库连接池
+  connection.query('...', function (err, rows) {
+    connection.release();
+  });
+});
