@@ -22,12 +22,12 @@ _id字段名为数据库保留字段名，由以下几部分组成：
 
 mongodb的数据类型
 mongodb为每一种数据类型分配了从1到255的整数id号。
-1 double  
+1 double
 2 string
 3 object
 4 array
 5 binary data  二进制数据
-7 object id  对象id 
+7 object id  对象id
 8 boolean
 9 date
 10 null
@@ -35,8 +35,8 @@ mongodb为每一种数据类型分配了从1到255的整数id号。
 13 javascript
 14 symbol
 15 javascript (with scope)  javascript(带作用域)
-16 32-bit integer  
-17 timestamp  
+16 32-bit integer
+17 timestamp
 18 64-bit integer
 255 min key 最小键
 127 max key 最大键
@@ -219,7 +219,7 @@ show collections
 db.createCollection(name, [options]);
 options可配置项
 capped  如果为true，则表示该集合是一个封顶集合，默认false
-autoIndexID  默认true  
+autoIndexID  默认true
 size
 max
 
@@ -276,7 +276,7 @@ readPreference
 ssl
 poolSize
 socketOptions
-auto_reconnect
+auto_reconnect // 自动重连
 
 Client对象连接到mongodb
 通过MongoClient对象连接到mongodb，首先要创建MongoClient对象的一个实例。
@@ -293,7 +293,7 @@ bufferMaxEntries  默认值-1，没有限制
 var client = new MongoClient(new Server('localhost', 27017, {poolSize: 5}), {retryMilliSeconds: 500});
 打开到mongodb数据库的连接
 client.open(function (err, client) {//如果连接成功，client表示MongoClient对象
-	
+
 });
 连接到特定的数据库，需要在client对象上调用db(database)方法，来创建数据库实例。
 var db = client.db('test');
@@ -307,7 +307,7 @@ client.close();
 通过一个连接字符串连接到mongodb
 通过调用MongoClient类的connect()方法，不需要实例。
 MongoClient.connect(connString, options, function (err, db) {//Db对象的实例作为第二个参数，关闭连接可在Db对象上调用db.close()
-	
+
 });
 connString字符串的语法:
 mongodb://username:password@host:port/database?options
@@ -326,7 +326,7 @@ close([forceClose], callback);
 admin();
 collectionInfo([name], callback);
 collectionsNames(callback);
-collection(name, [options], callback);
+collection(name, [options], callback); // options，{safe: true}，保证操作成功后执行回调函数
 collections(callback);
 logout(callback);
 authenticate(username, password, callback);
@@ -340,7 +340,7 @@ dropDatabase(dbName, callback);
 Admin对象
 Admin对象专门代表到admin数据库的连接，并提供不包含在Db对象的功能。让你能够ping mongodb服务器、在admin数据库中添加和删除用户、列出数据库等
 两种方法获得Admin对象
-1、var adminDb = db.admin(); 
+1、var adminDb = db.admin();
 2、var adminDb = new Admin(db);
 Admin对象上的方法
 serverStatus(callback);
@@ -357,10 +357,10 @@ Collection对象代表了mongodb的集合。可以使用Collection对象访问�
 var collection = db.collection();
 var collection = new Collection(db, collectionName);
 db.createColleciton(collectionName, function (err, collection) {
-	
+
 });
 Collection对象上的方法
-insert(docs, [callback]);
+insert(docs, [options], [callback]); // options，{safe: true}，保证操作成功后执行回调函数，如果不设置该项，插入出错后无反馈提示，并且仍可能会执行回调函数
 remove([query], [options], [callback]);
 rename(newName, callback);
 save([doc], [options], [callback]);
@@ -399,16 +399,16 @@ db.dropDatebase();
 
 获取服务器状态
 adminDb.serverStatus(function (err, status) {
-	
+
 });
 
 从nodejs访问和操作mongodb集合
 列出集合
 db.collectionNames(function (err, collectionNames) {
-	
+
 });
 db.collections(function (err, collectionList) {
-	
+
 });
 
 创建集合
@@ -421,7 +421,7 @@ db.createCollection('name', callback);
 
 获取集合信息
 coll.status(function (err, status) {
-	
+
 });
 
 从nodejs操作mongodb文档
@@ -550,29 +550,29 @@ coll.count([query], [options], callback);
 有3种方法
 按大小限制结果
 coll.find(query, {limit: 5}, function () {  //在options参数使用配置limit属性，限制返回的数量
-	
+
 });
 限制对象返回的字段
 使用options对象中fields选项，限制返回的字段，0表示排除，1表示包括
 coll.find(query, {fields: {'name': 0, 'type': 1}}, function () {
-	
+
 });
 对结果进行分页
 使用options对象的limit和skip选项，实现文档的分页。
 coll.find(query, {limit: 10, skip: 10}, function () {  //skip值是一个动态的值，表示要跳过的文档数
-	
+
 });
 
 对结果集进行排序
 使用options对象的sort选项，实现文档的排序
-coll.find(query, {sort: [[name, 1], [value, -1]]}, function () {  //先对name字段升序排序，再对value字段降序排序  
-	
+coll.find(query, {sort: [[name, 1], [value, -1]]}, function () {  //先对name字段升序排序，再对value字段降序排序
+
 });
 
 查询不同的字段值
 获得一组文档中单个字段所包含的不同值的清单
 coll.distinct(key, [query], [options], function () {  //key可以是字段名的字符串值。也可以使用句点如stats.name来指定子文档中的字段
-	
+
 });
 
 对结果进行分组
@@ -612,7 +612,7 @@ $sum
 可用在聚合表达式的字符串和算术运算符(不限制于$group)
 $add
 $divide  除
-$mod  
+$mod
 $multiply  乘
 $subtract  减
 $concat
@@ -644,7 +644,7 @@ _id 默认
 
 给索引设置特定的属性来定义mongodb如何处理索引
 unique  不重复
-sparse  不包含多余字段 
+sparse  不包含多余字段
 TTL
 
 可以利用mongodb shell、mongodb nodejs原生客户端或mongoose创建索引
@@ -653,7 +653,7 @@ db.myCollection.ensureIndex({name: 1}, {background: true, unique: true, sparse: 
 background选项指定所创建的索引是应该发生在shell的前台还是后台。在前台运行完成更快，但占用更多的系统资源。
 2、原生驱动程序创建索引
 db.ensureIndex('myCollection', {name: 1}, {background: true, unique: true, sparse: true}, function () {
-	
+
 });
 3、利用mongoose中的schema对象创建索引
 var schema = new Schema({name: {type: String, index: true, unique: true, sparse: true}});
@@ -663,7 +663,7 @@ scheme.schema.path('some.path').index({unique: true, sparse: true});
 使用封顶集合
 原生驱动程序
 db.createCollection('log', {capped: true, size: 5222222, max: 5000}, function (err, collection) {
-	
+
 });
 mongoose中，利用schema对象
 var schema = new Schema({name: String, value: Number}, {capped: true, size: 5222222, max: 5000});
@@ -674,7 +674,7 @@ var schema = new Schema({name: String, value: Number}, {capped: true, size: 5222
 辅助(secondary)服务器  客户端可以从辅助服务器读取，但不能写入。与主服务器同步。
 仲裁(arbiter)服务器  可定义主服务器，不具有数据副本。
 奇数台服务器，更容易选出主服务器。
-部署一个副本集：p303  
+部署一个副本集：p303
 
 实施分片
 分片时跨越在不同机器上运行的多个mongodb服务器存储文档的过程。添加越来越多的服务器，应用程序就可以支持越大的文档数量。
@@ -737,4 +737,3 @@ GridStore.unlink(db, names, callback);
 修复mongodb
 
 备份mongodb
-
