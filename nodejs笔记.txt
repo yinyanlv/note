@@ -61,7 +61,7 @@ time
 timeEnd
 trace  // 把代码当前位置的栈跟踪信息写到stderr，如果该方法传入参数，那么该参数便作为该栈跟踪信息的标签名，如：trace: label，底层调用assert.ok();
 assert  // 断言，当断言结果为false时，把消息和栈跟踪信息写到控制台，console.assert(expression, [message], ...); message，消息信息
-格式化，%s, %d, %j(json)
+格式化，%s, %d, %j(json)，%%(单独一个百分号%，不会消耗一个参数)
 
 readline模块
 读取命令行输入信息
@@ -912,33 +912,33 @@ EOL
 util模块
 nodejs的util模块，是一个工具库，提供了如格式化字符串、将对象转换为字符串、检查对象类型、输出流的同步写入，以及对象继承的增强。
 
-格式化字符串
-util.format(formatStr, [...]);  //foramatStr中，受支持的占位符。%s,%d,%j(json字符串),%
-
 检测对象类型
 util.isArray(obj);
 util.isRegExp(obj);
 util.isDate(obj);
 util.isError(obj);
 
+从其它对象继承功能
+util.inherits(constructor, superConstructor);
+可以通过constructor.super_属性访问superConstructor
+
+将JavaScript对象转换成字符串
+util.inspect(object, [options]);  // inspect,检查
+options可配置项
+showHidden  // 默认false
+depth  // 默认2
+colors  // 默认false
+customInspect  // 默认为true，设置为false时，被检查的对象的任何自定义inspect()函数都不会被调用
+
+格式化字符串
+util.format(formatStr, [...]);  // foramatStr中，受支持的占位符。%s,%d,%j(json字符串),%%
+
 同步写入输出流，同步写数据到stdout和stderr，阻塞进程，直到写操作完成。
+util.log(string);
 util.debug(string);
 util.error([...]);
 util.puts([...]);
 util.print([...]);
-util.log(string);
-
-将JavaScript对象转换成字符串
-util.inspect(object, [options]);  //inspect,检查
-options可配置项
-showHidden  //默认false
-depth  //默认2
-colors  //默认false
-customInspect  //默认为true，设置为false时，被检查的对象的任何自定义inspect()函数都不会被调用
-
-从其它对象继承功能
-util.inherits(constructor, superConstructor);
-可以通过constructor.super_属性访问superConstructor
 
 dns模块
 nodejs的dns模块，使得nodejs应用程序可以解析域名、查找域、或做反向查找
