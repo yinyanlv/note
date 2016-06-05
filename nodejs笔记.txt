@@ -44,13 +44,31 @@ engines  //此包可使用的node的版本
 console模块
 log
 info
-error
+error // 可通过命令，重定向标准错误输出流到文件，如：node test.js > error.log
 warn
-dir  //把一个javascript对象的字符串表示形式写到控制台
+dir  // 把一个javascript对象的字符串表示形式写到控制台，底层调用util.inspect()方法
 time
 timeEnd
-trace  //把代码当前位置的栈跟踪信息写到stderr
-assert  //断言，把消息和栈跟踪信息写到控制台
+trace  // 把代码当前位置的栈跟踪信息写到stderr，如果该方法传入参数，那么该参数便作为该栈跟踪信息的标签名，如：trace: label，底层调用assert.ok();
+assert  // 断言，当断言结果为false时，把消息和栈跟踪信息写到控制台，console.assert(expression, [message], ...); message，消息信息
+格式化，%s, %d, %j(json)
+
+readline模块
+读取命令行输入信息
+var rl = readline.createInterface(options);
+options配置：
+input // 要监听的可读流，必需
+output // 要写入readline的可写流，必需
+completer // 用于tab自动补全的函数
+terminal // 为true时，input和output流会像TTY(计算机终端设备)一样，并且经由ANSI／VT100转码
+
+rl.question('your question?', callback); // 接受到用户输入后，触发callback
+rl.close(); // 结束readline，返回到系统上下文环境
+rl.write(data, [key]); // key，代表模拟的组合按键，当终端是一个TTY时可用。rl.write(null, {ctrl: true, name: 'u'}); 模拟ctrl+u键
+rl.setPrompt(prompt, length); // prompt，定义命令行提示符，length，定义命令行提示符的长度
+rl.prompt([preserveCursor]); // 模拟控制台，等待用户输入，实现在接受完一次用户输入后，再次返回模拟控制台命令行，等待用户下一次输入，否则，不会等待下一次输入，直接失去命令行界面，preserveCursor设置为true时，用来阻止命令行提示符的光标被重置为0
+rl.on('line', callback); // readline模块line事件
+rl.on('close', callback); // readline模块close事件
 
 nodejs线程模型
 事件循环线程和线程池中的线程（执行阻塞型io功能）
