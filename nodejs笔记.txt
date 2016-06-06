@@ -297,9 +297,9 @@ fs模块，几乎所有功能，都有两种形式可供选择，同步和异步
 异步调用，自动处理异常。同步调用中，处理异常，必须使用try/catch块
 
 打开和关闭文件
-fs.open(path, flags, [mode], callback);  //flags指定打开文件的模式，mode设置文件访问模式，默认为0666，表示可读且可写。
+fs.open(path, flags, [mode], callback);  // flags指定打开文件的模式，mode设置文件访问模式，默认为0666，表示可读且可写。callback第二个参数为fd
 fs.openSync(path, flags, [mode]);
-fs.close(fd, callback);  //fd:文件描述符
+fs.close(fd, callback);  // fd:文件描述符
 fs.closeSync(fd);
 定义文件如何打开的标志(flags)
 r  读
@@ -321,11 +321,11 @@ ax+  读取，追加，如果路径存在则打开失败
 fs.writeFile(path, data, [options], callback);
 fs.writeFileSync(path, data, [options]);
 2、同步文件写入  多次写入
-fs.writeSync(fd, data, offset, length, position);  //必须先使用openSync()获得文件描述符fd,最后使用closeSync()
+fs.writeSync(fd, data, offset, length, position);  // 必须先使用openSync()获得文件描述符fd,最后使用closeSync()
 3、异步文件写入  多次写入
-fs.write(fd, data, offset, length, position, callback);  //必须先使用open()获得文件描述符fd,callback接受error和bytes(写入的字节数)两个参数,最后使用close()
+fs.write(fd, data, offset, length, position, callback);  // 必须先使用open()获得文件描述符fd,callback接受error和bytes(写入的字节数)两个参数,最后使用close()
 4、流式文件写入  写入大量数据
-fs.createWriteStream(path, [options]);  //返回一个writable流，手动调用write()方法和end()方法写入
+fs.createWriteStream(path, [options]);  // 返回一个writable流，手动调用write()方法和end()方法写入
 
 读取文件
 4种方式
@@ -333,56 +333,91 @@ fs.createWriteStream(path, [options]);  //返回一个writable流，手动调用
 fs.readFile(path, [options], callback);
 fs.readFileSync(path, [options]);
 2、同步文件读取  多次读取
-fs.readSync(fd, buffer, offset, length, position);  //借助buffer实现。必须先使用openSync()获得文件描述符fd,最后使用closeSync()
+fs.readSync(fd, buffer, offset, length, position);  // 借助buffer实现。必须先使用openSync()获得文件描述符fd,最后使用closeSync()
 3、异步文件读取  多次读取
-fs.read(fd, buffer, offset, length, position, callback);  //借助buffer实现。必须先使用open()获得文件描述符fd,callback接受error、bytes(写入的字节数)和buffer(读取的数据块)三个参数,最后使用close()
+fs.read(fd, buffer, offset, length, position, callback);  // 借助buffer实现。必须先使用open()获得文件描述符fd,callback接受error、bytes(写入的字节数)和buffer(读取的数据块)三个参数,最后使用close()
 4、流式文件读取  读取大量数据
-fs.createReadStream(path, [options]);  //返回一个readable流，无需手动调用read()方法
+fs.createReadStream(path, [options]);  // 返回一个readable流，无需手动调用read()方法
 
 验证路径的存在性
-fs.exists(path, callback);  //callback第一个参数返回true或false
+fs.exists(path, callback);  // callback第一个参数返回true或false
 fs.existsSync(path);
 
 获取文件信息
-fs.stat(path, callback);  //callback第二参数返回一个Stats对象
+fs.stat(path, callback);  // callback第二参数返回一个Stats对象
 fs.statSync(path);
+fs.fstat(fd, callback);
+fs.fstatSync(fd);
 Stats对象的属性和方法
 isFile()
 isDirectory()
 isSocket()
+uid
+gid
 dev  文件所在的设备ID
 mode  文件的访问模式
 size  指定文件字节数
-blkSize  指定用于存储该文件的块大小，字节为单位
+blksize  指定用于存储该文件的块大小，字节为单位
 blocks  指定文件在磁盘上占用的块的数目
 atime  上次访问文件的时间
 mtime  文件最后修改的时间
 ctime  文件的创建时间
+birthtime  文件的创建时间
 
 列出文件
-fs.readdir(path, callback);
+fs.readdir(path, callback); // 返回一个数组
 fs.readdirSync(path);
 
-删除文件
-fs.unlink(path, callback);  //第一个参数为err对象
-fs.unlinkSync(path);
-
-截断文件
-fs.truncate(path, len, callback);  //len:代表字节，callback,返回true或false，常用于截断不重要的文件，如日志
-fs.truncateSync(path, len);
-
-建立和删除目录
-fs.mkdir(path, [mode], callback);  //callback,返回true或false
+创建和删除目录
+fs.mkdir(path, [mode], callback);  // callback,返回true或false
 fs.mkdirSync(path, [mode]);
-fs.rmdir(path, callback);  //callback,返回true或false
+fs.rmdir(path, callback);  // callback,返回true或false
 fs.rmdirSync(path);
 
 重命名文件和目录
-fs.rename(oldPath, newPath, callback);  //callback,返回true或false
+fs.rename(oldPath, newPath, callback);  // callback,第一个参数为error，返回true或false
 fs.renameSync(oldPath, newPath);
 
+创建与删除文件硬链接(有创建和删除文件的功能)
+链接是对文件的引用，硬链接只能引用同一文件系统中的文件，当移动或删除原始文件时，硬链接不会被破坏，因为它引用的是文件的物理数据(创建副本)而不是文件在文件结构中的位置
+fs.link(srcPath, targetPath, callback);
+fs.linkSync(srcPath, targetPath);
+fs.unlink(srcPath, targetPath, callback);  // 第一个参数为err对象
+fs.unlinkSync(srcPath, targetPath);
+
+创建文件符号链接
+符号链接(软链接)，它是一类特殊的文件，该文件包含了另一个文件的路径名(绝对路径或相对路径)，可以链接到不同文件系统的文件，实际上并未真正创建文件，只是创建了一个快捷方式
+fs.symlink(srcPath, targetPath, callback);
+fs.symlinkSync(srcPath, targetPath);
+
+读取文件符号链接
+fs.readlink(targetPath, callback); // 返回一个原始文件的路径字符串，该方法只能读取符号链接文件，读取正常的文件会报错
+fs.readlinkSync(targetPath);
+
+相对路径转绝对路径
+fs.realpath(path, optionObj, callback); // optionObj，如：{'/bugong': '/home/bugong'}，返回一个绝对路径
+fs.realpathSync(path, optionObj);
+
+截取文件内容
+fs.truncate(path, len, callback);  // len，代表字节，callback，返回true或false，常用于截断不重要的文件，如日志
+fs.truncateSync(path, len);
+fs.ftruncate(fd, len, callback); // fd，文件描述符
+fs.ftruncateSync(fd, len); // fd，文件描述符
+
+更改文件所有权
+fs.chown(path, uid, gid, callback);
+fs.chownSync(path, uid, gid);
+fs.fchown(fd, uid, gid, callback);
+fs.fchownSync(fd, uid, gid);
+
+更改文件权限
+fs.chmod(path, mode, callback); // mode，权限码，如，777，一般是000
+fs.chmodSync(path, mode);
+fs.fchmod(fd, mode, callback);
+fs.fchmodeSync(fd, mode);
+
 监视文件的更改
-fs.watchFile(path, [options], callback);  //options包含两个属性persistent(持续，true或false)和interval(单位ms)
+fs.watchFile(path, [options], callback);  // options包含两个属性persistent(持续，true或false)和interval(单位ms)
 
 在nodejs中实现http服务
 因为http模块，相当低层次，所以更可能使用的地方是实现供应用程序使用的后端web服务。
@@ -425,7 +460,6 @@ options参数，具有一个maxKeys属性，限制生成的对象可以包含的
 
 querystring模块的stringify方法将JavaScript对象转换成一个查询字符串
 querystring.stringify(obj, [sep], [eq]);
-
 
 请求、响应和服务器对象
 http.ClientRequest对象
@@ -565,7 +599,6 @@ var options = {
 	key: fs.readFileSync('test/keys/server.pem'),
 	cert: fs.readFileSync('test/keys/server.crt')
 };
-
 
 nodejs实现套接字服务
 套接字允许一个进程通过一个ip地址和端口与另一个进程实现通信。nodejs的net模块，可创建套接字服务器，和连接到套接字服务器的客户端。nodejs的tls模块，可实现TLS套接字服务器和客户端。
