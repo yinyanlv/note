@@ -318,26 +318,30 @@ ax+  读取，追加，如果路径存在则打开失败
 写入文件
 4种方式
 1、简单单个文件写入
-fs.writeFile(path, data, [options], callback);
+fs.writeFile(path, data, [options], callback); // data，可以是字符串，options，如：'utf-8'
 fs.writeFileSync(path, data, [options]);
 2、同步文件写入  多次写入
-fs.writeSync(fd, data, offset, length, position);  // 必须先使用openSync()获得文件描述符fd,最后使用closeSync()
+fs.writeSync(fd, buffer, offset, length, position);  // 借助buffer实现，必须先使用openSync()获得文件描述符fd，最后使用closeSync()
 3、异步文件写入  多次写入
-fs.write(fd, data, offset, length, position, callback);  // 必须先使用open()获得文件描述符fd,callback接受error和bytes(写入的字节数)两个参数,最后使用close()
+fs.write(fd, buffer, offset, length, position, callback);  // 必须先使用open()获得文件描述符fd,callback接受error和bytes(写入的字节数)两个参数,最后使用close()
 4、流式文件写入  写入大量数据
 fs.createWriteStream(path, [options]);  // 返回一个writable流，手动调用write()方法和end()方法写入
 
 读取文件
 4种方式
 1、简单单个文件读取
-fs.readFile(path, [options], callback);
+fs.readFile(path, [options], callback); // options，如：'utf-8'
 fs.readFileSync(path, [options]);
 2、同步文件读取  多次读取
-fs.readSync(fd, buffer, offset, length, position);  // 借助buffer实现。必须先使用openSync()获得文件描述符fd,最后使用closeSync()
+fs.readSync(fd, buffer, offset, length, position);  // 借助buffer实现。offset，写入buffer的偏移量，position，文件读取的起始位置，必须先使用openSync()获得文件描述符fd,最后使用closeSync()
 3、异步文件读取  多次读取
 fs.read(fd, buffer, offset, length, position, callback);  // 借助buffer实现。必须先使用open()获得文件描述符fd,callback接受error、bytes(写入的字节数)和buffer(读取的数据块)三个参数,最后使用close()
 4、流式文件读取  读取大量数据
 fs.createReadStream(path, [options]);  // 返回一个readable流，无需手动调用read()方法
+
+追加写入文件
+fs.appendFile(path, data, [options], callback); // data，可以是字符串
+fs.appendFileSync(path, data, [options]);
 
 验证路径的存在性
 fs.exists(path, callback);  // callback第一个参数返回true或false
@@ -417,7 +421,9 @@ fs.fchmod(fd, mode, callback);
 fs.fchmodeSync(fd, mode);
 
 监视文件的更改
-fs.watchFile(path, [options], callback);  // options包含两个属性persistent(持续，true或false)和interval(单位ms)
+fs.watch()和fs.watchFile()并不完全的跨平台，且在某些情况下是不可用的
+fs.watch(path, [options], callback); // options包含两个属性persistent(持续，true或false)和interval(单位ms)，callback参数，event，filename
+fs.watchFile(path, [options], callback);  // options包含两个属性persistent(持续，true或false)和interval(单位ms)，callback参数，curFile，prevFile
 
 在nodejs中实现http服务
 因为http模块，相当低层次，所以更可能使用的地方是实现供应用程序使用的后端web服务。
@@ -497,7 +503,6 @@ abort();
 setTimeout(timeout, [callback]);
 setNoDelay([noDelay]);
 setSocketKeepAlive([enable], [initialDelay]);
-
 
 http.ServerResponse对象
 当http服务器，接收到一个request请求时，会创建一个ServerResponse对象。这个对象作为第二个参数被传递到request请求的处理程序。使用ServerResponse对象制定并发送到客户端的响应。ServerResponse对象，实现了一个writable流。
