@@ -436,25 +436,36 @@ resource/path/?query=string  路径,路径名
 ?query=string  搜索，查询
 #hash  散列
 
+path模块
+path.normalize(path); // 规范化输出各种非常规路径，如：'/home//test/a//..' => '/home/test' ('/..'规范化输出后，会跳转到上一级目录)
+path.join(path1, path2, ...); // 合并字符串路径
+path.resolve(path1, path2); // 将相对路径转换成绝对路径，path1，path2有层级关系，最终得到path2的绝对路径
+path.relative(path1, path2); // 将绝对路径转换成相对路径，path1，path2为绝对路径，最终得到path2相对于path1的相对路径
+path.dirname(path); // 获取包含该文件的文件夹的绝对路径，path，必须是绝对路径
+path.extname(path); // 获取该路径所指向的文件的扩展名，path，必须是绝对路径，得到的结果如：'.txt'
+path.basename(path, fileExt); // 根据一个绝对路径及其文件后缀名(如，'.txt')，获取最后一个'/'字符后面并除去文件后缀名的部分
+
 nodejs提供url模块，把一个url字符串换成一个url对象
 url.parse(urlStr, [parseQueryString], [slashesDenoteHost]);
 parseQueryString参数默认为false，如果为true，则将url中的查询字符串部分，转换成对象字面量。
 slashesDenoteHost参数默认为false，如果为true，则将//host/path解析为{host: 'host', pathname: '/path'}，而不是{pathname: '//host/path'}
 url对象属性
-href
-protocol
-host
-auth
-hostname
-port
-pathname
-search
-path
-query
+href // 'http://user:password@localhost:8000/index?name=bugong'
+protocol // 'http'
+host // 'localhost:8000'
+auth // user:password
+hostname // 'localhost'
+port // 8000
+path // '/index?name=bugong'
+pathname  // '/index'
+search // '?name=bugong'
+query // 'name=bugong'
 hash
 
+url.format(obj); // 与url.parse()互逆
+
 解析url组件，把url解析到新的位置
-url.resolve(originUrl, newUrl);  //不改变域名和端口  resolve 分解
+url.resolve(originUrl, newUrl);  // 不改变域名和端口，如：newUrl，'/test'，替换掉originUrl基础路径，'test'，追加到originUrl最后一个'/'后面  resolve 分解
 
 处理查询字符串和表单参数(从客户端请求的正文读出)
 
