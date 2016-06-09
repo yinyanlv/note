@@ -24,14 +24,14 @@ view engine  指定呈现模板时，如果从视图中省略了文件扩展名�
 views  指定模板引擎用来查找视图模板的路径。默认./views
 
 启动基于http模块的express服务器
-app.listen(port);  
+app.listen(port);
 事实上，express()返回的值实际上是一个回调函数，它映射了传递到http.createServer()和https.createServer()的回调函数。
 http.createServer(app).listen(3000);
 https.createServer(options, app).listen(3000);
 
 路由定义为两部分，第一部分是http请求方法，第二部分是url中指定的路径。
 实现路由
-app.<method>(path, [middleware...], callback);  
+app.<method>(path, [middleware...], callback);
 <method>部分指的是http请求方法。
 path指的是url路径部分
 middleware参数是回调函数执行前，要应用的中间件函数。
@@ -88,7 +88,7 @@ attachment([filepath])  //把Content-Disposition(可控制文件是否下载)标
 
 设置状态
 如果响应的http状态时200以外的值，你需要设置它。
-res.status(number);  
+res.status(number);
 200  ok
 300  redirection 重定向
 400  bad request 错误的请求
@@ -145,7 +145,7 @@ express的app对象提供了app.locals属性来存储本地变量，app.locals�
 
 响应中呈现模板
 可以使用app对象或response对象发送呈现后的模板。
-app.render(view, [locals], callback);  //locals，本地对象，如果没有在app.locals中定义，可动态传入。callback，在模板被呈现后执行，第一个参数error，第二个参数模板字符串。  
+app.render(view, [locals], callback);  //locals，本地对象，如果没有在app.locals中定义，可动态传入。callback，在模板被呈现后执行，第一个参数error，第二个参数模板字符串。
 res.render()函数，工作原理与app.render()完全一样，不同之处，不必有回调函数，所呈现的结果在响应中自动发送。如果不需要在发送前，对数据做处理，可使用res.render()，省得再调用res.send()。
 
 express中间件
@@ -169,7 +169,7 @@ app.use('/', bodyparser());
 
 把中间件分配到单个路由
 app.get('/abc', bodyparser(), function (req, res) {
-	
+
 });
 
 运用多个中间件
@@ -230,7 +230,7 @@ express-session会话中间件
 session中间件附加一个session对象到request对象上来实现会话功能。
 res.session对象的方法
 regenerate([callback]);  重置会话
-destory([callback]);  删除会话
+destroy([callback]);  删除会话
 save([callback]);  保存会话数据
 touch([callback]);  为会话cookie重置maxAge计数
 cookie  指定把会话链接到浏览器的cookie对象
@@ -268,7 +268,7 @@ express.static	         serve-static
 express.timeout	         connect-timeout
 
 app.use接受参数
-express 4 中，现在可以使用带有一个可变参数的路径来加载中间件，并且从路由处理器中读取参数的值，例如： 
+express 4 中，现在可以使用带有一个可变参数的路径来加载中间件，并且从路由处理器中读取参数的值，例如：
 app.use('/book/:id', function(req, res, next) {
   console.log('ID:', req.params.id);
   next();
@@ -306,7 +306,7 @@ router.get('/about', function(req, res) {
   res.send('About birds');
 })
 module.exports = router;
- 
+
 然后在应用中加载这个路由模块。
 var birds = require('./birds');
 ...

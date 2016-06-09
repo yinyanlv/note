@@ -623,7 +623,7 @@ nodejs实现套接字服务
 nodejs套接字，实现了Duplex流，套接字是http模块的底层结构，如果你不需要处理如GET和POST的web请求的功能，你只需要点对点的传输数据，使用套接字可以提供一个轻量级的解决方案和更多的控制。
 进程不能直接共享内存，使用套接字可实现内存共享。
 
-TCP服务器和Socket对象
+TCP(transmission control protocol，传输控制协议)服务器和Socket对象
 net.Socket对象
 Socket对象，同时在套接字服务器和客户端套接字上创建，并允许数据在它们之间来回写入和读取。Socket对象实现了Duplex流。
 在套接字客户端，当调用net.connect()或net.createConnection()时，Socket对象被创建。nodejs的net模块没有明确的客户端对象，Socket对象就是客户端。
@@ -638,7 +638,7 @@ var socket = net.createConnection(path, [connectionListener]);
 Socket对象的options选项
 port
 host
-localAdress
+localAddress
 allowHalfOpen
 
 Socket对象的事件
@@ -654,45 +654,45 @@ Socket对象上的方法
 setEncoding([encoding]);
 write(data, [encoding], [callback]);
 end(data, [encoding]);
-destory();
-pause();
-resume();
+destroy();
+pause(); // 暂停套接字data事件
+resume(); // 恢复套接字data事件
 setTimeout(timeout, [callback]);
 setNoDelay([noDelay]);
-setKeepAlive([enable], [iniialDelay]);
-address();
+setKeepAlive([enable], [initialDelay]);
+address(); // 获取套接字地址信息，返回一个json对象
 unref();
 ref();
 
 Socket对象上的属性
 bufferSize
-remoteAddress
+remoteAddress // 远程
 remotePort
-localAdress
+localAddress // 本地
 localPort
-bytesRead
-bytesWritten
+bytesRead // 套接字接收到的数据的字节长度
+bytesWritten // 套接字发送出的数据的字节长度
 
 net.Server对象
 调用net.createServer()时，Server对象被创建。当服务器接收到一个连接时，服务器会创建一个Socket对象，并把它传递给正在监听的任何事件处理程序。
-var server = net.createServer([options], [connectionListener]);  //connectionListener的参数为Socket对象。
+var server = net.createServer([options], [connectionListener]);  // connectionListener的参数为Socket对象。
 
 options配置项
-allowHalfOpen
+allowHalfOpen  // 默认为false，即连接方式为全开
 
 Server对象的事件
-listening
-connection
-close
+listening // 在服务器端调用listen()方法后被触发
+connection // 在客户端向服务器发送连接请求后被触发
+close // 调用close()方法后被触发
 error
 
 Server对象的方法
-listen(port, [host], [backlog], [callback]);  //backlog默认值511，待处理最大连接数
+listen(port, [host], [backlog], [callback]);  // backlog默认值511，待处理最大连接数
 listen(path, [callback]);
 listen(handle, [callback]);
-getConnections(callback);
 close([callback]);
-address();
+getConnections(callback); // 获取当前服务器的连接数
+address(); // 获取服务器地址信息，返回一个json对象，该方法必需在listening事件被触发后再使用，否则，无效
 unref();
 ref();
 
@@ -760,6 +760,34 @@ secureConnection
 clientError
 newSession
 resumeSession
+
+UDP(user datagram protocol，用户数据报协议)，为快速而安全的发送大数据包而设计，与TCP不同，它不考虑数据报的回写
+dgram模块
+创建UDP服务器
+var server = dgram.createSocket(type); // type，'udp4'或'udp6'分别对应IPv4或IPv6协议组
+
+事件
+listening
+message // callback参数，message和remote
+error
+close
+
+方法
+bind(port, host); // 绑定UDP数据报，类似net模块的listen()作用
+address(); // 返回套接字地址信息
+close();
+
+创建UDP客户端
+var client = dgram.createSocket(type); // 与创建UDP服务器一致
+
+事件
+close
+
+方法
+send(buffer, offset, length, port, host, function (err, bytes) {}); // 向服务器发送UDP数据报，bytes，发送的数据报的字节长度
+setBroadcast(flag); // 以广播的方式发送数据报，flag，true或false，设置为true时，数据报会被发送到一个本地接口的广播地址，广播和单播的区别就是通信的IP地址不同，广播信息不会被路由中转，因为可能会造成网络瘫痪
+bind(callback); // 成功bind后触发回调
+close();
 
 在nodejs中使用多处理器扩展应用程序
 nodejs允许用户从主应用程序把工作派生为随后可以彼此并行和主应用程序一起处理的各个进程。
