@@ -489,6 +489,9 @@ http.request(options, callback);  // 实现一个ClientRequest对象,callback回
 clientReq = http.request(options, function (response) {});
 clientReq.end();
 
+http模块有一个发送GET请求的快捷方法
+var clientReq = http.get(options, callback); // 为没有报文体的请求提供的快捷方法，该方法会自动调用end()方法
+
 options参数可配置属性
 host
 hostname
@@ -529,14 +532,14 @@ statusCode
 
 ServerResponse对象的方法
 writeContinue();
-writeHead(statusCode, [resonPhrase], [headers]);
+writeHead(statusCode, [reasonPhrase], [headers]); // reasonPhrase，原因短句，该方法只能在当前请求中使用一次，设置重定向，res.writeHead(301, {'Location': 'http://localhost:3000'});
+end([data], [encoding]);
 setTimeout(msecs, callback);
 setHeader(name, value);
 getHeader(name);
 removeHeader(name);
 write(chunk, [encoding]);
 addTrailers(header);
-end([data], [encoding]);
 
 http.IncomingMessage对象
 无论是http服务器还是http客户端，都创建IncomingMessage对象。IncomingMessage对象实现了一个readable流。
@@ -563,7 +566,6 @@ upgrade
 clientError
 启动http服务器，得到HTTP Server对象
 server = http.createServer(function (req, res) { // req:IncomingMessage对象，res:ServerResponse对象
-
 });
 server对象的方法
 server.listen(port, [hostname], [backlog], [callback]);  // backlog(积压)，指定允许进行排队的最大待处理连接数。默认511
