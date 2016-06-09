@@ -193,19 +193,23 @@ Stream模块需要require
 流的目的是提供一种从一个地方向另一个地方传送数据的通用机制。它们公开各种事件。一般用于http和文件。
 
 Readable流
+Readable流有两种模式
+流动模式，数据由底层系统读出，并尽可能快的提供给应用程序处理
+暂停模式，程序必须明确地调用stream.read()方法来取出若干数据块 // 默认，暂停模式
 事件
-readable
+readable // 可能不止一次，createReadStream()成功调用和data事件触发之前都会触发该事件
 data
-end
+end // end事件先于close事件
 error
 close
 方法
-readable.read([size]);  // 返回String对象，Buffer对象或null
+readable.read([size]);  // 返回String对象，Buffer对象或null，size，字节数，暂停模式时，需手动调用该方法，流动模式时，自动调用
 readable.setEncoding(encoding);
-readable.pause();  // 暂停data事件
+readable.pause();  // 暂停data事件，会触发end和close事件
 readable.resume();
+readable.push(data | buffer); // 发送数据，可多次调用，参数为null时，代表通知接收方数据已发送完毕
 readable.pipe(destination, [options]);  // 把这个流的输出传递到一个由destination指定writeable流对象。
-readable.unpipe([destination]);
+readable.unpipe([destination]); // 如果不指定目标，所有导流都会被解除
 
 自定义Readable流
 var stream = require('stream');
@@ -225,7 +229,7 @@ finish
 pipe
 unpipe
 方法
-writable.write(chunk, [encoding], [callback]);
+writable.write(chunk, [encoding], [callback]); // callback，当数据已被全部处理后，该方法返回true(数据被成功写入目标)，否则返回false(数据被写入缓存)
 writable.end(chunk, [encoding], [callback]);
 
 自定义Writeable流
