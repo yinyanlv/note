@@ -93,8 +93,8 @@ nodejs线程模型
 定时器
 setTimeout(func, time, [args]);
 setInterval(func, time, [args]);
-setImmediate(func, [args]);  //即时定时器用来在io事件的回调函数开始执行后（有机会被调用时），但任何超时时间或时间间隔事件被执行之前，立刻开始执行
-timeId.unref();  //当定时器事件回调，是事件队列中仅有的事件时，unref可使得事件循环不要继续
+setImmediate(func, [args]);  // 即时定时器用来在io事件的回调函数开始执行后（有机会被调用时），但任何超时时间或时间间隔事件被执行之前，立刻开始执行
+timeId.unref();  // 当定时器事件回调，是事件队列中仅有的事件时，unref可使得事件循环不要继续
 timeId.ref();
 
 nextTick()
@@ -103,7 +103,7 @@ nextTick()在io事件被触发之前执行。一次事件循环，可执行多�
 
 事件发射器和事件侦听器
 事件由一个EventEmitter对象发出，这个对象包含在events模块中
-emit(eventName, [args]);  //触发名为eventName的事件
+emit(eventName, [args]);  // 触发名为eventName的事件
 var events = require('events');
 var emitter = new events.EventEmitter();
 emitter.emit('myFirstEvent');
@@ -119,10 +119,9 @@ obj.emit('objFirstEvent');
 .on(eventName, callback);
 .once(eventName, callback);
 把事件侦听器从EventEmitter对象移除
-.listeners(eventName);  //返回eventName事件侦听器组成的数组
-.setMaxListeners(n);  //默认10
+.listeners(eventName);  // 返回eventName事件侦听器组成的数组
+.setMaxListeners(n);  // 默认10
 .removeListener(eventName, callback);
-
 
 node.js中处理数据io
 JSON
@@ -201,11 +200,11 @@ end
 error
 close
 方法
-readable.read([size]);  //返回String对象，Buffer对象或null
+readable.read([size]);  // 返回String对象，Buffer对象或null
 readable.setEncoding(encoding);
-readable.pause();  //暂停data事件
+readable.pause();  // 暂停data事件
 readable.resume();
-readable.pipe(destination, [options]);  //把这个流的输出传递到一个由destination指定writeable流对象。
+readable.pipe(destination, [options]);  // 把这个流的输出传递到一个由destination指定writeable流对象。
 readable.unpipe([destination]);
 
 自定义Readable流
@@ -221,7 +220,7 @@ function MyReadableStream(opt) {
 
 Writable流
 事件
-drain  //当write()调用返回false后，当准备好开始写更多的数据时，发出此事件通知侦听器
+drain  // 当write()调用返回false后，当准备好开始写更多的数据时，发出此事件通知侦听器
 finish
 pipe
 unpipe
@@ -248,7 +247,7 @@ util.inherits(MyDuplexStream, stream.Duplex);
 function MyDuplexStream(opt) {
 	stream.Duplex.call(this, opt);
 }
-//opt参数，allowHalfOpen属性为true时，即使可写入端已经结束，可读取端也保持打开状态。false时，结束可写入端时也会结束可读取端。
+// opt参数，allowHalfOpen属性为true时，即使可写入端已经结束，可读取端也保持打开状态。false时，结束可写入端时也会结束可读取端。
 还需要在MyDuplexStream的原型上同时实现_read(size)和_write(data, encoding, callback)方法。
 
 需多次调用write(),无需手动调用read(),自动触发read()
@@ -270,7 +269,7 @@ function MyTransformStream(opt) {
 
 
 把Readable流用管道输送到Writable流
-readable.pipe(writeabel, {end: true});  //end为true时，Writable流随着Readable流的结束而结束。
+readable.pipe(writeabel, {end: true});  // end为true时，Writable流随着Readable流的结束而结束。
 
 无需手动调用write(),无需手动调用read()
 
@@ -284,7 +283,7 @@ deflateRaw/inflateRaw  针对原始缓冲区的deflate压缩算法
 Zlib压缩(普通字符串?)/解压缩缓冲区
 压缩效果：deflateRaw > deflate > gzip
 var zlib = require('zlib');
-zlib.[funcName](buffer, callback);  //funcName：压缩/解压缩方法
+zlib.[funcName](buffer, callback);  // funcName：压缩/解压缩方法
 
 Zlib压缩/解压缩流
 使用pipe()函数，通过压缩解压缩对象把数据从一个流输送到另一个流
@@ -481,11 +480,9 @@ querystring.stringify(obj, [sep], [eq]);
 请求、响应和服务器对象
 http.ClientRequest对象
 构建http客户端时，调用http.request()使得一个ClientRequest对象被创建。ClientRequest对象实现了一个Writable流。ClientRequest对象来启动、监控和处理来自服务器端的响应。
-http.request(options, callback);  //实现一个ClientRequest对象,callback回调函数唯一的参数是一个IncomingMessage对象，该对象时来自服务器的响应。
+http.request(options, callback);  // 实现一个ClientRequest对象,callback回调函数唯一的参数是一个IncomingMessage对象，该对象时来自服务器的响应。
 
-clientReq = http.request(options, function (response) {
-
-});
+clientReq = http.request(options, function (response) {});
 clientReq.end();
 
 options参数可配置属性
@@ -517,8 +514,7 @@ setSocketKeepAlive([enable], [initialDelay]);
 
 http.ServerResponse对象
 当http服务器，接收到一个request请求时，会创建一个ServerResponse对象。这个对象作为第二个参数被传递到request请求的处理程序。使用ServerResponse对象制定并发送到客户端的响应。ServerResponse对象，实现了一个writable流。
-http.createServer(function (req, res) {  //res即http.ServerResponse对象
-
+http.createServer(function (req, res) {  // res即http.ServerResponse对象
 });
 
 ServerResponse对象的事件和属性
@@ -562,14 +558,14 @@ connect
 upgrade
 clientError
 启动http服务器，得到HTTP Server对象
-server = http.createServer(function (req, res) {//req:IncomingMessage对象，res:ServerResponse对象
+server = http.createServer(function (req, res) { // req:IncomingMessage对象，res:ServerResponse对象
 
 });
 server对象的方法
-server.listen(port, [hostname], [backlog], [callback]);  //backlog(积压)，指定允许进行排队的最大待处理连接数。默认511
+server.listen(port, [hostname], [backlog], [callback]);  // backlog(积压)，指定允许进行排队的最大待处理连接数。默认511
 另外两个方法监听通过文件系统的连接
-server.listen(path, [callback]);  //path一个要监听的文件路径
-server.listen(handle, [callback]);  //handle一个已经打开的文件描述符句柄
+server.listen(path, [callback]);  // path一个要监听的文件路径
+server.listen(handle, [callback]);  // handle一个已经打开的文件描述符句柄
 server.close([callback]);
 
 HTTPS服务器和客户端
@@ -586,12 +582,10 @@ openssl x509 -req -days 365 -in server.csr -signkey server.pen -out server.crt
 
 HTTPS客户端
 var clientRequest = https.request(options, function () {
-
 });
 创建自定义的Agent对象来实现https协议下的代理,options.agent = new https.Agent(options);
 HTTPS服务器
 var server = https.createServer(options, function (req, res) {
-
 });
 https.request()和https.createServer()中options的配置项
 key  私钥,用于指定SSL私钥
@@ -713,12 +707,11 @@ TLS套接字客户端
 var options = {
 	hostname: '...',
 	...,
-	key: fs.readFileSync('test/keys/client.pem'),  //指定用于SSL的私钥
-	cert: fs.readFileSync('test/keys/client.crt'),  //指定使用的X509公钥
-	ca: fs.readFileSync('test/keys/server.crt')  //如果使用的是自签名证书，需要在ca属性上指出服务器的证书
+	key: fs.readFileSync('test/keys/client.pem'),  // 指定用于SSL的私钥
+	cert: fs.readFileSync('test/keys/client.crt'),  // 指定使用的X509公钥
+	ca: fs.readFileSync('test/keys/server.crt')  // 如果使用的是自签名证书，需要在ca属性上指出服务器的证书
 };
 var socket = tls.connect(options, function (res) {
-
 };
 tls.connect()的options的其他配置项
 key
@@ -732,12 +725,11 @@ secureProtocol
 
 TLS套接字服务器
 var options = {
-	key: fs.readFileSync('test/keys/server.pem'),  //指定用于SSL的私钥
-	cert: fs.readFileSync('test/keys/server.crt'),  //指定使用的X509公钥
-	ca: fs.readFileSync('test/keys/client.crt')  //如果使用的是自签名证书，需要在ca属性上指出客户端的证书
+	key: fs.readFileSync('test/keys/server.pem'),  // 指定用于SSL的私钥
+	cert: fs.readFileSync('test/keys/server.crt'),  // 指定使用的X509公钥
+	ca: fs.readFileSync('test/keys/client.crt')  // 如果使用的是自签名证书，需要在ca属性上指出客户端的证书
 };
 var server = tls.createServer(options, function (socket) {
-
 });
 tls.createServer()的options的其他配置项
 key
@@ -821,7 +813,6 @@ process.stdin.on('end', function () { // 用户可以通过ctrl + d，触发end�
 
 进程信号，process模块的一个特点是，它允许你注册监听器来处理操作系统发送给一个进程的信号。
 process.on('SIGBREAK', function () {
-
 });
 操作系统可以发送给nodejs进程的事件
 SIGUSR1
@@ -852,7 +843,7 @@ argv // 获取当前进程的命令行参数数组
 platform // 获取当前系统平台，如：'linux'或'win32'...
 arch // 获取当前cpu指令集架构，如：'ia32'，ia32(Intel Architecture,32-bit,英特尔32位元架构)，architecture（体系结构）
 env // 获取当前shell的环境变量参数，该信息为系统级别，如：PATH,LANGUAGE,OS等
-maxTickDepath
+maxTickDepth
 
 cwd(); // 获取应用程序当前目录　
 chdir(directoryName); // 改变应用程序目录，directoryName必须是完整路径，如：'/home/test'
@@ -921,7 +912,7 @@ killSignal // 如：'SIGTERM'
 
 使用子派生child_process.fork()，在一个单独的处理器上启动另一个v8引擎实例来运行nodejs模块代码。每个v8实例需要大约10MB的内存和30ms的启动时间。不能从创建比系统CPU数更多的进程来获得性能收益，返回一个ChildProcess对象
 不同于spawn(),在派生时，不能为子进程配置stdio。fork()方法，会在主进程和子进程之间直接建立一个IPC管道，应使用ChildProcess对象中的send()方法，在父进程和子进程之间通信。send()方法是同步方法
-var childProcess = child_process.fork(modulePath, [args], [options]);    // modulePath，只能是javascript代码文件，无callback
+var childProcess = child_process.fork(modulePath, [args], [options]);   // modulePath，只能是javascript代码文件，无callback
 
 fork()中options可配置项
 cwd
@@ -931,7 +922,7 @@ execPath
 silent // 缺省时，所派生的node进程的stdout、stderr会关联到父进程，可将silent设置为true，更改该行为
 
 进程集群(可通过child_process.fork()手动实现)
-cluster模块  //cluster 群
+cluster模块  // cluster 群
 cluster模块，可以让你很快实现在同一台机器上的运行的TCP或HTTP服务器集群。目前的api并不稳定。
 
 cluster模块事件
@@ -1021,7 +1012,7 @@ dns模块
 nodejs的dns模块，使得nodejs应用程序可以解析域名、查找域、或做反向查找
 dns模块上的方法
 lookup(domain, [family], callback);
-resolve(domain, [rrtype], callback);  //resolve，分解
+resolve(domain, [rrtype], callback);  // resolve，分解
 resolve4(domain, callback);
 resolve6(domain, callback);
 resolveMx(domain, callback);
