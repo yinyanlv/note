@@ -4,7 +4,7 @@ node封装模块(node packaged module)
 引用模块的加载顺序
 .js -> .json -> .node(内部通过dlopen()方法加载)
 当引用一个模块，该模块不是本地原生模块且没有'/', './', '../'这样的相对路径时，nodejs会自动向上递归遍历node_modules文件夹来查找并加载该模块
-module.pahts // 一个数组，记录了当前模块加载时，遍历的路径
+module.paths // 一个数组，记录了当前模块加载时，遍历的路径
 module.exports // 模块真正公开的接口，会覆盖exports
 exports
 
