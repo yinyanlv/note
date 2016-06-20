@@ -1,0 +1,24 @@
+FileReader接口
+方法
+readAsBinaryString(file); // 将文件读取为二进制编码
+readAsText(file, [encoding]); // 将文件读取为文本
+readAsDataURL(file); // 将文件读取为DataURL
+abort();
+事件
+abort
+error
+loadstart
+progress
+load  // 成功读取
+loadend  // 读取完成，无论成功或失败
+
+// 获得实际文件
+let file = document.getElementById('input').files[0];
+console.log(file.type);
+
+canvas接口
+let canvas = document.createElement('canvas');
+canvas.getContext('2d').globalAlpha = 0;
+canvas.width = 100;
+canvas.height = 100;
+let data = canvas.toDataURL();  // 将内容保存为图片
