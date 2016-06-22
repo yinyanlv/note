@@ -17,3 +17,7 @@ border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px
 transform
 rotate();  // 顺时针为正方向
 skew(x, y);  // x, 逆时针为正方向, y, 顺时针为正方向
+
+img
+通过width属性缩放图片，只会以图片的左上角为原点进行缩放
+通过scale缩放图片，默认以图片的中心点进行缩放，除非重新设置了transform-origin
