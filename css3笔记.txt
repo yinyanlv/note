@@ -3,3 +3,10 @@ perspective: 500;
 perspective-origin: center center;
 transform-style: preserve-3d;
 backface-visibility: hidden;
+
+background: url(../demo.png) no-repeat 10px 10px / 2em 2em;  // 10px, background-position, 2em, background-size
+background-origin: content-box;  // 默认content-box
+
+border-radius: 50% / 50%;  // 宽 ／ 高
+border-radius: 50%;
+border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px 5px 20px;  // 左上角开始，顺时针
