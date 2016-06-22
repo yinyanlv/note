@@ -188,7 +188,6 @@ Object.values();
 Object.entries();
 JSON.stringify(); //只串行化对象自身的可枚举的属性
 Object.assign(); //只拷贝源对象自身的可枚举的属性
-Reflect.enumerate(); //返回所有for...in循环会遍历的属性
 es6规定，所有Class的原型的方法都是不可枚举的
 属性的遍历，7种方法
 for...in //for...in循环遍历对象自身的和继承的可枚举属性（不含Symbol属性）
