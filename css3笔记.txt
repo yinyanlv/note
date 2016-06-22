@@ -1,3 +1,5 @@
+inherit可以用在任何css属性中，对于伪元素，则会取生成该伪元素的宿主元素对应的该属性的值
+
 透视
 perspective: 500;
 perspective-origin: center center;
@@ -6,7 +8,12 @@ backface-visibility: hidden;
 
 background: url(../demo.png) no-repeat 10px 10px / 2em 2em;  // 10px, background-position, 2em, background-size
 background-origin: content-box;  // 默认content-box
+linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向
 
 border-radius: 50% / 50%;  // 宽 ／ 高
 border-radius: 50%;
 border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px 5px 20px;  // 左上角开始，顺时针
+
+transform
+rotate();  // 顺时针为正方向
+skew(x, y);  // x, 逆时针为正方向, y, 顺时针为正方向
