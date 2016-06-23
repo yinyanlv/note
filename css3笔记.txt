@@ -10,7 +10,7 @@ background: url(../demo.png) no-repeat 10px 10px / 2em 2em;  // 10px, background
 background-origin: content-box;  // 默认content-box
 linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向
 
-border-radius: 50% / 50%;  // 宽 ／ 高
+border-radius: 50% / 50%;  // 宽 / 高
 border-radius: 50%;
 border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px 5px 20px;  // 左上角开始，顺时针
 
