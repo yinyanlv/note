@@ -1,5 +1,15 @@
 inherit可以用在任何css属性中，对于伪元素，则会取生成该伪元素的宿主元素对应的该属性的
 
+ios overflow: auto;滚动无惯性
+-webkit-overflow-scrolling: touch;
+
+移动设备覆盖系统默认手势
+body {
+  -ms-touch-action: none;  // 禁止双击放大
+  touch-action: none;
+  -webkit-touch-callout: none;
+}
+
 透视
 perspective: 500;
 perspective-origin: center center;
@@ -11,7 +21,6 @@ background-origin: content-box;  // 默认content-box
 linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向
 background: -webkit-image-set(url(...) 1x, url(...) 1.5x, url(...) 2x);  // 目前只适用于webkit内核，1x，像素密度
 
-
 border-radius: 50% / 50%;  // 宽 / 高
 border-radius: 50%;
 border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px 5px 20px;  // 左上角开始，顺时针
@@ -19,6 +28,25 @@ border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px
 transform
 rotate();  // 顺时针为正方向
 skew(x, y);  // x, 逆时针为正方向, y, 顺时针为正方向
+matrix(a, b, c, d, e, f);  // 3*3矩阵，各坐标相对于中心点，(x, y)每个点变换之前的坐标，(ax + cy + e, bx + dy + f)每个点变换之后的坐标
+a c e   x   ax + cy + e
+b d f * y = bx + dy + f
+0 0 1   1   0  + 0  + 1
+scale(a, d)
+translate(e, f)
+rotate(x) == matrix(cos(x), sin(x), -sin(x), cos(x), 0, 0)  // x，旋转的角度
+skew(x, y) == matrix(1, tan(y), tan(x), 1, 0, 0)  // x，x轴倾斜的角度，y，y轴倾斜的角度
+matrix3d(); // 4*4矩阵
+事件
+transformend
+
+动画函数
+cubic-bezier(x1, y1, x2, y2);
+
+动画事件
+w3c/firefox animationstart animation animateionend
+webkit webkitAnimationStart webkitAnimationIteration webkitAnimationEnd
+ie10 animationstart animationiteration animationend
 
 img
 通过width属性缩放图片，只会以图片的左上角为原点进行缩放
@@ -29,3 +57,9 @@ min-width  // 虚拟宽度
 min-device-width  // 真实物理宽度
 min-device-pixel-ratio: 1.5x  // 1.5x，设备像素密度
 min-aspect-ratio: 1 / 1;  // 宽高比，横屏，aspect，方向
+orientation: landscape;  // landscape，横向，portrait，纵向
+
+移动设备浏览器
+window.orientation  // 0，纵向，90 | -90，横向
+事件
+orientationchange  // 一些设备只触发resize事件
