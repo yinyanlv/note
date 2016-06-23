@@ -1,3 +1,21 @@
+指定虚拟窗口大小
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">  // device-width,其实并非设备真实的宽度
+
+http-equiv，元信息，把content属性关联到http头部，等效设置了http报头，http报头优先级最高
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta http-equiv="content-type" content="...">
+<meta http-equiv="expires" content="...">
+<meta http-equiv="set-cookie" content="...">
+<meta http-equiv="refesh" content="...">
+...
+
+MIME(Multipurpose Internet Mail Extensions)类型
+描述消息内容类型的因特网标准，用来设定某种扩展名的文件用一种应用程序来打开，当该扩展名文件被访问的时候，浏览器会自动使用指定应用程序来打开
+text/html
+application/octet-stream
+image/gif
+...
+
 FileReader接口
 方法
 readAsBinaryString(file); // 将文件读取为二进制编码
@@ -22,3 +40,44 @@ canvas.getContext('2d').globalAlpha = 0;
 canvas.width = 100;
 canvas.height = 100;
 let data = canvas.toDataURL();  // 将内容保存为图片
+
+web storage网络存储
+localStorage，只能存字符串
+localStorage.setItem(key, value);
+localStorage.getItem(key);
+localStorage.removeItem(key);
+localStorage.clear();
+localStorage.length;
+localStorage.key(n);  // 获取第n个数据的key键键名
+
+pjax
+ajax，负责更新内容，pushState负责更新url
+window.history.pushState(stateObj, name, url);  // name，一般为null
+popstate事件，用户后退或前进导致状态堆位置发生改变时触发
+window.addEventListener('popstate', function (e) {}, false);  // e.state，stateObj
+
+应用缓存
+manifest缓存清单
+服务器返回的MIME类型必须配置为：text/cache-manifest
+<html manifest="yourname.appcache">...</html>  // appcache固定
+manifest包含4个条目
+MASTER  // html标签上有manifest参数的文件
+CACHE  // 自定义要缓存的文件，永久缓存，直到manifest改变（不是资源改变）
+NETWORK  // 允许网络请求的文件，一般用*
+FALLBACK  // 用户离线时的备用内容，定义多个资源，必须同域
+应用缓存API
+window.applicationCache
+属性
+status  // 默认0
+方法
+update();
+swapCache();
+事件
+cached
+checking
+downloading
+error
+noupdate
+obsolete  // 废弃
+progress
+updateready
