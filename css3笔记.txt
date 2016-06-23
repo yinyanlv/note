@@ -17,13 +17,19 @@ transform-style: preserve-3d;
 backface-visibility: hidden;
 
 background: url(../demo.png) no-repeat 10px 10px / 2em 2em;  // 10px, background-position, 2em, background-size
+background: url('data:image/svg+xml,<svg>...</svg>');  // data URI方式
+background-position: right 10px bottom 10px;  // css3支持
 background-origin: content-box;  // 默认content-box
-linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向
+background-clip: content-box;  // 背景裁剪
 background: -webkit-image-set(url(...) 1x, url(...) 1.5x, url(...) 2x);  // 目前只适用于webkit内核，1x，像素密度
+background-blend-mode: multiply;  // 混合模式，overlay, screen, difference, multiply, normal
+linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向
+clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);  // 根据路径裁剪，polygon，多边形，可用于动画
 
 border-radius: 50% / 50%;  // 宽 / 高
 border-radius: 50%;
 border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px 5px 20px;  // 左上角开始，顺时针
+border-image: 33.34% url() stretch;  // stretch，拉伸，round，重复
 
 transform
 rotate();  // 顺时针为正方向
