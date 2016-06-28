@@ -1,4 +1,5 @@
 inherit可以用在任何css属性中，对于伪元素，则会取生成该伪元素的宿主元素对应的该属性的值
+伪元素无法设置内联样式
 
 ios overflow: auto;滚动无惯性
 -webkit-overflow-scrolling: touch;
@@ -46,6 +47,10 @@ matrix3d(); // 4*4矩阵
 perspective(.5em);
 事件
 transformend
+
+animation
+animation-play-state: paused;
+animation-delay: -20s;  // 负的动画延时可直接跳至动画中对应的时间点
 
 动画函数
 cubic-bezier(x1, y1, x2, y2);
