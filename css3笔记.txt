@@ -26,7 +26,7 @@ background-blend-mode: multiply;  // 混合模式，overlay, screen, difference,
 linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向
 clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);  // 根据路径裁剪，polygon，多边形，可用于动画
 
-border-radius: 50% / 50%;  // 宽 / 高
+border-radius: 50% / 50%;  // 横向 / 纵向
 border-radius: 50%;
 border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px 5px 20px;  // 左上角开始，顺时针
 border-image: 33.34% url(...) stretch;  // stretch，拉伸，round，重复，当背景是svg图时，size可以直接是1，1对应的是svg文件的坐标系统，因此不需要单位
