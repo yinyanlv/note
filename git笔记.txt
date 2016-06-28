@@ -25,13 +25,13 @@ $ git commit -m "这是git的第一行"  //描述文字，最好用英文，否�
 $ git status
 $ git diff test_git.txt  //查看某文件的修改内容
 
-$ git log  //产看历史提交记录（由近到远）
+$ git log  //查看历史提交记录（由近到远）
 $ git log --pretty=oneline
 
 HEAD当前版本（HEAD可全部小写）
 HEAD^ 上一个版本
 HEAD^^ 上上个版本
-HEAD^^...  
+HEAD^^...
 HEAD~199  上199个版本
 
 $ git reset --hard HEAD^  //--hard 暂存区，工作区全部替换
@@ -130,7 +130,7 @@ $ git tag v1.0
 $ git tag  //查看所有标签，按字母排序
 
 $ git log --pretty=oneline --abbrev-commit  //历史提交commit id
-$ git tag v0.9 e6bb687  
+$ git tag v0.9 e6bb687
 
 $ git show v0.9  //查看标签信息
 
