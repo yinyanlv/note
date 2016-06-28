@@ -3,24 +3,20 @@ CVS SVN（必须联网才能干活）
 分布式版本控制系统
 git
 
-所有的版本控制系统，只能跟踪文本文件的改动。
+windows下要使用很多Linux和Unix工具时，需要Cygwin这样的模拟环境。打包好的git，msysgit.exe
 
-windows下要使用很多Linux和Unix工具时，需要Cygwin这样的模拟环境。
-打包好的git，msysgit.exe
+git init
+git add test_git.txt
+git add -A  // stages All
+git add .  // stages new and modified, without deleted
+git add -u  // stages modified and deleted, without new
+git commit -m "这是git的第一行"  // 描述文字，最好用英文，否则，会报出警告。
 
-$ pwd  //查看文件目录
-$ git init
-$ git add test_git.txt
-$ git add -A //stages All
-$ git add . //stages new and modified, without deleted
-$ git add -u //stages modified and deleted, without new
-$ git commit -m "这是git的第一行"  //描述文字，最好用英文，否则，会报出警告。
+git status
+git diff test_git.txt  // 查看某文件的修改内容
 
-$ git status
-$ git diff test_git.txt  //查看某文件的修改内容
-
-$ git log  //查看历史提交记录（由近到远）
-$ git log --pretty=oneline
+git log --graph --pretty=oneline --abbrev-commit  // 查看分支合并记录，以及历史提交id，--graph，可以看到分支合并图
+git reflog  // 查看历史命令记录，包括拉取和提交
 
 HEAD当前版本（HEAD可全部小写）
 HEAD^ 上一个版本
@@ -28,115 +24,85 @@ HEAD^^ 上上个版本
 HEAD^^...
 HEAD~199  上199个版本
 
-$ git reset --hard HEAD^  //--hard 暂存区，工作区全部替换
-$ git reset --hard 版本号（7位）  //到指定版本号，可前进和后退
+git diff HEAD -- test_git.txt  // --后面要有空格，查看工作区和版本库里面最新版本的区别
 
-$ cat test_git.txt  //查看当前文件的内容
+git rm <file>
+git rm --cached <file>  // 会直接从暂存区删除文件，工作区则不做出改变
 
-$ git reflog  //产看历史命令记录
+git reset HEAD <file>  // 丢弃暂存区中该文件的修改，工作区不受影响
+git reset HEAD  // 暂存区的目录树会被重写，被master分支指向的目录树所替换，但是工作区不受影响
+git reset --hard HEAD^  // --hard，暂存区，工作区全部替换
+git reset --hard 版本号（7位）  // 到指定版本号，可前进和后退
 
-工作区，版本库（暂存区 stage|index，只有git有）
+git checkout -- <file>  // 丢弃工作区中某文件的修改，没有--，就变成创建一个分支的命令
+git checkout .  // 丢弃工作区中所有修改
+git checkout HEAD <file>  // 丢弃工作区和暂存区中某文件的修改
+git checkout HEAD .  // 丢弃工作区和暂存区中所有修改
 
-$ git diff HEAD -- test_git.txt  //--后面要有空格，查看工作区和版本库里面最新版本的区别
-
-$ git checkout -- test_git.txt  //丢弃工作区中的修改，没有--，就变成创建一个分支的命令。
-1、还没有放到暂存区，就回到和版本库一模一样的状态。
-2、已添加到暂存区，就回到添加到暂存区的状态。
-
-$ git reset HEAD test_git.txt //把暂存区中的修改重新放回工作区(丢弃暂存区中的修改)。
-
-$ rm test_git2.txt
-
-$ git rm test_git2.txt
-$ git commit -m "remove test_git2.txt"
-
-当执行 "git reset HEAD" 命令时，暂存区的目录树会被重写，被 master 分支指向的目录树所替换，但是工作区不受影响。
-当执行 "git rm --cached <file>" 命令时，会直接从暂存区删除文件，工作区则不做出改变。
-当执行 "git checkout ." 或者 "git checkout -- <file>" 命令时，会用暂存区全部或指定的文件替换工作区的文件。这个操作很危险，会清除工作区中未添加到暂存区的改动。
-当执行 "git checkout HEAD ." 或者 "git checkout HEAD <file>" 命令时，会用 HEAD 指向的 master 分支中的全部或者部分文件替换暂存区和以及工作区中的文件。这个命令也是极具危险性的，因为不但会清除工作区中未提交的改动，也会清除暂存区中未提交的改动。
-
-$ ssh-keygen -t rsa -C "1761869346@qq.com"  //创建ssh key
-
+ssh-keygen -t rsa -C "1761869346@qq.com"  // 创建ssh key
 提示错误:ssh: connect to host github.com port 22: Connection timed out
 原因:The reason could be the firewall modification as you are under a network.(In which case they may deliberately block some ports)
 解决方案:
-ssh -T git@github.com //检测ssh连接是否超时
-git config --local -e //文本编辑器打开git本地配置文件
-url = git@github.com:username/repo.git => url = https://github.com/username/repo.git //更改连接方式为https
+ssh -T git@github.com  // 检测ssh连接是否超时
+git config --local -e  // 文本编辑器打开git本地配置文件
+url = git@github.com:username/repo.git => url = https://github.com/username/repo.git  // 更改连接方式为https
 
-$ git remote  //查看远程库名称
-$ git remote -v  //显示更详细的信息
-$ git remote add origin git@github.com:woodjs/learn_git.git  //origin是默认远程仓库的名字，可更改。
-$ git clone git@github.com:woodjs/learn_git_clone.git
-$ git pull  //从远程拉最新提交
-$ git push origin master
-$ git push -u origin master  //第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令。
+git remote  // 查看远程库名称
+git remote -v  // 显示更详细的信息
+git remote add origin git@github.com:woodjs/learn_git.git  // origin是默认远程仓库的名字，可更改
 
-$ git checkout -b dev  //创建并切换分支
-相当于
-$ git branch dev
-$ git checkout dev
+git clone git@github.com:woodjs/learn_git_clone.git
+git pull  // 从远程拉最新提交
+git push origin master
+git push -u origin master  // 第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令
 
-$ git branch  //查看所有的分支
-$ git merge dev  //将merge分支合并到master分支，合并指定分支到当前分支，Fast forward模式（快进模式）
+git branch  // 查看所有的分支
+git branch -d dev  // 删除dev分支
+git branch -D feature  // 强行丢弃一个没有被合并过的分支
+git checkout -b dev  // 创建并切换分支，相当于git branch dev，git checkout dev
+git checkout -b dev origin/dev  // 从远程库克隆时，默认只能看到master分支，要想看到其它分支
+git branch --set-upstream dev origin/dev  // 指定本地分支和远程分支的连接
 
-$ git branch -d dev  //删除dev分支
-45678
+git merge dev  // 将merge分支合并到master分支，合并指定分支到当前分支，Fast forward模式（快进模式），在这种模式下，删除分支后，会丢掉分支信息
+git merge --no-ff -m "merge with no-ff" dev  // 强制禁用Fast forward模式，--no-ff参数就可以用普通模式合并，合并后的历史有分支记录，可以看出做过合并，而Fast forward合并就看不出来曾经做过合并
 
-$ git branch -D feature  //强行丢弃一个没有被合并过的分支
+git stash  // 储存工作现场
+git stash list
+git stash apply  // 恢复工作现场，但不删除stash
+git stash apply stash@{0}  // 到指定工作现场
+git stash drop  // 删除stash
+git stash pop  // 恢复工作现场，并删除stash
 
-从远程库克隆时，默认只能看到master分支，要想看到其它分支，使用如下命令：
-$ git checkout -b dev origin/dev
+git tag v1.0
+git tag  // 查看所有标签，按字母排序
+git tag v0.9 e6bb687
+git show v0.9  // 查看标签信息
+git tag -a v0.8 -m "version 0.8 released" e6bb687  // -a指定标签名，-m添加标签描述
+git tag -s v0.8 -m "version 0.8 released" e6bb687  // -s用私钥签名一个标签，签名采用PGP签名，因此，必须先安装gpg（Gnupg）。
+git tag -d v0.9
+git push origin v1.0  // 向远程推送标签
+git push origin --tags  // 向远程一次性推送所有未推送的标签
+git push origin :refs/tags/v1.0  // 从远程库删除标签，必须先本地删除
 
-指定本地分支和远程分支的连接：
-$ git branch --set-upstream dev origin/dev
-
-$ git log --graph --pretty=oneline --abbrev-commit  //查看分支合并情况，以及历史提交id
---graph 可以看到分支合并图
-
-Fast forward模式，在这种模式下，删除分支后，会丢掉分支信息。如果强制禁用Fast forward模式，git会merge时，生成一个新的commit，这样从分支历史上就可以看出分支信息。
-
-强制禁用 Fast forward模式
-$ git merge --no-ff -m "merge with no-ff" dev
---no-ff参数就可以用普通模式合并，合并后的历史有分支记录，可以看出做过合并，而Fast forward合并就看不出来曾经做过合并。
-
-$ git stash  //储存工作现场
-$ git stash list
-$ git stash apply  //恢复工作现场，但不删除stash
-$ git stash apply stash@{0}  //到指定工作现场
-$ git stash drop  //删除stash
-$ git stash pop  //恢复工作现场，并删除stash
-
-$ git tag v1.0
-$ git tag  //查看所有标签，按字母排序
-$ git tag v0.9 e6bb687
-$ git show v0.9  //查看标签信息
-$ git tag -a v0.8 -m "version 0.8 released" e6bb687  //-a指定标签名，-m添加标签描述
-$ git tag -s v0.8 -m "version 0.8 released" e6bb687  //-s用私钥签名一个标签，签名采用PGP签名，因此，必须先安装gpg（Gnupg）。
-$ git tag -d v0.9
-$ git push origin v1.0  //向远程推送标签
-$ git push origin --tags  //向远程一次性推送所有未推送的标签
-$ git push origin :refs/tags/v1.0  //从远程库删除标签，必须先本地删除
-
-$ git config --global user.name "bugong"
-$ git config --global user.email "1761869346@qq.com"
-$ git config --global color.ui true  //让git显示颜色
-$ git config --global alias.st status  //alias 别名
+git config --global user.name "bugong"
+git config --global user.email "1761869346@qq.com"
+git config --global color.ui true  // 让git显示颜色
+git config --global alias.st status  // alias 别名
 
 git服务器（linux系统）
 1、安装git
-$ sudo apt-get install git
+sudo apt-get install git
 2、创建git用户
-$ sudo adduser git
+sudo adduser git
 3、创建证书登陆
-搜集所有用户的id_rsa.pub文件，把所有公钥导入到/home/git/.ssh/authorized_keys文件里。
+搜集所有用户的id_rsa.pub文件，把所有公钥导入到/home/git/.ssh/authorized_keys文件里
 4、初始化git仓库
-$ sudo git init --bare sample.git
-$ sudo chown -R git:git sample.git  //将owner改为git
+sudo git init --bare sample.git
+sudo chown -R git:git sample.git  //将owner改为git
 5、禁用shell登录
-编辑/etc/passwd文件完成。可正常通过ssh使用git，但无法登录shell。
+编辑/etc/passwd文件完成。可正常通过ssh使用git，但无法登录shell
 6、克隆远程仓库
-$ git clone git@server:/srv/sample.git
+git clone git@server:/srv/sample.git
 
-gitosis  //管理公钥
-gitolite  //权限控制
+gitosis  // 管理公钥
+gitolite  // 权限控制
