@@ -7,15 +7,9 @@ git
 
 windows下要使用很多Linux和Unix工具时，需要Cygwin这样的模拟环境。
 打包好的git，msysgit.exe
-$ git config --global user.name "bugong"
-$ git config --global user.email "1761869346@qq.com"
 
-$ mkdir git
-$ cd git
 $ pwd  //查看文件目录
-
 $ git init
-
 $ git add test_git.txt
 $ git add -A //stages All
 $ git add . //stages new and modified, without deleted
@@ -70,13 +64,13 @@ ssh -T git@github.com //检测ssh连接是否超时
 git config --local -e //文本编辑器打开git本地配置文件
 url = git@github.com:username/repo.git => url = https://github.com/username/repo.git //更改连接方式为https
 
+$ git remote  //查看远程库名称
+$ git remote -v  //显示更详细的信息
 $ git remote add origin git@github.com:woodjs/learn_git.git  //origin是默认远程仓库的名字，可更改。
-
-$ git push -u origin master  //第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令。
-
 $ git clone git@github.com:woodjs/learn_git_clone.git
-
-$ ls  //查看当前目录，文件列表
+$ git pull  //从远程拉最新提交
+$ git push origin master
+$ git push -u origin master  //第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令。
 
 $ git checkout -b dev  //创建并切换分支
 相当于
@@ -84,13 +78,20 @@ $ git branch dev
 $ git checkout dev
 
 $ git branch  //查看所有的分支
-
-$ git merge dev  //将merge分支合并到master分支，合并指定分支到当前分支
-Fast forward模式（快进模式）
+$ git merge dev  //将merge分支合并到master分支，合并指定分支到当前分支，Fast forward模式（快进模式）
 
 $ git branch -d dev  //删除dev分支
 45678
-$ git log --graph --pretty=oneline --abbrev-commit  //查看分支合并情况
+
+$ git branch -D feature  //强行丢弃一个没有被合并过的分支
+
+从远程库克隆时，默认只能看到master分支，要想看到其它分支，使用如下命令：
+$ git checkout -b dev origin/dev
+
+指定本地分支和远程分支的连接：
+$ git branch --set-upstream dev origin/dev
+
+$ git log --graph --pretty=oneline --abbrev-commit  //查看分支合并情况，以及历史提交id
 --graph 可以看到分支合并图
 
 Fast forward模式，在这种模式下，删除分支后，会丢掉分支信息。如果强制禁用Fast forward模式，git会merge时，生成一个新的commit，这样从分支历史上就可以看出分支信息。
@@ -101,56 +102,25 @@ $ git merge --no-ff -m "merge with no-ff" dev
 
 $ git stash  //储存工作现场
 $ git stash list
-
 $ git stash apply  //恢复工作现场，但不删除stash
 $ git stash apply stash@{0}  //到指定工作现场
 $ git stash drop  //删除stash
-
 $ git stash pop  //恢复工作现场，并删除stash
 
-
-$ git branch -D feature  //强行丢弃一个没有被合并过的分支。
-
-$ git remote  //查看远程库名称
-$ git remote -v  //显示更详细的信息
-
-$ git push origin master
-
-从远程库克隆时，默认只能看到master分支，要想看到其它分支，使用如下命令：
-$ git checkout -b dev origin/dev
-
-no track....
-指定本地分支和远程分支的链接
-$ git branch --set-upstream dev origin/dev
-
-$ git pull  //从远程拉最新提交
-
 $ git tag v1.0
-
 $ git tag  //查看所有标签，按字母排序
-
-$ git log --pretty=oneline --abbrev-commit  //历史提交commit id
 $ git tag v0.9 e6bb687
-
 $ git show v0.9  //查看标签信息
-
-
 $ git tag -a v0.8 -m "version 0.8 released" e6bb687  //-a指定标签名，-m添加标签描述
-
 $ git tag -s v0.8 -m "version 0.8 released" e6bb687  //-s用私钥签名一个标签，签名采用PGP签名，因此，必须先安装gpg（Gnupg）。
-
 $ git tag -d v0.9
-
 $ git push origin v1.0  //向远程推送标签
-
 $ git push origin --tags  //向远程一次性推送所有未推送的标签
-
 $ git push origin :refs/tags/v1.0  //从远程库删除标签，必须先本地删除
 
+$ git config --global user.name "bugong"
+$ git config --global user.email "1761869346@qq.com"
 $ git config --global color.ui true  //让git显示颜色
-
-.gitignore放到工作区根目录。
-
 $ git config --global alias.st status  //alias 别名
 
 git服务器（linux系统）
