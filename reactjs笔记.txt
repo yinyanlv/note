@@ -1,0 +1,85 @@
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+
+React.createElement('a', propsObj, childNode);
+React.DOM.ul(propsObj, React.DOM.li(null, 'hello react!'));  // 工厂方法
+React.render(component, parentNode);
+React.createClass({
+  mixins: [],
+  componentDidMount: function () {},
+  render: function () {}
+});
+
+
+jsx
+小写的标签名默认是html标签，大写开头的标签名默认是react标签
+class -> className
+for -> htmlFor
+style  // 接受由css属性构成的js对象
+
+js表达式
+{}
+
+注释
+在一个组件的子元素位置使用注释要用{}包起来，如：{/* child comment, put {} around */}
+
+转义
+<div dangerouslySetInnerHTML={{__html: 'cc &copy; 2015'}} />  // 禁止转义
+
+扩展属性运算符 ...
+{...props}  // 属性可覆盖
+
+
+组件
+props，组件的配置属性，不可变
+state，当组件状态state有改变时，react会自动调用组件的render方法重新渲染整个组件，通过this.setState方法更改
+class Test extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {test: true};
+  },
+  render() { // 必须包含
+
+  }
+}
+
+方法
+getInitialState
+getDefaultProps  // 如果是使用es6语法，可以直接在Test组建类上定义defaultProps这个类属性来设置初始化时的属性值，如：Test.defaultProps = {initialCount: 0};
+
+生命周期函数
+componentWillMount  // 只会在装载组件之前调用一次，在render之前调用，可以在这个方法里面调用setState改变状态，并且不会导致额外调用一次render
+componentDidMount  // 只会在装载组件完成之后调用一次，在render之后调用，从这里开始可以通过ReactDOM.findDOMNode(this)获取到该组件的dom节点
+componentWillReceiveProps  // 更新组件时触发，不会在首次render组件时调用
+shouldComponentUpdate  // 更新组件时触发，不会在首次render组件时调用
+componentWillUpdate  // 更新组件时触发，不会在首次render组件时调用
+componentDidUpdate  // 更新组件时触发，不会在首次render组件时调用
+componentWillUnmount  // 卸载组件时触发
+
+事件处理
+合成事件和原生事件，合成事件中的event对象，并不是原生的event对象，且该event对象只在当前的event loop有效，如果想使用原生的e.stopPropagation()，需使用e.nativeEvent.stopImmediatePropagation();
+
+事件参数传递
+this.handleClick.bind(this, arg1, arg2, ...);
+
+dom操作
+findDOMNode()  // 该方法不能用在无状态组件上
+refs  // 通过在要引用的dom元素上面设置一个ref属性指定一个名称，然后通过this.refs.{name}来访问对应的dom元素，ref不能设置在无状态组件上
+如果ref是设置在原生html元素上，它拿到的就是dom元素，如果设置在自定义组件上，它拿到的就是组件实例，这时候就需要通过findDOMNode来拿到组件的dom元素
+
+组合组件
+如果组件中包含通过循环插入的子元素，为了保证重新渲染ui的时候能够正确显示这些子元素，每个元素都需要通过一个特殊的key属性指定一个唯一值
+this.props.children  // 组件标签里面包含的子元素会通过this.props.children传递进来
+
+组件间通信
+在父组件给子组件设置props，然后子组件就可以通过props访问到父组件的数据/方法
+父组件访问子组件，用refs
+非父子组件间的通信，使用全局事件Pub/Sub模式，在componentDidMount里面订阅事件，在componentWillUnmount里面取消订阅，该模式不建议使用，建议使用flux等模式
+
+表单
+表单元素在react里面有两种表现形式，受控组件和非受控组件
+
+数据流
+flux，一套前段应用的架构模式，主要包含4个部分：
+action -> dispatch -> store -> view
+redux
