@@ -17,20 +17,34 @@ perspective-origin: center center;
 transform-style: preserve-3d;
 backface-visibility: hidden;
 
-background: url(../demo.png) no-repeat 10px 10px / 2em 2em;  // 10px, background-position, 2em, background-size
+background: url(../demo.png) no-repeat 10px 10px / 2em 2em fixed;  // 10px, background-position, 2em, background-size
 background: url('data:image/svg+xml,<svg>...</svg>');  // data URI方式
 background-position: right 10px bottom 10px;  // css3支持
 background-origin: content-box;  // 默认content-box
 background-clip: content-box;  // 允许背景出现的区域
+background-attachment: fixed;  // fixed / scroll
 background: -webkit-image-set(url(...) 1x, url(...) 1.5x, url(...) 2x);  // 目前只适用于webkit内核，1x，像素密度
-background-blend-mode: multiply;  // 混合模式，overlay, screen, difference, multiply, normal
+background-blend-mode: multiply;  // 为每层背景指定混合模式，overlay, screen, difference, multiply, normal
 linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向
+
 clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);  // 根据路径裁剪，polygon，多边形，可用于动画
 
 border-radius: 50% / 50%;  // 横向 / 纵向
 border-radius: 50%;
 border-radius: 10px / 5px 20px; == border-radius: 10px 10px 10px 10px / 5px 20px 5px 20px;  // 左上角开始，顺时针
 border-image: 33.34% url(...) stretch;  // stretch，拉伸，round，重复，当背景是svg图时，size可以直接是1，1对应的是svg文件的坐标系统，因此不需要单位
+
+box-shadow: 1px 1px 2px 3px rgba(0, 0, 0, 0.5);  // 3px，扩张半径，可以为负值，可定义多个投影
+
+filter: drop-shadow() ...;  // 多个效果用空格分隔，滤镜可动画
+drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));  // 弥补box-shadow等属性的不足，任何非透明的部分都会被一视同仁的打上投影，如：text-shadow，即使其值设置为none，也会对阴影进行投影
+blur(20px);  // 滤镜效果
+grayscale();
+sepia(1);  // 降饱和度的橙黄色染色效果，几乎所有像素的色相值会被收敛到35~40
+saturate(4);  // 给每个像素提升饱和度
+hue-rotate(200deg);  // 每个像素的色相以指定的度数进行偏移
+
+mix-blend-mode: luminosity;  // 为整个元素设置混合模式，不可动画
 
 transform
 rotate();  // 顺时针为正方向
@@ -39,10 +53,10 @@ matrix(a, b, c, d, e, f);  // 3*3矩阵，各坐标相对于中心点，(x, y)�
 a c e   x   ax + cy + e
 b d f * y = bx + dy + f
 0 0 1   1   0  + 0  + 1
-scale(a, d)
-translate(e, f)
-rotate(x) == matrix(cos(x), sin(x), -sin(x), cos(x), 0, 0)  // x，旋转的角度
-skew(x, y) == matrix(1, tan(y), tan(x), 1, 0, 0)  // x，x轴倾斜的角度，y，y轴倾斜的角度
+scale(a, d);
+translate(e, f);
+rotate(x); == matrix(cos(x), sin(x), -sin(x), cos(x), 0, 0);  // x，旋转的角度
+skew(x, y); == matrix(1, tan(y), tan(x), 1, 0, 0);  // x，x轴倾斜的角度，y，y轴倾斜的角度
 matrix3d(); // 4*4矩阵
 perspective(.5em);
 事件
