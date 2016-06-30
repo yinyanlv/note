@@ -11,6 +11,16 @@ body {
   -webkit-touch-callout: none;
 }
 
+content属性中的特殊字符
+content: '\A';  // 代表0x000A(换行符，unicode表示法)，在css中还可以写成\000A，在js中常写成\n
+content: '\D';  // 代表回车符，在js中常写成\r，现代浏览器中已经不需要用到这个字符了
+
+hyphens: auto;  // 连字符断行，none，manual(默认)，auto
+
+white-space: pre;  // 保留源代码中的空白符和换行符，pre，pre-line，pre-wrap
+
+tab-size: 2;  // 缩进两个字符，也可以用长度值，如：2em 
+
 透视
 perspective: 500;
 perspective-origin: center center;
@@ -20,7 +30,7 @@ backface-visibility: hidden;
 background: url(../demo.png) no-repeat 10px 10px / 2em 2em fixed;  // 10px, background-position, 2em, background-size
 background: url('data:image/svg+xml,<svg>...</svg>');  // data URI方式
 background-position: right 10px bottom 10px;  // css3支持
-background-origin: content-box;  // 默认content-box
+background-origin: content-box;  // 默认padding-box
 background-clip: content-box;  // 允许背景出现的区域
 background-attachment: fixed;  // fixed / scroll
 background: -webkit-image-set(url(...) 1x, url(...) 1.5x, url(...) 2x);  // 目前只适用于webkit内核，1x，像素密度
