@@ -19,7 +19,11 @@ hyphens: auto;  // 连字符断行，none，manual(默认)，auto
 
 white-space: pre;  // 保留源代码中的空白符和换行符，pre，pre-line，pre-wrap
 
-tab-size: 2;  // 缩进两个字符，也可以用长度值，如：2em 
+tab-size: 2;  // 缩进两个字符，也可以用长度值，如：2em
+
+font-variant-ligatures: common-ligatures discretionary-ligatures historical-ligatures;  // 用来控制连字效果的开启和关闭，variant，变体，ligatures，连体字母，
+
+unicode-range: U+26;  // 代表&，只能在@font-face规则内部有效，它并不是css属性，可指定一个或多个区间，如：U+400-4FF, U＋5??, U+600-6FF
 
 透视
 perspective: 500;
