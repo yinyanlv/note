@@ -11,6 +11,8 @@ body {
   -webkit-touch-callout: none;
 }
 
+margin, padding值为百分比时，百分比值都是相对于父元素的宽度
+
 content属性中的特殊字符
 content: '\A';  // 代表0x000A(换行符，unicode表示法)，在css中还可以写成\000A，在js中常写成\n
 content: '\D';  // 代表回车符，在js中常写成\r，现代浏览器中已经不需要用到这个字符了
@@ -29,7 +31,19 @@ resize: none;  // none, both, horizontal, vertical，适用于任何元素，只
 
 pointer-events: none;  // 事件穿透
 
-user-select: none; 
+user-select: none;
+
+max-width: min-content;  // 元素内最大不可换行的元素的宽度，min-content(类似display: inline-block;)，fit-content(类似浮动元素)
+
+table-layout: fixed;  // 该模式下，设置表格的列宽，单元格不会忽视已设置的宽度而根据内容来自动调整宽度，默认auto
+
+align-self: center;  // 不依赖其他因素，垂直居中，css3标准，目前支持性还不好
+
+display: flex;  // flexbox(伸缩盒)，此时子元素设置margin: auto;会在垂直和水平方向上都居中，其他模式下，margin: auto;只能实现水平居中
+align-items: center;  // 垂直居中
+justify-content: center;  // 水平居中
+flex-flow: column;  // 子元素垂直摆放
+flex: 1;
 
 透视
 perspective: 500;
@@ -86,9 +100,14 @@ transformend
 animation
 animation-play-state: paused;
 animation-delay: -20s;  // 负的动画延时可直接跳至动画中对应的时间点
+animation-direction: alternate;  // normal(不反转循环周期)，alternate(反转偶数)，alternate-reverse(反转奇数)，reverse(反转每一个循环周期)
+animation-play-state: paused;  // paused/running，可通过交互控制动画状态
 
-动画函数
-cubic-bezier(x1, y1, x2, y2);
+动画调速函数
+cubic-bezier(x1, y1, x2, y2);  // 反向版本，锚点的水平坐标和垂直坐标互换，水平方向上[0, 1]，垂直方向上[-∞, +∞]
+steps(4, end);  // 根据指定的步进数，把整个动画切分为多帧，整个动画会在帧与帧之间硬切，不会插值处理，start/end(默认，即终止状态在无限短的时间内突然出现又突然结束)，用于指定动画在每个循环周期的什么位置发生帧的切换动作
+step-start  // 单步切换，相当于steps(1, start)的简写
+step-end  // 相当于steps(1, end)的简写
 
 动画事件
 w3c/firefox animationstart animation animateionend
