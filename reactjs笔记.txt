@@ -80,6 +80,39 @@ this.props.children  // 组件标签里面包含的子元素会通过this.props.
 表单元素在react里面有两种表现形式，受控组件和非受控组件
 
 数据流
+
 flux，一套前段应用的架构模式，主要包含4个部分：
 action -> dispatch -> store -> view
+
 redux
+store.dispatch(action) -> reducer(state, action) -> store.getState()
+store不再拥有state，而只是管理state，store会保存root reducer返回的state树
+action需要通过store.dispatch();发送
+reducer，pure function，用来处理action触发的对state树的更改，(oldState, action) => newState;
+
+import {createStore, combineReducers} from 'redux';
+
+const app = combineReducers({
+  a: reducerA,
+  b: reducerB,
+  ...
+});
+const store = createStore(app, [initState]);  // initState，可选，对于服务器端渲染很有用
+store.getState();  // 获取state
+store.dispatch();  // 发送action，更改state
+store.subscribe();  // 注册回调函数监听state的更改
+
+react-redux
+<Provider store={store}>  // 容器组件，用来接受store，并让store对子组件可用，如：<App/>可使用connect方法关联store，利用了react暂时隐藏的特性context
+  <App/>
+</Provider>
+connect([mapStateToProps], [mapDispatchToProps], [mergeProps], [options]);  // 调用该方法会返回另一个函数，该返回的函数接受一个组件类作为参数，最后才返回一个和store关联起来的组件
+connect()(App);  // 此时，可在App组件里面通过props拿到store的dispatch方法，但现在App组件并未监听store状态的更改，要监听store的状态更改，必须指定mapStateToProps参数
+mapStateToProps(state, [ownProps]);  // 该参数是一个函数，只有指定了这个参数，组件才会监听store的更新，每次更新都会调用mapStateToProps这个函数，返回一个字面量对象将会合并到组件的props属性，ownProps，传递给组件的props
+mapDispatchToProps(dispatch, [ownProps]);  // 定义如何传递dispatch给组件，在这个函数里直接dispatch action creator，返回一个字面量对象将会合并到组件的props属性，这样组件就可以通过props调用到action（可在内部使用bindActionCreators()简化这种操作），如果省略该函数，默认直接把dispatch挂载到props传入
+
+context
+React.withContext({}, function () {});
+contextTypes  // React.PropTypes.string.isRequired
+childContextTypes
+getChildContext
