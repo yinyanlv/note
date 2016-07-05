@@ -169,7 +169,7 @@ buffer.writeInt32BE(value, offset, [noAssert]);
 
 从缓冲区读取
 buffer.toString([encoding], [start], [end]); // 不包括end
-stringDecoder.write(buffer);  // nodejs提供StringDecoder对象，读取缓冲区数据，返回缓冲区的解码字符串版本
+StringDecoder.write(buffer);  // nodejs提供StringDecoder对象，读取缓冲区数据，返回缓冲区的解码字符串版本
 buffer[offset]
 buffer.readInt8(offset, [noAssert]);
 buffer.readInt16LE(offset, [noAssert]);
