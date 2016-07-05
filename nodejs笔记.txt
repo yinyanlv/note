@@ -271,7 +271,6 @@ function MyTransformStream(opt) {
 
 需多次调用write(),无需手动调用read()
 
-
 把Readable流用管道输送到Writable流
 readable.pipe(writeabel, {end: true});  // end为true时，Writable流随着Readable流的结束而结束。
 
