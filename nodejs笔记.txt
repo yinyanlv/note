@@ -33,7 +33,7 @@ package.json
 // 网络资源参考地址：http://realwall.cn/blog/?p=120
 package.json中必须的指令只是名称和版本
 常用指令
-main  // 应用程序的主入口点，它可以是一个二进制文件或js文件，如果其他用户需要你的包，当用户调用require()方法时，返回的就是这个模块的导出（exports）。
+main  // 应用程序的主入口点，它可以是一个二进制文件或js文件，如果其他用户需要你的包，当用户调用require()方法时，返回的就是这个模块的导出（exports）
 name
 description
 version
