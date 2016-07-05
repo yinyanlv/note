@@ -47,7 +47,7 @@ dependencies
 bugs // 数组，提交bug的地址，可以是网址或邮件地址，如：{url: '...', email: '...'}
 licenses // 许可证数组，每个元素包含type(许可证类型)和url(链接到许可证文本的地址)字段
 bin  // 随项目安装的二进制文件
-scripts  // npm start [<name>]，npm stop [<name>]，npm test [<name>]触发。key是生命周期事件名，value是在事件点要跑的命令。
+scripts  // npm start [<name>]，npm stop [<name>]，npm test [<name>]触发。key是生命周期事件名，value是在事件点要跑的命令
 engines  // 此包可使用的node的版本，{node: '4.2.x'}
 private
 
