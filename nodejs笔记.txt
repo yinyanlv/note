@@ -483,7 +483,7 @@ querystring.stringify(obj, [sep], [eq]);
 请求、响应和服务器对象
 http.ClientRequest对象
 构建http客户端时，调用http.request()使得一个ClientRequest对象被创建。ClientRequest对象实现了一个Writable流。ClientRequest对象来启动、监控和处理来自服务器端的响应。
-http.request(options, callback);  // 实现一个ClientRequest对象,callback回调函数唯一的参数是一个IncomingMessage对象，该对象时来自服务器的响应。
+http.request(options, callback);  // 实现一个ClientRequest对象,callback回调函数唯一的参数是一个IncomingMessage对象，该对象是来自服务器的响应。
 
 clientReq = http.request(options, function (response) {});
 clientReq.end();
