@@ -84,6 +84,8 @@ updateready
 
 标签
 当浏览器遇到不认识的标签时，会把它们当成内联元素（早版本ie，拒绝给无法识别的元素应用样式），大多数html5元素都是块级元素
+分块元素，在页面中创建新的、嵌套纲要的元素，<article>，<aside>，<nav>，<section>，article和section从纲要角度考虑，必须带有标题，div不是分块元素
+区块根，这些元素不是从已有的纲要向下分支，而产生自己的纲要，但不会包含着在页面的主纲要视图中。<body>，<blockquote>，<td>，<fieldset>，<figure>，<details>
 <header>  // 表示内容的标题或网页的页眉，一个网页可以包含多个header
 <footer>  // 目前，html5中规定，只能在footer中放置一些版权、链接之类的信息，不能在footer中放置太多的链接、重要的内容或无关的内容，可以有多个footer，可选择性忽视
 <article>  // 表示一个完整的、自成一体的内容块，如：博客文章，新闻报道
