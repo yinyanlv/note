@@ -87,14 +87,19 @@ updateready
 分块元素，在页面中创建新的、嵌套纲要的元素，<article>，<aside>，<nav>，<section>，article和section从纲要角度考虑，必须带有标题，div不是分块元素
 区块根，这些元素不是从已有的纲要向下分支，而产生自己的纲要，但不会包含着在页面的主纲要视图中。<body>，<blockquote>，<td>，<fieldset>，<figure>，<details>
 <header>  // 表示内容的标题或网页的页眉，一个网页可以包含多个header
-<footer>  // 目前，html5中规定，只能在footer中放置一些版权、链接之类的信息，不能在footer中放置太多的链接、重要的内容或无关的内容，可以有多个footer，可选择性忽视
+<footer>  // 目前，html5中规定，只能在footer中放置一些版权、链接之类的信息，不能在footer中放置太多的链接、重要的内容或无关的内容，可以有多个footer，可选择性忽视html 5规则
 <article>  // 表示一个完整的、自成一体的内容块，如：博客文章，新闻报道
-<section>  // 适合带标题的内容区块，可独立成块，没有明确的含义，语义化最后的选择
+<section>  // 适合带标题的内容区块，可独立成块，没有明确的含义，语义化最后的选择，其中的内容必须开始于一个标题
 <aside>  // 表示与周围的文本没有密切相关的内容，可独立成块，可以放置广告、内容链接、醒目引文等
 <nav>  // 通常只用于页面中最大最主要的导航区，页面可包含多个nav，nav中可包含除了链接以外的其它元素，如：aside
-<main>  // 用于标识网页的主要内容，不能把main嵌套到article或其它任何语义元素里，一个页面只能有一个main元素
+<main>  // 用于标识网页的主要内容，不能把main嵌套到article或其它任何语义元素里，一个页面只能有一个main元素，html 5.1新增
 <figure>  // 添加插图，独立于文本，但在文本中可能会提到它
 <figcaption>  // 表示对插图的描述，一般放在figure标签内部，其内部可包含html或文本，此时，图片的alt的属性可忽略
+<time>  // 标注日期和时间，datatime属性，可放置计算机能看得懂的通用格式的日期，pubdate属性
+<output>  // 标注js计算后返回的值，form属性，for属性
+<mark>  // 标注突显文本，默认有浅黄色的背景
+<del>  // 删除的文本
+<ins>  // 插入的文本
 <cite>  // 表示引用
 <small>  // 表示附属细则
 <em>  // 表示应当重读的文本，外观上表现为斜体
@@ -104,3 +109,21 @@ updateready
 <summary>  // 标题，放置在details中，可点击，目前只有chrome支持，不建议使用
 <hr />  // html5中代表主题切换，外观上仍然表现为一条水平线
 <wbr />  // 在需要换行时，在该标签处换行
+
+ARIA（accessible rich internet application），无障碍富因特网应用
+规定了可在任意html元素上使用的属性
+role  // 表示所在元素的用途，如：role="banner"
+aria-required  // 针对表单元素，表示用户必须输入值
+aria-invalid  // 针对表单元素，表示当前值不正确
+
+RDFa（resource description framework），资源描述框架
+一种使用属性向网页嵌入详细信息的标准
+
+微格式（microformats）
+一种在网页中嵌入元数据简单而又比较合理的方式，它们附加在通常用于添加样式的class属性上，如：class="vcard"
+
+微数据（microdata）
+首先要给相应的元素添加itemscope和itemtype属性，如：<div itemscope itemtype="http://schema.org/Person"></div>
+itemscope  // 表示开始一段新的语义内容
+itemtype  // 表示内容中包含的数据类型
+itemprop  // 标注重要信息，如：<h3 itemprop="name">bugong</h3>
