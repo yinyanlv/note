@@ -87,7 +87,7 @@ updateready
 分块元素，在页面中创建新的、嵌套纲要的元素，<article>，<aside>，<nav>，<section>，article和section从纲要角度考虑，必须带有标题，div不是分块元素
 区块根，这些元素不是从已有的纲要向下分支，而产生自己的纲要，但不会包含着在页面的主纲要视图中。<body>，<blockquote>，<td>，<fieldset>，<figure>，<details>
 <header>  // 表示内容的标题或网页的页眉，一个网页可以包含多个header
-<footer>  // 目前，html5中规定，只能在footer中放置一些版权、链接之类的信息，不能在footer中放置太多的链接、重要的内容或无关的内容，可以有多个footer，可选择性忽视html 5规则
+<footer>  // 目前，html5中规定，只能在footer中放置一些版权、链接之类的信息，不能在footer中放置太多的链接、重要的内容或无关的内容，可以有多个footer，可选择性忽视html5规则
 <article>  // 表示一个完整的、自成一体的内容块，如：博客文章，新闻报道
 <section>  // 适合带标题的内容区块，可独立成块，没有明确的含义，语义化最后的选择，其中的内容必须开始于一个标题
 <aside>  // 表示与周围的文本没有密切相关的内容，可独立成块，可以放置广告、内容链接、醒目引文等
@@ -109,6 +109,32 @@ updateready
 <summary>  // 标题，放置在details中，可点击，目前只有chrome支持，不建议使用
 <hr />  // html5中代表主题切换，外观上仍然表现为一条水平线
 <wbr />  // 在需要换行时，在该标签处换行
+
+表单
+html5中自带的验证机制，目前只能在提交时统一验证，不能在焦点切换时验证
+<fieldset>  // 在表单中，划分逻辑块
+<legend>  // 放置标题
+for属性，可指向id
+placeholder  // ie10之前不支持
+autofocus  // ie10之前不支持
+novalidate  // 只能用在form标签
+formnovalidate  // 用在提交按钮上
+required
+pattern  // 正则表达式验证，如：pattern="[a-z]{3,}"，pattern中不必使用^, $匹配字段值的开头和结尾，html5会自动确保这一点，错误提示文字取自title属性，注意，不会验证空值
+min
+max
+step
+spellcheck  // true/false，检查输入的拼写是否正确
+autocomplete  // on/off，自动完成
+multiple  // 多选，一般用于select标签，但现在可以用于file（一次性选择多个文件）和email（一次性写入多个邮件地址）
+autocorrect  // 在移动设备上控制自动纠错
+autocapitalize  // 在移动设备上控制自动大小写功能
+伪类
+:required/:optional  // 根据是否应用了required属性来应用样式，如：input:required:invalid{background: red;}
+:valid/:invalid  // 根据是否包含错误来应用样式
+:in-range/:out-of-range  // 根据min和max属性判断输入值是否超出范围来应用样式
+方法
+[input].setCustomValidity(text);  // 自定义验证，该方法会触发浏览器默认验证提示，提示信息内容为text，text为空字符串时，不触发提示信息
 
 ARIA（accessible rich internet application），无障碍富因特网应用
 规定了可在任意html元素上使用的属性
