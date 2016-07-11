@@ -82,6 +82,10 @@ obsolete  // 废弃
 progress
 updateready
 
+html编辑功能
+contenteditable  // ture/false，使用户能够编辑某个元素
+designMode  // on/off，使用户能够编辑整个页面，通常与iframe配合使用，iframe.contentWindow.document.designMode = 'on';
+
 标签
 当浏览器遇到不认识的标签时，会把它们当成内联元素（早版本ie，拒绝给无法识别的元素应用样式），大多数html5元素都是块级元素
 分块元素，在页面中创建新的、嵌套纲要的元素，<article>，<aside>，<nav>，<section>，article和section从纲要角度考虑，必须带有标题，div不是分块元素
@@ -126,7 +130,7 @@ max
 step
 spellcheck  // true/false，检查输入的拼写是否正确
 autocomplete  // on/off，自动完成
-multiple  // 多选，一般用于select标签，但现在可以用于file（一次性选择多个文件）和email（一次性写入多个邮件地址）
+multiple  // 多选，一般用于select标签，但现在可以用于file（一次性选择多个文件）和email（一次性写入多个邮件地址，用逗号分隔）
 autocorrect  // 在移动设备上控制自动纠错
 autocapitalize  // 在移动设备上控制自动大小写功能
 伪类
@@ -135,6 +139,27 @@ autocapitalize  // 在移动设备上控制自动大小写功能
 :in-range/:out-of-range  // 根据min和max属性判断输入值是否超出范围来应用样式
 方法
 [input].setCustomValidity(text);  // 自定义验证，该方法会触发浏览器默认验证提示，提示信息内容为text，text为空字符串时，不触发提示信息
+新增input类型
+浏览器对不认识的input类型，统一都作为普通文本框处理
+email
+url
+search
+tel
+number  // 默认间隔为1，默认只接受整数，可调整间隔step为0.1等，使支持小数
+range  // 监听onchange事件
+date  // YYYY-MM-DD
+month  // YYYY-MM
+week  // YYYY-Www，2016-W02，表示，2016年第二周
+time  // HH:mm::ss.ss
+datetime-local  // YYYY-MM-DDTHH:mm:ss
+datetime  // YYYY-MM-DD HH:mm:ss-HH:mm，datetime目前没有被任何浏览器有效支持，并且将来可能会移除
+color
+新增控件
+<datalist>  // 文本框输入建议下拉列表，完全不可见，必须配合标准的文本框使用，通过list属性，<input type="text" list="test"> <datalist id="test"><option label="测试" value="test"></option>...</datalist>
+<progress>  // 进度条，表示任务的进度，不设置value，表示不确定进度条，并非必须出现在表单里
+<meter>  // 计量器，表示已知范围内的一个值，外观与progress相似，并非必须出现在表单里
+<command>  // 用户可执行的操作
+<menu>  // 封装用户可执行的操作
 
 ARIA（accessible rich internet application），无障碍富因特网应用
 规定了可在任意html元素上使用的属性
