@@ -52,6 +52,7 @@ git remote -v  // 显示更详细的信息
 git remote add origin git@github.com:woodjs/learn_git.git  // origin是默认远程仓库的名字，可更改
 
 git clone git@github.com:woodjs/learn_git_clone.git
+git clone -b branchName git@github.com:woodjs/learn_git_clone.git  // 克隆指定分支
 git pull  // 从远程拉最新提交
 git push origin master
 git push -u origin master  // 第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令
