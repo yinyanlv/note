@@ -16,6 +16,40 @@ application/octet-stream
 image/gif
 ...
 
+音频与视频
+文件的扩展名表示容器的格式
+<audio>
+src
+controls
+preload  // auto（预先下载整个文件），metadata（点击播放按钮后，先获取音频文件开头的数据块，从而确定一些基本信息），none（不必预先下载），浏览器不一定执行该属性
+autoplay  // 要实现自动播放，需要去掉controls属性
+loop
+mediagroup  // 可与video共为一组，将多个媒体文件连接到一起，这样它们的播放就是同步的，即一个窗口点击播放，多个同组媒体文件会同时播放
+音频文件格式
+MP3（收费）  .mp3  audio/mp3  ie9支持
+Ogg Vorbis（免费开放）  .ogg  audio/ogg
+WAV（未压缩，体积大）  .wav  audio/wav
+
+<video>
+src
+controls
+preload
+autoplay
+loop
+muted  // 静音模式
+poster  // 3种情况下，使用该封面，1、视频第一帧未加载完毕，2、preload属性设置为none，3、没有找到指定的视频文件
+width  // 不用加px，不论怎么设置视频容器的尺寸，视频画面总是会保持自身的比例，空余的部分，留白
+height
+mediagroup
+视频文件格式
+H.264（收费）  .mp4  video/mp4  ie9支持
+Ogg Theora（免费开放）  .ogv  video/ogg
+WebM（google推出，免费，效果不如H.264）  .webm  video/webm
+
+<source>
+嵌套在audio或video中，可配置多个，此时，要删除audio或video标签上的src属性
+<source type="audio/mp3" src="test.mp3"></source>  // type，MIME类型，浏览可根据type，判断是否支持该编码的文件，从而选择是否下载，配置type，可免去浏览器多余的下载
+
 FileReader接口
 方法
 readAsBinaryString(file); // 将文件读取为二进制编码
