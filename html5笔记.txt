@@ -18,21 +18,27 @@ image/gif
 
 音频与视频
 文件的扩展名表示容器的格式
-<audio>
+<audio>  // ie9，已经支持
 src
-controls
+controls  // 若不配置该属性，就不会出现播放器界面
 preload  // auto（预先下载整个文件），metadata（点击播放按钮后，先获取音频文件开头的数据块，从而确定一些基本信息），none（不必预先下载），浏览器不一定执行该属性
 autoplay  // 要实现自动播放，需要去掉controls属性
 loop
 mediagroup  // 可与video共为一组，将多个媒体文件连接到一起，这样它们的播放就是同步的，即一个窗口点击播放，多个同组媒体文件会同时播放
+音频对象方法和属性
+pause();
+play();
+canPlayType(MIMEType);  // 返回值''（浏览器不支持），'probably'（浏览器可以支持），'maybe'（希望浏览器支持）
+currentTime
+new Audio(src);
 音频文件格式
 MP3（收费）  .mp3  audio/mp3  ie9支持
 Ogg Vorbis（免费开放）  .ogg  audio/ogg
 WAV（未压缩，体积大）  .wav  audio/wav
 
-<video>
+<video>  // ie9，已经支持
 src
-controls
+controls  // 若不配置该属性，就不会出现控制按钮，但播放器界面仍存在
 preload
 autoplay
 loop
@@ -41,14 +47,33 @@ poster  // 3种情况下，使用该封面，1、视频第一帧未加载完毕�
 width  // 不用加px，不论怎么设置视频容器的尺寸，视频画面总是会保持自身的比例，空余的部分，留白
 height
 mediagroup
+视频对象方法和属性
+pause();
+play();
+playbackRate  // 改变播放速度，如：2，视频会以正常速度的两倍播放，-1（有些浏览器可能不支持），速度不变，只是会倒退播放
+currentTime
+duration
+seekable  // 获得首个以秒计的视频可寻址范围
+事件
+onTimeUpdate  // 播放时，会连续触发
+onprogress
 视频文件格式
 H.264（收费）  .mp4  video/mp4  ie9支持
 Ogg Theora（免费开放）  .ogv  video/ogg
 WebM（google推出，免费，效果不如H.264）  .webm  video/webm
 
-<source>
+<source />  // ie9，已经支持
 嵌套在audio或video中，可配置多个，此时，要删除audio或video标签上的src属性
-<source type="audio/mp3" src="test.mp3"></source>  // type，MIME类型，浏览可根据type，判断是否支持该编码的文件，从而选择是否下载，配置type，可免去浏览器多余的下载
+<source type="audio/mp3" src="test.mp3">  // type，MIME类型，浏览可根据type，判断是否支持该编码的文件，从而选择是否下载，配置type，可免去浏览器多余的下载
+
+标记时间的文本轨道
+WebVTT（web video text tracks）格式，浏览器广泛支持该标准，文件后缀，.vtt
+
+<track />  // ie10，已经支持，添加字幕文件，和source一样，放置在video标签内部
+<track src="test.vtt" srclang="en" kind="subtitles" label="english" default>
+kind  // 描述了字幕中的内容类型，subtitles，descriptions，chapters，metadata，
+captions  // 如果字幕中，包含了对话和音效及音乐线索的描述，可设置该属性
+default  // 初始化时选用的字幕
 
 FileReader接口
 方法
