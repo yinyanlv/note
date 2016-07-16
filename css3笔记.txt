@@ -11,6 +11,7 @@ body {
   -webkit-touch-callout: none;
 }
 
+border，不接受百分比值
 margin, padding值为百分比时，百分比值都是相对于父元素的宽度
 
 content属性中的特殊字符
@@ -39,11 +40,32 @@ table-layout: fixed;  // 该模式下，设置表格的列宽，单元格不会�
 
 align-self: center;  // 不依赖其他因素，垂直居中，css3标准，目前支持性还不好
 
+column-count: 3;  // 分栏，ie10
+column-width: 10em;  // 可以不设置column-count只设置column-width
+column-gap: 1em;  // 调整分栏之间的间隔
+column-rule: 1px solid red;  // 添加一条垂直的分隔线
+column-span: 1;  // 控制元素横跨多列，默认1，目前只能设置为1或all
+
 display: flex;  // flexbox(伸缩盒)，此时子元素设置margin: auto;会在垂直和水平方向上都居中，其他模式下，margin: auto;只能实现水平居中
 align-items: center;  // 垂直居中
 justify-content: center;  // 水平居中
 flex-flow: column;  // 子元素垂直摆放
 flex: 1;
+
+字体
+字体格式
+WOFF（web open font format）  // 面向未来，性能最好，ie9及以上已支持
+EOT（embedded openType）  // 微软特有，ie9之前的版本支持
+TTF（trueTye）、OTF（openType postscript）  // 桌面应用中常用的字体格式，兼容android和旧版的非ie浏览器
+SVG（scalable vector graphics）  // 速度慢，文本质量不高，兼容旧版ipad和iphone
+@font-face {  // 正式注册字体，使用字体前，必须先注册该字体
+  font-family: 'fontname';  // 命名字体
+  src: url('test.eot');  // 必须首先注册eot格式字体，这样老版本ie不理解其它规则，也没关系
+  src: local('fontname'),  // 如果用户电脑恰好安装了该字体，浏览器会直接使用该本地字体，要避免误用同名的字体，可以传入一个无意义的字体名
+      url('fontname.woff') format('woff'),
+      url('fontname.ttf') format('truetype'),
+      url('fontname.svg') format('svg');
+}
 
 透视
 perspective: 500;
@@ -59,7 +81,8 @@ background-clip: content-box;  // 允许背景出现的区域，默认border-box
 background-attachment: fixed;  // fixed(相对于视口) / scroll / local(相对于当前元素)
 background: -webkit-image-set(url(...) 1x, url(...) 1.5x, url(...) 2x);  // 目前只适用于webkit内核，1x，像素密度
 background-blend-mode: multiply;  // 为每层背景指定混合模式，overlay, screen, difference, multiply, normal
-linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向
+linear-gradient  // y轴，垂直向上为初始0度，顺时针为正方向，from关键字，to关键字，使用webkit前缀时，不需要使用from关键字指定方向，渐变函数会自动赋值，循环渐变不能使用form关键字
+radial-gradient  // circle和ellipse（椭圆），at关键字，circle at 90% 5%（中心点，位于左边缘90%，上边缘5%），使用webkit前缀时，不能使用at关键字
 
 clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);  // 根据路径裁剪，polygon，多边形，可用于动画
 clip: rect(0, 0, 0, 0);  // 裁剪
@@ -82,6 +105,7 @@ hue-rotate(200deg);  // 每个像素的色相以指定的度数进行偏移
 mix-blend-mode: luminosity;  // 为整个元素设置混合模式，不可动画
 
 transform
+多个变换函数间，使用空格分隔
 skew(x, y);  //
 matrix(a, b, c, d, e, f);  // 3*3矩阵，各坐标相对于中心点，(x, y)每个点变换之前的坐标，(ax + cy + e, bx + dy + f)每个点变换之后的坐标
 a c e   x   ax + cy + e
@@ -117,11 +141,23 @@ img
 通过scale缩放图片，默认以图片的中心点进行缩放，除非重新设置了transform-origin
 
 媒体查询
+@media (not max-width: 568px) {  // not关键字，不包含当前像素，如：not max-width: 568px约等于min-width: 569px
+}
+width  // 显示区域的虚拟宽度
+height
 min-width  // 虚拟宽度
+device-width
 min-device-width  // 真实物理宽度
 min-device-pixel-ratio: 1.5x  // 1.5x，设备像素密度
+aspect-ratio: 1 / 1;
 min-aspect-ratio: 1 / 1;  // 宽高比，横屏，aspect，方向
+device-aspect-ratio: 1 / 1;
+min-device-aspect-ratio: 1 / 1;
 orientation: landscape;  // landscape，横向，portrait，纵向
+color  // 支持的颜色数量，1，表示黑白，目前主流浏览器都是24位
+min-color
+通过媒体查询应用样式表
+<link rel="stylesheet" type="text/css" media="screen and (max-width: 568px)" href="test.css">  // 该样式表总是被下载，但只会在对应的条件下才会被应用
 
 移动设备浏览器
 window.orientation  // 0，纵向，90 | -90，横向

@@ -64,7 +64,7 @@ WebM（google推出，免费，效果不如H.264）  .webm  video/webm
 
 <source />  // ie9，已经支持
 嵌套在audio或video中，可配置多个，此时，要删除audio或video标签上的src属性
-<source type="audio/mp3" src="test.mp3">  // type，MIME类型，浏览可根据type，判断是否支持该编码的文件，从而选择是否下载，配置type，可免去浏览器多余的下载
+<source type="audio/mp3" src="test.mp3" media="(max-width: 568px)">  // type，MIME类型，浏览可根据type，判断是否支持该编码的文件，从而选择是否下载，配置type，可免去浏览器多余的下载，可在该标签使用媒体查询，来下载对应的文件
 
 标记时间的文本轨道
 WebVTT（web video text tracks）格式，浏览器广泛支持该标准，文件后缀，.vtt
