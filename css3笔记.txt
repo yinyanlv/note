@@ -11,6 +11,11 @@ body {
   -webkit-touch-callout: none;
 }
 
+移动设备禁止横竖屏改变字体大小
+body {
+  -webkit-text-size-adjust: none;
+}
+
 border，不接受百分比值
 margin, padding值为百分比时，百分比值都是相对于父元素的宽度
 
