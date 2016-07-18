@@ -236,6 +236,7 @@ destroy([callback]);  删除会话
 save([callback]);  保存会话数据
 touch([callback]);  为会话cookie重置maxAge计数
 cookie  指定把会话链接到浏览器的cookie对象
+
 crypto模块生成安全的密码来实现会话验证
 crypto.createHash('sha256').update(pwd).digest('base64').toString();
 
