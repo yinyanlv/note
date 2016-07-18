@@ -73,6 +73,7 @@ git stash apply  // 恢复工作现场，但不删除stash
 git stash apply stash@{0}  // 到指定工作现场
 git stash drop  // 删除stash
 git stash pop  // 恢复工作现场，并删除stash
+git stash clear  // 清空
 
 git tag v1.0
 git tag  // 查看所有标签，按字母排序
