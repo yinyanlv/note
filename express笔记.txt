@@ -45,7 +45,9 @@ app.get('/find', function (req, res) {
 	var query = urlObj.query;
 	...
 });
+
 2、post参数  请求正文中传递参数
+
 3、正则  express使用正则表达式解析url并把与表达式匹配的路径作为参数数组存储。使用正则，可以为你的路径实现不遵循标准的/格式的模式。
 /book/12:15
 app.get(/^\/book\/(\w+)\:(\w+)$/, function (req, res) {  // req.params是与url路径中的条目(分组捕获)匹配的数组
