@@ -75,6 +75,41 @@ kind  // 描述了字幕中的内容类型，subtitles，descriptions，chapters
 captions  // 如果字幕中，包含了对话和音效及音乐线索的描述，可设置该属性
 default  // 初始化时选用的字幕
 
+canvas接口
+属性
+id
+width  // 不要在样式表中设置，单位px
+height
+let context = canvas.getContext('2d');
+context上的方法和属性
+context.beginPath();  // 开始一个新线段的绘制，不影响已绘制完成的部分，隔离各线段配置的颜色和宽度等属性，不调用该方法，已绘制的部分，会以新设定的配置，重新绘画，第一次绘制无需调用beginPath
+context.closePath();  // 会自动在最后一个绘制点与绘制起点间绘制一条直线
+context.moveTo(x, y);
+context.lineTo(x, y);
+context.fill();  // 填充形状，一般是先填充后描边，否则，轮廓线会有一部分被填充色覆盖掉
+context.stroke();  // 真正的着色
+context.lineWidth = 10;  // 设置线条宽度，单位像素
+context.strokeStyle = '#eee';  // 设置线条颜色，可使用rgb或rgba函数等
+context.lineGap = 'butt';  // 设置线条两端的形状，butt（方头，默认），round（圆头），square（与butt类似，但是会在线条两头各增加一半线宽的长度）
+context.lineJoin = 'mitre';  // 指定线段交点的形状，mitre（锐角斜接，默认），round（圆头），bevel（平头斜接）
+context.rect(x, y, width, height);
+context.fillRect(x, y, width, height);  // 填充一个矩形区域
+context.strokeRect(x, y, width, height);  // 绘制矩形框
+context.arc(centerX, centerY, radius, startingAngle, endingAngle);  // 绘制曲线，startingAngle，endingAngle，要用弧度表示，3点钟方向为0pi，顺时针为正方向
+context.arcTo();
+context.bezierCurveTo(controlX_1, controlY_1, controlX_2, controlY_2, endPointX_2, endPointY_2);
+context.quadraticCurveTo();  // quadratic，二次
+context.translate(x, y);
+context.rotate();
+context.scale();
+context.matrix();
+context.save();  // 保存坐标系当前状态
+context.restore();  // 恢复坐标系到前一个最近的状态，可多次调用
+context.globalAlpha = 0;  // 设置绘图上下文的不透明度
+context.globalCompositeOperation = 'source-over';  // 合成操作，源，正在绘制的图形，目标，画布上已绘制的图形
+12种合成模式：'source-over'（默认）, 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 'xor'
+let data = canvas.toDataURL();  // 将内容保存为图片
+
 FileReader接口
 方法
 readAsBinaryString(file); // 将文件读取为二进制编码
@@ -92,13 +127,6 @@ loadend  // 读取完成，无论成功或失败
 // 获得实际文件
 let file = document.getElementById('input').files[0];
 console.log(file.type);
-
-canvas接口
-let canvas = document.createElement('canvas');
-canvas.getContext('2d').globalAlpha = 0;
-canvas.width = 100;
-canvas.height = 100;
-let data = canvas.toDataURL();  // 将内容保存为图片
 
 web storage网络存储
 localStorage，只能存字符串
