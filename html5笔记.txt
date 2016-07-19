@@ -79,7 +79,7 @@ canvas  // ie9，已支持
 canvas和audio、video一样，支持后备内容
 属性
 id
-width  // 不要在样式表中设置，那样会发生变形，因为此时画布会自动使用默认尺寸（300px ＊ 150px），单位px
+width  // 单位px，不要在样式表中设置canvas尺寸，因为画布的context会忽略样式表中设置的尺寸，而使用标签上直接定义或默认（300px ＊ 150px）的尺寸，此时，样式表设置的尺寸会使画布发生变形
 height
 let context = canvas.getContext('2d');
 context上的方法和属性
