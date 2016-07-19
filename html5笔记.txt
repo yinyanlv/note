@@ -75,10 +75,11 @@ kind  // 描述了字幕中的内容类型，subtitles，descriptions，chapters
 captions  // 如果字幕中，包含了对话和音效及音乐线索的描述，可设置该属性
 default  // 初始化时选用的字幕
 
-canvas接口
+canvas  // ie9，已支持
+canvas和audio、video一样，支持后备内容
 属性
 id
-width  // 不要在样式表中设置，单位px
+width  // 不要在样式表中设置，那样会发生变形，因为此时画布会自动使用默认尺寸（300px ＊ 150px），单位px
 height
 let context = canvas.getContext('2d');
 context上的方法和属性
@@ -89,16 +90,20 @@ context.lineTo(x, y);
 context.fill();  // 填充形状，一般是先填充后描边，否则，轮廓线会有一部分被填充色覆盖掉
 context.stroke();  // 真正的着色
 context.lineWidth = 10;  // 设置线条宽度，单位像素
+context.fillStyle = 'black';
 context.strokeStyle = '#eee';  // 设置线条颜色，可使用rgb或rgba函数等
 context.lineGap = 'butt';  // 设置线条两端的形状，butt（方头，默认），round（圆头），square（与butt类似，但是会在线条两头各增加一半线宽的长度）
 context.lineJoin = 'mitre';  // 指定线段交点的形状，mitre（锐角斜接，默认），round（圆头），bevel（平头斜接）
 context.rect(x, y, width, height);
+context.clearRect(x, y, width, height);  // 清除画布
 context.fillRect(x, y, width, height);  // 填充一个矩形区域
 context.strokeRect(x, y, width, height);  // 绘制矩形框
+绘制曲线
 context.arc(centerX, centerY, radius, startingAngle, endingAngle);  // 绘制曲线，startingAngle，endingAngle，要用弧度表示，3点钟方向为0pi，顺时针为正方向
 context.arcTo();
 context.bezierCurveTo(controlX_1, controlY_1, controlX_2, controlY_2, endPointX_2, endPointY_2);
 context.quadraticCurveTo();  // quadratic，二次
+变换
 context.translate(x, y);
 context.rotate();
 context.scale();
@@ -108,7 +113,36 @@ context.restore();  // 恢复坐标系到前一个最近的状态，可多次调
 context.globalAlpha = 0;  // 设置绘图上下文的不透明度
 context.globalCompositeOperation = 'source-over';  // 合成操作，源，正在绘制的图形，目标，画布上已绘制的图形
 12种合成模式：'source-over'（默认）, 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 'xor'
-let data = canvas.toDataURL();  // 将内容保存为图片
+canvas.toDataURL(MIME);  // MIME: 'image/jpeg'...，默认，png，将内容转换为图像文件并编码为url形式，本地模式运行页面，页面中的dataURL功能会失效，此时，只能通过web服务器访问该页面
+绘制图像或视频帧
+context.getImageData();  //  取得原始像素数据
+context.createImageData();  // 一个像素一个像素地创建图像
+context.drawImage(image | video, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);  // 在画布上绘制图片，x，y，在画布上的定位
+绘制文本
+context.font = '20px bold Arial';
+context.textBaseline = 'top';
+context.fillText('hello canvas!');  // 相对于绘制线条和图片，绘制文本速度稍慢，如果想创建交互、动态的应用，可以事先把文本保存为图片
+context.strokeText('hello canvas!');
+context.measureText();  // 计算每行可以放多少个单词
+添加阴影
+context.shadowColor = 'red';
+context.shadowBlur = 20;  // 不小于3才会达到最佳效果
+context.shadowOffsetX = 10;
+context.shadowOffsetY = 10;
+填充图案
+let pattern = context.createPattern(image, 'repeat');  // repeat，repeat-x，repeat-y
+context.{fillStyle | strokeStyle} = pattern;
+填充渐变
+let linear = context.createLinearGradient(x1, y1, x2, y2);  // 起点，终点，可确定方向
+linear.addColorStop(0, 'red');
+linear.addColorStop(0.5, 'yellow');
+linear.addColorStop(1, 'green');
+context.{fillStyle | strokeStyle} = linear;
+let radial = context.createRadialGradient(x1, y1, r1, x2, y2, r2);  // 表示两个圆，非同心圆时，有拉伸、压缩等效果
+radial.addColorStop(0, 'red');
+radial.addColorStop(0.5, 'yellow');
+radial.addColorStop(1, 'green');
+context.{fillStyle | strokeStyle} = radial;
 
 FileReader接口
 方法
