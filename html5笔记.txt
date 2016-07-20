@@ -115,9 +115,10 @@ context.globalCompositeOperation = 'source-over';  // 合成操作，源，正�
 12种合成模式：'source-over'（默认）, 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 'xor'
 canvas.toDataURL(MIME);  // MIME: 'image/jpeg'...，默认，png，将内容转换为图像文件并编码为url形式，本地模式运行页面，页面中的dataURL功能会失效，此时，只能通过web服务器访问该页面
 绘制图像或视频帧
-context.getImageData();  //  取得原始像素数据
-context.createImageData();  // 一个像素一个像素地创建图像
-context.drawImage(image | video, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);  // 在画布上绘制图片，x，y，在画布上的定位
+context.getImageData(x, y, width, height);  // 取得原始像素块，取得的对象，有一个data属性，其值为一个像素数组，每一个像素用四个值表示，red, green, blue, alpha，它们先按rgba顺序再按照像素的顺序，放置在data属性中
+context.createImageData();  // 创建新的、空的像素块
+context.putImageData(imageData, x, y); // 将像素块绘入到画布中
+context.drawImage(image | video, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);  // 在画布上绘制图片，x，y，在画布上的定位，如果只传入了3个参数，那么第二个和第三个参数，即为x，y
 绘制文本
 context.font = '20px bold Arial';
 context.textBaseline = 'top';
@@ -143,6 +144,9 @@ radial.addColorStop(0, 'red');
 radial.addColorStop(0.5, 'yellow');
 radial.addColorStop(1, 'green');
 context.{fillStyle | strokeStyle} = radial;
+创建具有交互能力的canvas
+1、记录绘制的每个元素
+2、基于坐标或像素做碰撞检测
 
 FileReader接口
 方法
