@@ -11,9 +11,16 @@ body {
   -webkit-touch-callout: none;
 }
 
+移动端禁止点击高亮
+-webkit-tap-highlight-color: rgba(255,0,0,0);
+
 移动设备禁止横竖屏改变字体大小
 body {
   -webkit-text-size-adjust: none;
+}
+
+input::-webkit-search-cancel-button{
+  display: none;  // 去除部分浏览器搜索框中的删除按钮
 }
 
 border，不接受百分比值
@@ -22,6 +29,8 @@ margin, padding值为百分比时，百分比值都是相对于父元素的宽�
 content属性中的特殊字符
 content: '\A';  // 代表0x000A(换行符，unicode表示法)，在css中还可以写成\000A，在js中常写成\n
 content: '\D';  // 代表回车符，在js中常写成\r，现代浏览器中已经不需要用到这个字符了
+
+appearance: none;  // 控制元素外观，normal, icon, window, button, menu, field
 
 hyphens: auto;  // 连字符断行，none，manual(默认)，auto
 
