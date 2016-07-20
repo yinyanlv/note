@@ -18,7 +18,7 @@ image/gif
 
 音频与视频
 文件的扩展名表示容器的格式
-<audio>  // ie9，已经支持
+<audio>  // ie9+
 src
 controls  // 若不配置该属性，就不会出现播放器界面
 preload  // auto（预先下载整个文件），metadata（点击播放按钮后，先获取音频文件开头的数据块，从而确定一些基本信息），none（不必预先下载），浏览器不一定执行该属性
@@ -32,11 +32,11 @@ canPlayType(MIMEType);  // 返回值''（浏览器不支持），'probably'（�
 currentTime
 new Audio(src);
 音频文件格式
-MP3（收费）  .mp3  audio/mp3  ie9支持
+MP3（收费）  .mp3  audio/mp3  ie9+
 Ogg Vorbis（免费开放）  .ogg  audio/ogg
 WAV（未压缩，体积大）  .wav  audio/wav
 
-<video>  // ie9，已经支持
+<video>  // ie9+
 src
 controls  // 若不配置该属性，就不会出现控制按钮，但播放器界面仍存在
 preload
@@ -58,24 +58,24 @@ seekable  // 获得首个以秒计的视频可寻址范围
 onTimeUpdate  // 播放时，会连续触发
 onprogress
 视频文件格式
-H.264（收费）  .mp4  video/mp4  ie9支持
+H.264（收费）  .mp4  video/mp4  ie9+
 Ogg Theora（免费开放）  .ogv  video/ogg
 WebM（google推出，免费，效果不如H.264）  .webm  video/webm
 
-<source />  // ie9，已经支持
+<source />  // ie9+
 嵌套在audio或video中，可配置多个，此时，要删除audio或video标签上的src属性
 <source type="audio/mp3" src="test.mp3" media="(max-width: 568px)">  // type，MIME类型，浏览可根据type，判断是否支持该编码的文件，从而选择是否下载，配置type，可免去浏览器多余的下载，可在该标签使用媒体查询，来下载对应的文件
 
 标记时间的文本轨道
 WebVTT（web video text tracks）格式，浏览器广泛支持该标准，文件后缀，.vtt
 
-<track />  // ie10，已经支持，添加字幕文件，和source一样，放置在video标签内部
+<track />  // ie10+，添加字幕文件，和source一样，放置在video标签内部
 <track src="test.vtt" srclang="en" kind="subtitles" label="english" default>
 kind  // 描述了字幕中的内容类型，subtitles，descriptions，chapters，metadata，
 captions  // 如果字幕中，包含了对话和音效及音乐线索的描述，可设置该属性
 default  // 初始化时选用的字幕
 
-canvas  // ie9，已支持
+canvas  // ie9+
 canvas和audio、video一样，支持后备内容
 属性
 id
@@ -148,7 +148,19 @@ context.{fillStyle | strokeStyle} = radial;
 1、记录绘制的每个元素
 2、基于坐标或像素做碰撞检测
 
+web storage  // ie8+（ie8中，不支持onStorage事件）
+localStorage和sessionStorage的api完全相同，它们的区别仅在于数据的寿命，没有web服务器，不要测试web storage
+localStorage  // 用于长期、无限期保存网站的数据，并且站内任何页面都可以访问该数据，只能存储字符串，不能跨域访问，大多数浏览器限制最多可存储5MB的数据
+localStorage.setItem(key, value);
+localStorage.getItem(key);
+localStorage.removeItem(key);
+localStorage.clear();
+localStorage.length;
+localStorage.key(n);  // 获取第n个数据的key键键名
+sessionStorage  // 不能跨域访问，用于临时保存针对一个窗口（标签页）的数据，只要用户不关闭窗口（标签页），即使用户从你的网站跑到别的网站再回来，已存储的数据依然存在
+
 FileReader接口
+支持该标准的浏览器，能够从计算机硬盘的其它文件中读取数据
 方法
 readAsBinaryString(file); // 将文件读取为二进制编码
 readAsText(file, [encoding]); // 将文件读取为文本
@@ -166,14 +178,8 @@ loadend  // 读取完成，无论成功或失败
 let file = document.getElementById('input').files[0];
 console.log(file.type);
 
-web storage网络存储
-localStorage，只能存字符串
-localStorage.setItem(key, value);
-localStorage.getItem(key);
-localStorage.removeItem(key);
-localStorage.clear();
-localStorage.length;
-localStorage.key(n);  // 获取第n个数据的key键键名
+IndexDB
+支持该标准的浏览器，内含一个完整的、微型的数据库引擎
 
 pjax
 ajax，负责更新内容，pushState负责更新url
@@ -212,7 +218,7 @@ contenteditable  // ture/false，使用户能够编辑某个元素
 designMode  // on/off，使用户能够编辑整个页面，通常与iframe配合使用，iframe.contentWindow.document.designMode = 'on';
 
 标签
-当浏览器遇到不认识的标签时，会把它们当成内联元素（早版本ie，拒绝给无法识别的元素应用样式），大多数html5元素都是块级元素
+当浏览器遇到不认识的标签时，会把它们当成内联元素（早版本ie(6, 7, 8)，拒绝给无法识别的元素应用样式），大多数html5元素都是块级元素
 分块元素，在页面中创建新的、嵌套纲要的元素，<article>，<aside>，<nav>，<section>，article和section从纲要角度考虑，必须带有标题，div不是分块元素
 区块根，这些元素不是从已有的纲要向下分支，而产生自己的纲要，但不会包含着在页面的主纲要视图中。<body>，<blockquote>，<td>，<fieldset>，<figure>，<details>
 <header>  // 表示内容的标题或网页的页眉，一个网页可以包含多个header
@@ -244,8 +250,8 @@ html5中自带的验证机制，目前只能在提交时统一验证，不能在
 <fieldset>  // 在表单中，划分逻辑块
 <legend>  // 放置标题
 for属性，可指向id
-placeholder  // ie10之前不支持
-autofocus  // ie10之前不支持
+placeholder  // ie10+
+autofocus  // ie10+
 novalidate  // 只能用在form标签
 formnovalidate  // 用在提交按钮上
 required
