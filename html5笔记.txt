@@ -148,7 +148,7 @@ context.{fillStyle | strokeStyle} = radial;
 1、记录绘制的每个元素
 2、基于坐标或像素做碰撞检测
 
-web storage  // ie8+（ie8中，不支持onStorage事件）
+web storage  // ie8+（ie8中，不支持onstorage事件）
 localStorage和sessionStorage的api完全相同，它们的区别仅在于数据的寿命，没有web服务器，不要测试web storage
 localStorage  // 用于长期、无限期保存网站的数据，并且站内任何页面都可以访问该数据，只能存储字符串，不能跨域访问，大多数浏览器限制最多可存储5MB的数据
 localStorage.setItem(key, value);
@@ -158,28 +158,65 @@ localStorage.clear();
 localStorage.length;
 localStorage.key(n);  // 获取第n个数据的key键键名
 sessionStorage  // 不能跨域访问，用于临时保存针对一个窗口（标签页）的数据，只要用户不关闭窗口（标签页），即使用户从你的网站跑到别的网站再回来，已存储的数据依然存在
+onstorage  // localStorage或sessionStorage发生变化时，该站点所有被打开的页面，都会触发onstorage事件，（firefox的window对象没有onstorage属性，但可以用addEventListener，注册侦听storage事件），事件对象e包含的属性，e.oldValue，e.newValue，e.url（导致此次变化的url）
 
-FileReader接口
-支持该标准的浏览器，能够从计算机硬盘的其它文件中读取数据
+File api  // ie10+
+支持该标准的浏览器，能够从计算机硬盘的文件中读取数据，它不能修改、创建文件
+// 获得实际文件
+let file = document.getElementById('input').files[0];  // file.size（字节），file.type（MIME），file.name（不包括路径）
+FileReader类
 方法
-readAsBinaryString(file); // 将文件读取为二进制编码
-readAsText(file, [encoding]); // 将文件读取为文本
-readAsDataURL(file); // 将文件读取为DataURL
+readAsText(file, [encoding]);  // 将文件读取为文本
+readAsDataURL(file);  // 将文件读取为dataURL
+readAsBinaryString(file);  // 将文件读取为二进制编码
+readAsArrayBuffer(file);  // 将文件读取到一个buffer数组中
 abort();
 事件
 abort
 error
 loadstart
 progress
-load  // 成功读取
+load  // 成功读取，e.target.result（文件内容）
 loadend  // 读取完成，无论成功或失败
+通过拖动载入文件
+ondragenter
+ondragover
+ondrop  // e.dataTransfer.files，取得拖进来的文件
 
-// 获得实际文件
-let file = document.getElementById('input').files[0];
-console.log(file.type);
+IndexedDB  // ie10+
+支持该标准的浏览器，内含一个完整的、微型的数据库引擎，一个IndexedDB数据库属于某个人，使用特定的电脑和特定的浏览器，访问特定的网站，任何一项发生变化，都会对应一个新的IndexedDB数据库，IndexedDB默认无限期保存数据
+let request = window.indexedDB.open('dbname', 1);  // 1，数据库的版本号，1，表示一个全新的数据库
+request.onsuccess = function (e) {
+  // request.result（数据库对象）
+  let store = request.result.createObjectStore('tableName', {keyPath: 'id', autoIncrement: true});  // 创建数据表，keyPath，对象中作为主关键字的属性，可自定义配置属性
+  let transaction = request.result.transaction(['tableName'], 'readwrite');  // 创建事务，{readwrite | readonly}，事务类型
+  let objectStore = transaction.objectStore('tableName');  // 为事务获取对象存储
 
-IndexDB
-支持该标准的浏览器，内含一个完整的、微型的数据库引擎
+  let r = objectStore.put(recordObj);  // 添加或更新数据
+  r.onsuccess = function () {};
+
+  let r2 = objectStore.openCursor();  // 创建游标，用于查询所有数据，游标初始定位在第一条数据
+  r2.onsuccess = function (e) {
+    let cursor = e.target.result;  // cursor，{true ｜ false}
+    let record = cursor.value;
+    ...
+    cursor.continue();  // 访问下一条数据
+  };
+
+  let r3 = objectStore.get('mainKeyValue');  // 查询单条数据
+  ...
+
+  let r4 = objectStore.delete('mainKeyValue');  // 删除某条数据
+  ...
+
+};
+request.onerror = function (e) {
+  // request.error
+};
+request.onupgradeneeded = function (e) {  // 在所请求的数据库版本不可用时触发
+  // e.oldVersion（当前数据库版本）
+};
+window.indexedDB.deleteDatabase();  // 删除一个数据库
 
 pjax
 ajax，负责更新内容，pushState负责更新url
