@@ -20,13 +20,13 @@ windows用户，在C:\Users\{user}\.cargo目录下新建一个config文件
 模式（patterns）
 类型注解（type annotations）
 可变性（mutability）
-初始化绑定（initializing bindings） //使用之前必须初始化
+初始化绑定（initializing bindings）  // 使用之前必须初始化
 作用域（scope）
-隐藏（shadowing） //重新声明并初始化变量，来覆盖前一个变量绑定
+隐藏（shadowing）  // 重新声明并初始化变量，来覆盖前一个变量绑定
 
 函数
 定义函数时，必须为函数参数声明类型，这是一个全推断与无推断的最佳平衡
-rust函数只能返回一个值 //->
+rust函数只能返回一个值  // ->
 rust是一个基于表达式的语言，分号与其它基于“大括号和分号”的语言不同，在rust中分号来分隔各个表达式
 表达式与语句
 表达式返回一个值，而语句不是
@@ -39,26 +39,26 @@ fn diverges() -> ! {
 }
 控制台想获取更多的信息，配置rust环境RUST_BACKTRACE=1
 函数指针
-let f: fn(i32) -> i32 = someFunc; //此时不需要类型推断
-let f = someFunc; //此时需要类型推断
+let f: fn(i32) -> i32 = someFunc;  // 此时不需要类型推断
+let f = someFunc;  // 此时需要类型推断
 
 原生类型
 bool
-char //单引号，rust中一个字符占4个字节
+char  // 单引号，rust中一个字符占4个字节
 数字类型
 有符号，无符号，定长，不定长，整型，浮点型
 i8
 i16
-i32 //整型默认
+i32  // 整型默认
 i64
-isize //依赖底层指针大小，有符号
+isize  // 依赖底层指针大小，有符号
 u8
 u16
 u32
-u64 //无符号整型默认
-usize //依赖底层指针大小，无符号
-f32 //单精度
-f64 //双精度，默认
+u64  // 无符号整型默认
+usize  // 依赖底层指针大小，无符号
+f32  // 单精度
+f64  // 双精度，默认
 有符号数，采用补码形式表示
 计算机中的有符号数有三种表示方法，即原码、反码和补码，符号位0表示正，1表示负
 正数的补码是其本身
@@ -66,13 +66,13 @@ f64 //双精度，默认
 -5对应正数5（00000101） -> 所有位取反（11111010） -> 加1(11111011)
 数组，定长的相同类型的元素列表，数组默认是不可变的
 数组的类型是[T; N]，T为泛型标记，N代表数组的长度
-arr.len(); //获取数组元素数量
-let a = [0; 20]; //将数组中每一个元素初始化为相同值的简写
-切片(slices)是对一个数组的引用，通过组合&和[]来创建一个切片，如&arr[..],&arr[1..4] //复制1，2，3元素
+arr.len();  // 获取数组元素数量
+let a = [0; 20];  // 将数组中每一个元素初始化为相同值的简写
+切片(slices)是对一个数组的引用，通过组合&和[]来创建一个切片，如&arr[..],&arr[1..4]  // 复制1，2，3元素
 切片的类型是&[T]，T为泛型
 原始字符串类型，str，不定长类型，本身并不是非常有用，不过当它用在引用后是就有用了
 元组(tuples)，固定大小的有序列表，可用作模式匹配
-let x: (i32, &str) = (1, "hello"); //类型，(i32, &str)，&str是一个字符串切片
+let x: (i32, &str) = (1, "hello");  // 类型，(i32, &str)，&str是一个字符串切片
 可以用一个逗号来消除一个单元素元组(0,)和一个括号中的值(0)的歧义
 元组索引（Tuple Indexing），tuple.0,tuple.1...元组索引使用.而不是[]
 函数，函数的类型为!
@@ -93,30 +93,30 @@ if x == 5 {
 
 }
 if语句其实是一个表达式
-let y = if x == 5 { 10 } else { 15 }; // y: i32
+let y = if x == 5 { 10 } else { 15 };  // y: i32
 一个没有else的if总是返回()作为返回值
 
 循环
 loop
-loop { //无限循环，直到一些终止语句被执行
+loop {  // 无限循环，直到一些终止语句被执行
 
 }
 while
-while judge { //不确定应该循环多少次
+while judge {  // 不确定应该循环多少次
 
 }
 for
-for var in expression { //循环特定的次数，expression是一个迭代器如1..10（不包括上限值10）
+for var in expression {  // 循环特定的次数，expression是一个迭代器如1..10（不包括上限值10）
 
 }
 enumerate方法，记录已经循环了多少次
 for (i, j) in (5..10).enumerate() {
 
 }
-break; //loop, while, for
-continue; //while, for
+break;  // loop, while, for
+continue;  // while, for
 循环标签，主要用于嵌套循环的流程控制
-'test:for i in 0..10 { //注意，标签名单引号并未闭合
+'test:for i in 0..10 {  // 注意，标签名单引号并未闭合
   continue 'test;
 }
 
@@ -151,7 +151,7 @@ fn foo(mut x: i32) {}
 字段级别可变性，你不能拥有一个一些字段可变而一些字段不可变的结构体
 
 结构体
-struct Point { //根据传统，结构体使用大写字母开头，并使用驼峰命名法
+struct Point {  // 根据传统，结构体使用大写字母开头，并使用驼峰命名法
   x: i32,
   y: i32
 }
@@ -188,7 +188,7 @@ match属于“模式匹配”的范畴
 match x {
   1 => println!("abc"),
   ...
-  _ => println!("test"); //必须包含_
+  _ => println!("test");  // 必须包含_
 }
 匹配枚举，处理枚举的可能变量
 match msg {
@@ -208,7 +208,7 @@ match x {
 解构
 .. 代表省略的部分
 忽略绑定，在模式中使用_来忽视它的类型和值，从而匹配某个分支，也可以在模式中用..来忽略多个值
-ref和ref mut //在模式中创建一个引用
+ref和ref mut  // 在模式中创建一个引用
 范围，可以用...匹配一个范围的值，范围经常用在整数和char上
 绑定，可以使用@把值绑定到变量上
 let x = 5;
@@ -250,8 +250,8 @@ fn main() {
 vectors（向量）
 vector，是一个动态，可增长的数组，被实现为标准库类型Vec<T>
 可以使用vec!宏来创建它
-let v = vec![1, 2, 3, 4, 5]; //v: Vec<i32>
-let v = vec![0; 10]; //十个0
+let v = vec![1, 2, 3, 4, 5];  // v: Vec<i32>
+let v = vec![0; 10];  // 十个0
 访问元素
 []，必须用usize类型的值来索引
 越界访问
@@ -284,7 +284,7 @@ fn takes_anything<T>(x: T) {
   // do something with x
 }
 泛型结构体
-impl<T> Point<T> { //给泛型struct增加一个实现
+impl<T> Point<T> {  // 给泛型struct增加一个实现
   fn swap(&mut self) {
     std::mem::swap(&mut self.x, &mut self.y);
   }
@@ -490,7 +490,7 @@ Deref和方法调用，当调用一个方法时Deref也会出现
 宏
 宏允许我们在句法水平上进行抽象。宏是一个“展开后的”句法形式的速记。这个展开发生在编译的早期
 vec!宏，用来初始化一个任意数量元素的vector
-macro_rules! vec { ... } //定义宏
+macro_rules! vec { ... }  // 定义宏
 卫生宏，一些语言使用简单的文本替换来实现宏
 常用宏
 panic!，这个宏导致当前线程恐慌
