@@ -9,7 +9,7 @@ cargo build  // 编译，存放至debug文件夹
 cargo build --release  // 优化编译，存放至release文件夹
 cargo run  // 编译并运行
 cargo run --release
-cargo new hello_rust --bin
+cargo new hello_rust --bin  // --bin，将程序编译为一个可执行文件，而不是一个库
 cargo update
 cargo install
 cargo doc  // 根据注释，生成html文档
