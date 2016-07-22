@@ -218,37 +218,47 @@ request.onupgradeneeded = function (e) {  // 在所请求的数据库版本不�
 };
 window.indexedDB.deleteDatabase();  // 删除一个数据库
 
+离线应用  // ie10+，离线应用由一个单独的缓存清单控制，不限定时间
+manifest缓存清单，文件后缀名，.appcache（html5标准），也可以使用其它后缀名，如：.manifest（不推荐）
+如果缓存清单中写了一个不存在的文件，浏览器会忽略整个缓存清单
+如果浏览器缓存了缓存清单，就不会再向服务器请求缓存清单，因此，应该让web服务器明确告诉浏览器不要缓存缓存清单
+如果浏览器下载了新的缓存清单，却发现内容没有变化，它同样会停止更新，并使用之前缓存的内容，可以通过修改注释来解决这个问题，如：# version 0.0.1
+每次更新缓存内容，不是增量更新，而是全部重新下载一遍，包括丝毫未改的那些文件
+服务器返回的MIME类型必须配置为：text/cache-manifest
+<html manifest="yourname.appcache">...</html>  // manifest值，为缓存清单的路径和文件名，浏览器会先下载缓存清单，再下载清单里列出的所有文件
+manifest
+第一行："CACHE MANIFEST"
+注释以＃开头
+包含4个条目
+MASTER  // html标签上有manifest参数的文件
+CACHE  // 自定义要缓存的文件，永久缓存，直到manifest改变（不是资源改变），缓存列表不支持通配符*，防止无意间缓存庞大的站点
+NETWORK  // 定义未缓存的（永不缓存），（总是）需要联网访问的内容，一般用*（通配符，也可以代表某一部分，如：*.jpg），如果不显式定义该条目，那些未缓存的内容将不会发起网络请求
+FALLBACK  // 定义是否根据计算机是否在线而控制显示的内容，每一行，第一个为在线时使用的文件名，第二个为离线后备文件名，必须同域，支持通配符，'/'，有些浏览器可使用*
+判断是否在线
+1、navigator.onLine，该属性并不准确，因为，该属性只能真实地反应浏览器“脱机工作”的设置，并不能反应是否联网
+2、通过FALLBACK，在线和离线时，加载不同的脚步，根据脚步的返回值，来判断
+离线应用api
+window.applicationCache
+属性
+status  // 默认0，可以知道浏览器现在在做什么，是在检测更新缓存清单，还是在下载新文件，还是在做其它什么事
+方法
+update();  // 让浏览器检测是否有新的缓存清单
+swapCache();  // 告诉浏览器开始使用新的缓存内容
+事件
+checking  // 发现网页中的manifest属性时触发
+noupdate  // 已经下载了缓存清单，且缓存清单并未改变时触发
+downloading  // 浏览器开始下载缓存清单以及其中列出的文件之前触发
+progress  // 下载文件期间，不断地触发
+cached  // 新离线应用的所有文件第一次下载完成后，触发，此后不会再发生事件
+updateready  // 表示浏览器已经下载了新版本的应用，一般需要重新加载页面，才能应用
+error  // 缓存期间发生任何问题，都会触发
+obsolete  // 在检测更新时，发现描述文件不存在时，触发，然后，它会清除缓存，以后，加载页面时，都是从服务器取得实时、最新的页面
+
 pjax
 ajax，负责更新内容，pushState负责更新url
 window.history.pushState(stateObj, name, url);  // name，一般为null
 popstate事件，用户后退或前进导致状态堆位置发生改变时触发
 window.addEventListener('popstate', function (e) {}, false);  // e.state，stateObj
-
-应用缓存
-manifest缓存清单
-服务器返回的MIME类型必须配置为：text/cache-manifest
-<html manifest="yourname.appcache">...</html>  // appcache固定
-manifest包含4个条目
-MASTER  // html标签上有manifest参数的文件
-CACHE  // 自定义要缓存的文件，永久缓存，直到manifest改变（不是资源改变）
-NETWORK  // 允许网络请求的文件，一般用*
-FALLBACK  // 用户离线时的备用内容，定义多个资源，必须同域
-应用缓存API
-window.applicationCache
-属性
-status  // 默认0
-方法
-update();
-swapCache();
-事件
-cached
-checking
-downloading
-error
-noupdate
-obsolete  // 废弃
-progress
-updateready
 
 html编辑功能
 contenteditable  // ture/false，使用户能够编辑某个元素
