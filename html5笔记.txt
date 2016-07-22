@@ -187,13 +187,14 @@ IndexedDB  // ie10+
 支持该标准的浏览器，内含一个完整的、微型的数据库引擎，一个IndexedDB数据库属于某个人，使用特定的电脑和特定的浏览器，访问特定的网站，任何一项发生变化，都会对应一个新的IndexedDB数据库，IndexedDB默认无限期保存数据
 let request = window.indexedDB.open('dbname', 1);  // 1，数据库的版本号，1，表示一个全新的数据库
 request.onsuccess = function (e) {
+
   // request.result（数据库对象）
   let store = request.result.createObjectStore('tableName', {keyPath: 'id', autoIncrement: true});  // 创建数据表，keyPath，对象中作为主关键字的属性，可自定义配置属性
   let transaction = request.result.transaction(['tableName'], 'readwrite');  // 创建事务，{readwrite | readonly}，事务类型
   let objectStore = transaction.objectStore('tableName');  // 为事务获取对象存储
 
-  let r = objectStore.put(recordObj);  // 添加或更新数据
-  r.onsuccess = function () {};
+  let r1 = objectStore.put(recordObj);  // 添加或更新数据
+  r1.onsuccess = function () {};
 
   let r2 = objectStore.openCursor();  // 创建游标，用于查询所有数据，游标初始定位在第一条数据
   r2.onsuccess = function (e) {
@@ -208,7 +209,6 @@ request.onsuccess = function (e) {
 
   let r4 = objectStore.delete('mainKeyValue');  // 删除某条数据
   ...
-
 };
 request.onerror = function (e) {
   // request.error
