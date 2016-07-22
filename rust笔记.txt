@@ -1,11 +1,13 @@
 基础命令
-rustc main.rs
+rustc main.rs  // 编译
+rustc main.rs -O  // 优化编译
 cargo --version
 Cargo.toml文件，配置文件
 Cargo.lock文件，跟踪程序的依赖
-cargo build
-cargo build --release
-cargo run
+cargo build  // 编译，存放至debug文件夹
+cargo build --release  // 优化编译，存放至release文件夹
+cargo run  // 编译并运行
+cargo run --release
 cargo new hello_rust --bin
 
 cargo镜像
@@ -16,67 +18,39 @@ index = "git://crates.mirrors.ustc.edu.cn/index"
 index = "http://crates.mirrors.ustc.edu.cn/index"
 windows用户，在C:\Users\{user}\.cargo目录下新建一个config文件
 
-变量绑定
-模式（patterns）
-类型注解（type annotations）
-可变性（mutability）
-初始化绑定（initializing bindings）  // 使用之前必须初始化
-作用域（scope）
-隐藏（shadowing）  // 重新声明并初始化变量，来覆盖前一个变量绑定
+let关键字
+有变量绑定和模式匹配的作用
+':'，类型注解
 
-函数
-定义函数时，必须为函数参数声明类型，这是一个全推断与无推断的最佳平衡
-rust函数只能返回一个值  // ->
-rust是一个基于表达式的语言，分号与其它基于“大括号和分号”的语言不同，在rust中分号来分隔各个表达式
-表达式与语句
-表达式返回一个值，而语句不是
-rust中语句有两种类型：声明语句和表达式语句（目的是把任何表达式变为语句），其余都是表达式
-提早返回（early returns）
-发散函数（diverging function）
-发散函数并不返回，它拥有一个类型!，代表“发散”
-fn diverges() -> ! {
-  panic!("This function never returns!");
-}
-控制台想获取更多的信息，配置rust环境RUST_BACKTRACE=1
-函数指针
-let f: fn(i32) -> i32 = someFunc;  // 此时不需要类型推断
-let f = someFunc;  // 此时需要类型推断
+const和static
+const和static，与let绑定不同，必须指定类型
+const，常量贯穿于整个程序的生命周期。实际上它们会被内联到用到它们的地方，为此对同一常量的引用并不能保证引用到相同的内存地址
+static，以静态量的方式提供了类似“全局变量”的功能，在使用时并不内联。这意味着对每一个值只有一个实例，并且位于内存中的固定位置
 
-原生类型
+原生类型  // rust不提供原生类型之间的隐式转换，只能使用as关键字显式转换
 bool
 char  // 单引号，rust中一个字符占4个字节
-数字类型
-有符号，无符号，定长，不定长，整型，浮点型
-i8
-i16
-i32  // 整型默认
-i64
-isize  // 依赖底层指针大小，有符号
-u8
-u16
-u32
-u64  // 无符号整型默认
-usize  // 依赖底层指针大小，无符号
-f32  // 单精度
-f64  // 双精度，默认
-有符号数，采用补码形式表示
-计算机中的有符号数有三种表示方法，即原码、反码和补码，符号位0表示正，1表示负
-正数的补码是其本身
+数值类型
+i8  i16  i32（整型默认）  i64  isize（依赖底层指针大小，有符号）
+u8  u16  u32  u64（无符号整型默认）  usize（依赖底层指针大小，无符号）
+f32（单精度）  f64（双精度，默认）
+计算机中的数值有三种表示方法，即原码、反码和补码，符号位0表示正，1表示负，有符号数，采用补码形式表示，正数的补码是其本身
 求－5对应的补码：
 -5对应正数5（00000101） -> 所有位取反（11111010） -> 加1(11111011)
-数组，定长的相同类型的元素列表，数组默认是不可变的
-数组的类型是[T; N]，T为泛型标记，N代表数组的长度
-arr.len();  // 获取数组元素数量
-let a = [0; 20];  // 将数组中每一个元素初始化为相同值的简写
-切片(slices)是对一个数组的引用，通过组合&和[]来创建一个切片，如&arr[..],&arr[1..4]  // 复制1，2，3元素
-切片的类型是&[T]，T为泛型
-原始字符串类型，str，不定长类型，本身并不是非常有用，不过当它用在引用后是就有用了
-元组(tuples)，固定大小的有序列表，可用作模式匹配
-let x: (i32, &str) = (1, "hello");  // 类型，(i32, &str)，&str是一个字符串切片
-可以用一个逗号来消除一个单元素元组(0,)和一个括号中的值(0)的歧义
-元组索引（Tuple Indexing），tuple.0,tuple.1...元组索引使用.而不是[]
-函数，函数的类型为!
-let x: fn(i32) -> i32 = foo;
+字符串类型  // 最底层的是不定长类型str，两种字符串类型&str（字符串切片）和String（堆分配字符串）
+数组  // 具有固定大小，并且元素都是同种类型，可表示为[T; N]
+切片  // 引用一个数组的部分数据，并且不需要拷贝，可表示为&[T]，如：&arr[1..4]  // 复制1，2，3元素
+元组  // tuples，固定大小的有序列表，每个元素都有可以有自己的类型，通过解构或者索引（tuple.0）来获得每个元素的值，可以用一个逗号来消除一个单元素元组(0,)和一个括号中的值(0)的歧义
+指针  // 最底层的是裸指针*const T和*mut T，rust的安全大多来源于编译时检查，不过裸指针并没有这样的保证，当解引用一个裸指针时，要为它并不指向正确的地址负责，为此，需要使用unsafe
+函数  // 具有函数类型的变量实质上是一个函数指针，其类型为!，如：let x: fn(i32) -> i32 = foo;
+元类型  // 即()，其唯一值也是()
+
+字符串类型
+可变大小的数据结构，两种字符串类型，&str（字符串切片，固定大小且不可变）和String（堆分配字符串，可变）
+String转换为&str（通过&）的代价很小，不过从&str转换到String（to_string()）涉及到分配内存，除非有必要，否则不要这么做
+索引，因为字符串是有效utf-8编码的，它不支持索引，字符串切片的索引，索引的是字节偏移，而不是字符偏移
+字符串常量  // 类型，&'static str
+字符串常量是静态分配的字符串切片，也就是说它储存在我们编译好的程序中，并且整个程序的运行过程中一直存在
 
 注释
 // 行注释
@@ -119,6 +93,24 @@ continue;  // while, for
 'test:for i in 0..10 {  // 注意，标签名单引号并未闭合
   continue 'test;
 }
+
+函数
+定义函数时，必须为函数参数声明类型，这是一个全推断与无推断的最佳平衡
+rust函数只能返回一个值  // ->
+rust是一个基于表达式的语言，分号与其它基于“大括号和分号”的语言不同，在rust中分号来分隔各个表达式
+表达式与语句
+表达式返回一个值，而语句不是
+rust中语句有两种类型：声明语句和表达式语句（目的是把任何表达式变为语句），其余都是表达式
+提早返回（early returns）
+发散函数（diverging function）
+发散函数并不返回，它拥有一个类型!，代表“发散”
+fn diverges() -> ! {
+  panic!("This function never returns!");
+}
+控制台想获取更多的信息，配置rust环境RUST_BACKTRACE=1
+函数指针
+let f: fn(i32) -> i32 = someFunc;  // 此时不需要类型推断
+let f = someFunc;  // 此时需要类型推断
 
 所有权（ownership）
 对于任何给定的资源都正好（只）有一个绑定与之对应，当一个绑定离开作用域，它们绑定的资源就会释放
@@ -258,24 +250,6 @@ let v = vec![0; 10];  // 十个0
 尝试访问并不存在的索引，前的线程会panic，如果想处理越界错误而不是panic，可以使用像get或get_mut这样的方法，他们在给出一个无效的索引时返回None
 迭代
 for var in vector
-
-字符串
-可变大小的数据结构
-两种字符串类型，&str和String
-&str，字符串切片（string slices）
-字符串常量是&’static str类型
-字符串常量是静态分配的字符串切片，也就是说它储存在我们编译好的程序中，并且整个程序的运行过程中一直存在
-String，是一个在堆上分配的字符串，通常通过一个字符串切片调用to_string方法转换而来
-String可以通过一个&强制转换为&str
-String转换为&str的代价很小，不过从&str转换到String涉及到分配内存
-索引（Indexing），因为字符串是有效UTF-8编码的，它不支持索引
-as_bytes()
-chars().nth()
-切片（Slicing），是字节偏移，而不是字符偏移
-let dog = "hachiko";
-let hachi = &dog[0..5];
-连接（Concatenation）
-如果你有一个String，你可以在它后面接上一个&str，不过如果你有两个String，你需要使用&来转换其中的一个Sting为&str
 
 泛型
 泛型在类型理论中叫做参数多态
@@ -433,11 +407,6 @@ use sayings::japanese::greetings as ja_greetings;
 use sayings::japanese::farewells::*;
 use sayings::english::{self, greetings as en_greetings, farewells as en_farewells};
 
-const和static
-const和static，与let绑定不同，必须指定类型
-const，常量贯穿于整个程序的生命周期。实际上它们会被内联到用到它们的地方，为此对同一常量的引用并不能保证引用到相同的内存地址
-static，以静态量的方式提供了类似“全局变量”的功能，在使用时并不内联。这意味着对每一个值只有一个实例，并且位于内存中的固定位置
-
 属性
 属性，以某种方式改变它们附加到的项的意义
 #[test]，作用于下一个项
@@ -448,9 +417,9 @@ static，以静态量的方式提供了类似“全局变量”的功能，在�
 #[cfg(target_os = "macos")]
 目前，不能创建自己的属性，Rust编译器定义了它们
 
-type别名
-type关键字让你定义另一个类型的别名
-type Name = String;
+type关键字
+定义某个类型的别名
+type NameA = String;
 
 类型转换
 as用于安全转换，transmute允许任意的转换
@@ -500,10 +469,6 @@ try!，try!用来进行错误处理
 unreachable!，这个宏用于当你认为一些代码不应该被执行的时候
 unimplemented!，unimplemented!宏可以被用来当你尝试去让你的函数通过类型检查，同时你又不想操心去写函数体的时候
 
-裸指针
-Rust的安全大多来源于编译时检查，不过裸指针并没有这样的保证，使用它们是unsafe的
-*const T和*mut T在Rust中被称为“裸指针”
-解引用 *T，当解引用一个裸指针时，要为它并不指向正确的地方负责，为此，需要使用unsafe
 外部函数接口(FFI，Foreign Function Interface)
 
 不安全代码
