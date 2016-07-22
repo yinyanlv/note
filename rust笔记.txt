@@ -1,14 +1,20 @@
 基础命令
 rustc main.rs  // 编译
 rustc main.rs -O  // 优化编译
+rustdoc main.rs  // 根据注释，生成html文档
 cargo --version
-Cargo.toml文件，配置文件
-Cargo.lock文件，跟踪程序的依赖
+Cargo.toml  // 项目数据描述文件，[package]，[dependencies]，[[test]]，[[example]]，[[bin]]
+Cargo.lock  // 根据toml文件生成的项目依赖详细清单文件，一般不用管它
 cargo build  // 编译，存放至debug文件夹
 cargo build --release  // 优化编译，存放至release文件夹
 cargo run  // 编译并运行
 cargo run --release
 cargo new hello_rust --bin
+cargo update
+cargo install
+cargo doc  // 根据注释，生成html文档
+
+控制台想获取更多的信息，配置rust环境RUST_BACKTRACE=1
 
 cargo镜像
 在$HOME/.cargo/config中添加如下内容
@@ -17,6 +23,64 @@ index = "git://crates.mirrors.ustc.edu.cn/index"
 如果所处的环境中不允许使用git协议, 可以把上述地址改为
 index = "http://crates.mirrors.ustc.edu.cn/index"
 windows用户，在C:\Users\{user}\.cargo目录下新建一个config文件
+
+rust是一个基于表达式的语言，分号与其它基于“大括号和分号”的语言不同，在rust中分号来分隔各个表达式，表达式会返回一个值，而语句不返回值或总是返回()
+rust中的语句仅有两种类型：声明语句（如：let语句）和表达式语句（通过在末尾加分号，将表达式变成语句）
+
+rust默认不用指针来存放数据，但当使用trait对象时，会使用指针来储存值
+
+rust，默认一切都是私有的
+
+所有权  // ownership
+对于任何给定的资源都只有一个绑定与之对应，当一个绑定离开作用域，它们绑定的资源就会释放
+copy特性
+基本类型（如数字，bool）都实现了copy特性，因此它们的所有权并不遵循“所有权规则”
+可通过函数返回值，交还所有权，也可以通过借用，交还所有权
+
+引用和借用
+&T类型为一个引用，它借用了该资源的所有权，一个借用变量的绑定在它离开作用域时并不释放资源，因此可再次使用原始的绑定
+普通引用是不可变的，就像绑定一样
+&mut T类型，可变引用，允许改变借用的资源
+*var 访问变量引用的资源
+任何借用必须位于比拥有者更小的作用域
+
+生命周期
+生命周期，定义了一个引用有效的作用域
+引用指向一个无效的资源，这叫做悬垂指针（dangling pointer）或者“释放后使用”
+fn bar<'a>(x: &'a mut i32) {
+}
+'a读作“生命周期 a”
+用<>声明了生命周期，一个函数可以在<>之间有“泛型参数”，生命周期也是其中一种
+'static，该作用域是特殊的，它代表某样东西具有横跨整个程序的生命周期
+
+包装箱（crate）和模块（module）
+包装箱，类似于lib和package
+定义模块，用mod关键字来定义我们的每一个模块
+导入外部的包装箱，extern crate name;
+定义公有模块，pub mod name;
+用use导入模块，允许我们导入名字到我们本地的作用域中
+use phrases::english::{greetings, farewells};
+使用pub use重导出，可以在包装箱内用它重导出函数到另一个模块中
+复杂的导入
+extern crate phrases as sayings;
+use sayings::japanese::greetings as ja_greetings;
+use sayings::japanese::farewells::*;
+use sayings::english::{self, greetings as en_greetings, farewells as en_farewells};
+
+属性  // 目前，不能创建自己的属性，rust编译器定义了它们
+属性，以某种方式改变它们附加到的项的意义
+#[test]，作用于下一个项
+#![test]，作用于包含它的项
+属性可以有附加数据
+#[inline(always)]
+属性也可以有键值
+#[cfg(target_os = "macos")]
+
+注释
+//  行注释
+/**/  块注释
+///  文档注释，内建markdown标记支持，注释之后的项，会生成库文档
+//!  文档注释，用来注释包含它的项（crate，模块或者函数），而不是注释位于它之后的项，会生成库文档  // crate，箱
 
 let关键字
 有变量绑定和模式匹配的作用
@@ -42,23 +106,50 @@ f32（单精度）  f64（双精度，默认）
 切片  // 引用一个数组的部分数据，并且不需要拷贝，可表示为&[T]，如：&arr[1..4]  // 复制1，2，3元素
 元组  // tuples，固定大小的有序列表，每个元素都有可以有自己的类型，通过解构或者索引（tuple.0）来获得每个元素的值，可以用一个逗号来消除一个单元素元组(0,)和一个括号中的值(0)的歧义
 指针  // 最底层的是裸指针*const T和*mut T，rust的安全大多来源于编译时检查，不过裸指针并没有这样的保证，当解引用一个裸指针时，要为它并不指向正确的地址负责，为此，需要使用unsafe
-函数  // 具有函数类型的变量实质上是一个函数指针，其类型为!，如：let x: fn(i32) -> i32 = foo;
+函数  // 具有函数类型的变量实质上是一个函数指针，其类型为!，!可用作任何类型：，如：let x: fn(i32) -> i32 = foo;
 元类型  // 即()，其唯一值也是()
 
-字符串类型
+字符串类型  // 原生类型
 可变大小的数据结构，两种字符串类型，&str（字符串切片，固定大小且不可变）和String（堆分配字符串，可变）
 String转换为&str（通过&）的代价很小，不过从&str转换到String（to_string()）涉及到分配内存，除非有必要，否则不要这么做
+String类型，本质上来讲，是一种堆内存申请的Vec<[u8]>类型，有压入（push）、弹出（pop）
 索引，因为字符串是有效utf-8编码的，它不支持索引，字符串切片的索引，索引的是字节偏移，而不是字符偏移
-字符串常量  // 类型，&'static str
+字符串常量  // 类型，&'static str，特殊的字符串切片
 字符串常量是静态分配的字符串切片，也就是说它储存在我们编译好的程序中，并且整个程序的运行过程中一直存在
 
-注释
-// 行注释
-/**/ 块注释
-/// 文档注释，内建markdown标记支持，注释之后的项，会生成库文档
-//! 文档注释，用来注释包含它的项（crate，模块或者函数），而不是注释位于它之后的项，会生成库文档  // crate，箱
+vector  // 向量
+vector，动态，可增长的数组，是一种基于堆内存申请的，连续且动态的数据类型，被实现为标准库类型Vec<T>，可以使用vec!宏来创建它，拥有O(1)时间复杂度的索引、压入（push）、弹出（pop)
+let v = vec![1, 2, 3, 4, 5];  // v: Vec<i32>
+let v = vec![0; 10];  // 十个0
+访问元素
+[]，必须用usize类型的值来索引
+越界访问
+尝试访问并不存在的索引，前的线程会panic，如果想处理越界错误而不是panic，可以使用像get或get_mut这样的方法，它们在给出一个无效的索引时返回None
 
-if语句
+结构体  // 一种记录类型，即使用pub关键字使结构体变为公有的，它的字段仍然是默认私有的，与枚举不同
+struct Point {  // 根据传统，结构体使用大写字母开头，并使用驼峰命名法，结构体中的值默认是不可变的，rust在语言级别不支持字段可变性（mut），因为可变性是绑定（let）的一个属性，而不是结构体自身的，可使用Cell<T>来模拟
+  x: i32,
+  y: i32
+}
+访问字段，通过圆点记法  // 如point.x
+元组结构体
+由元组和结构体混合构成，元组结构体有名字，不过它的字段没有  // struct Color(i32, i32, i32);
+当元组结构体，只有一个元素时，我们称之为新类型（newtype），因为创建了一个与元素类似的类型  // struct Inches(i32);
+类单元结构体（Unit-like struct）
+类单元结构体，定义一个没有任何成员的结构体，它与一个空元组()类似
+
+枚举  // 一种集合类型，代表一系列子数据类型的集合，如果使用pub使枚举变为公有，则它的元素也都是默认公有的
+enum Message {
+    Quit,
+    ChangeColor(i32, i32, i32),
+    Move { x: i32, y: i32 },
+    Write(String)  // 构造器，构造器可以作为函数，当要用到闭包时，可以将函数作为参数传递给其他函数
+}
+::  // 通过::来获得枚举中每个元素的名称
+
+type关键字  // 定义某个类型的别名，type NameA = String;
+
+if语句  // 其实是一个表达式，let y = if x == 5 { 10 } else { 15 }; ，一个没有else的if总是返回()作为返回值
 if x == 5 {
 
 } else if x == 6 {
@@ -66,159 +157,55 @@ if x == 5 {
 } else {
 
 }
-if语句其实是一个表达式
-let y = if x == 5 { 10 } else { 15 };  // y: i32
-一个没有else的if总是返回()作为返回值
+if let  // 模式匹配，if let Some(x) = option {} else {}
 
 循环
-loop
-loop {  // 无限循环，直到一些终止语句被执行
-
-}
-while
-while judge {  // 不确定应该循环多少次
-
-}
-for
-for var in expression {  // 循环特定的次数，expression是一个迭代器如1..10（不包括上限值10）
-
-}
-enumerate方法，记录已经循环了多少次
-for (i, j) in (5..10).enumerate() {
-
-}
+loop {}  // 无限循环，直到一些终止语句被执行
+while judge {}  // 不确定应该循环多少次
+while let  //  模式匹配，while let Some(x) = v.pop() {}
+for var in expression {}  // 循环特定的次数，expression是一个迭代器如1..10（不包括上限值10）
 break;  // loop, while, for
 continue;  // while, for
 循环标签，主要用于嵌套循环的流程控制
-'test:for i in 0..10 {  // 注意，标签名单引号并未闭合
+'test: for i in 0..10 {  // 注意，标签名单引号并未闭合
   continue 'test;
 }
 
-函数
-定义函数时，必须为函数参数声明类型，这是一个全推断与无推断的最佳平衡
-rust函数只能返回一个值  // ->
-rust是一个基于表达式的语言，分号与其它基于“大括号和分号”的语言不同，在rust中分号来分隔各个表达式
-表达式与语句
-表达式返回一个值，而语句不是
-rust中语句有两种类型：声明语句和表达式语句（目的是把任何表达式变为语句），其余都是表达式
-提早返回（early returns）
-发散函数（diverging function）
-发散函数并不返回，它拥有一个类型!，代表“发散”
-fn diverges() -> ! {
-  panic!("This function never returns!");
-}
-控制台想获取更多的信息，配置rust环境RUST_BACKTRACE=1
-函数指针
-let f: fn(i32) -> i32 = someFunc;  // 此时不需要类型推断
-let f = someFunc;  // 此时需要类型推断
-
-所有权（ownership）
-对于任何给定的资源都正好（只）有一个绑定与之对应，当一个绑定离开作用域，它们绑定的资源就会释放
-copy特性
-基本类型（如数字，bool）都实现了copy特性，因此它们的所有权并不遵循“所有权规则”
-可通过函数返回值，交还所有权，也可以通过借用，交还所有权
-
-引用和借用
-&T类型为一个引用，它借用了该资源的所有权，一个借用变量的绑定在它离开作用域时并不释放资源，因此可再次使用原始的绑定
-普通引用是不可变的，就像绑定一样
-&mut T类型，可变引用，允许改变借用的资源
-＊var 访问变量引用的资源
-任何借用必须位于比拥有者更小的作用域
-可以有一个或另一个这两种类型（&T或&mut T）的借用，不过不能同时拥有它们（&T或&mut T）
-
-生命周期
-生命周期，定义了一个引用有效的作用域
-引用指向一个无效的资源，这叫做悬垂指针（dangling pointer）或者“释放后使用”
-fn bar<'a>(x: &'a mut i32) {
-}
-'a读作“生命周期 a”
-用<>声明了生命周期，一个函数可以在<>之间有“泛型参数”，生命周期也是其中一种
-'static，该作用域是特殊的，它代表某样东西具有横跨整个程序的生命周期
-
-可变性
-mut是模式的一部分
-let (mut x, y) = (5, 6);
-fn foo(mut x: i32) {}
-内部可变性 vs 外部可变性
-字段级别可变性，你不能拥有一个一些字段可变而一些字段不可变的结构体
-
-结构体
-struct Point {  // 根据传统，结构体使用大写字母开头，并使用驼峰命名法
-  x: i32,
-  y: i32
-}
-访问字段，通过圆点记法，如point.x
-rust在语言级别不支持字段可变性
-一个包含..的struct表明你想要使用一些其它结构体的拷贝的一些值
-let mut point = Point3d { x: 0, y: 0, z: 0 };
-point = Point3d { y: 1, .. point };
-元组结构体
-元组结构体有一个名字，不过它的字段没有
-struct Color(i32, i32, i32);
-let black = Color(0, 0, 0);
-当元组结构体，只有一个元素时，我们称之为新类型（newtype），因为创建了一个与元素类似的类型
-struct Inches(i32);
-let length = Inches(10);
-let Inches(integer_length) = length; //模式匹配
-类单元结构体（Unit-like structs）
-类单元结构体，定义一个没有任何成员的结构体，它与一个空元组()类似
-
-枚举
-enum是一个代表数个可能变量的数据的类型
-enum Message {
-    Quit,
-    ChangeColor(i32, i32, i32),
-    Move { x: i32, y: i32 },
-    Write(String), //构造器
-}
-一个enum是一个单独的类型，一个枚举的值可以匹配任何一个变量，枚举有时被叫做“集合类型”，枚举可能值的集合是每一个变量可能值的集合的总和
-::语法，来使用枚举中每个变量的名字
-构造器可以作为函数，这对我们没有什么直接的帮助，直到我们要用到闭包时，这时我们要考虑将函数作为参数传递给其他函数
-
-match（匹配）
-match属于“模式匹配”的范畴
+match  // 匹配，属于模式匹配的范畴
 match x {
-  1 => println!("abc"),
-  ...
-  _ => println!("test");  // 必须包含_
+  e @ 1 ... 5 | e @ 8 ... 10 => println!("got a range element {}", e),  // |，用于匹配多个值，...，匹配一个范围（包含最后一个值，经常用在整数和char上），如果需要得到|或者...匹配到的值，可以使用@绑定变量
+  ...  // ..，用来忽略部分数据，ref和ref mut，用来在模式中得到一个引用
+  _ => println!("test");  // 必须包含_，因为match强制进行穷尽性检查，必须覆盖所有的可能值
 }
-匹配枚举，处理枚举的可能变量
-match msg {
-  Message::Quit => quit(),
-  Message::ChangeColor(r, g, b) => change_color(r, g, b),
-  Message::Move { x: x, y: y } => move_cursor(x, y),
-  Message::Write(s) => println!("{}", s),
-};
-
-模式
-常用于let，match
-多重模式，'|'
-match x {
-  1 | 2 => println!("one or two"),
-  _ => println!("anything")
-}
-解构
-.. 代表省略的部分
-忽略绑定，在模式中使用_来忽视它的类型和值，从而匹配某个分支，也可以在模式中用..来忽略多个值
-ref和ref mut  // 在模式中创建一个引用
-范围，可以用...匹配一个范围的值，范围经常用在整数和char上
-绑定，可以使用@把值绑定到变量上
-let x = 5;
-match x {
-  e @ 1 ... 5 | e @ 8 ... 10 => println!("got a range element {}", e),
-  _ => println!("anything"),
-}
-守卫（guards），可以用if来引入匹配守卫
+守卫  // guard，可以用if来引入匹配守卫
 let x = 4;
 let y = false;
 match x {
   4 | 5 if y => println!("yes"),
   _ => println!("no"),
 }
-混合与匹配，可以对上面的多种匹配方法进行组合
 
-方法语法
-rust通过impl关键字，可以实现链式调用，impl关键字定义的函数又称为方法
+函数
+定义函数时，必须为函数参数声明类型，这是一个全推断与无推断的最佳平衡，rust中函数只能返回一个值
+发散函数  // 发散函数，不返回
+fn diverges() -> ! { // 返回类型!，!，可用作任何类型
+  panic!("This function never returns!");
+}
+高阶函数，允许把闭包作为参数来生成新的函数
+
+闭包  // 匿名函数，闭包，可以省略参数和返回值的类型，闭包实际上是trait的语法糖
+let plus_two = |x| {
+  let mut result: i32 = x;
+  result += 1;
+  result += 1;
+
+  result
+};
+move关键字，强制使闭包取得它所属环境的所有权，得到一个属于自己的栈帧。没有move，一个闭包可能会绑定在创建它的栈帧上
+返回闭包  // 通过把内部闭包变为move Fn，从而为闭包创建了一个新的栈帧。通过Box装箱，提供一个已知大小的返回值，并允许它离开当前的栈帧
+
+方法  // 即关联函数
+impl关键字  // impl关键字定义的函数又称为方法（关联函数），可用在struct、enum或者trait对象上
 struct Circle {
   x: f64,
   y: f64,
@@ -233,39 +220,16 @@ fn main() {
   let c = Circle { x: 0.0, y: 0.0, radius: 2.0 };
   println!("{}", c.area());
 }
-方法的第一参数比较特殊，&self。它有3种变体：self，&self和&mut self
-链式方法调用，通过在方法内部返回self来做到这点
-关联函数（Associated functions）
-可以定义一个不带self参数的关联函数，关联函数构建了一个新的Struct，通过Struct::method()语法调用
-创建者模式（Builder Pattern），通过一个Struct构建另一个Struct
+方法的第一参数通常为self参数。它有3种变体：
+self  // 允许实现者移动和修改对象，对应的闭包特性为FnOnce
+&self  // 既不允许实现者移动对象也不允许修改，对应的闭包特性为Fn
+&mut self  // 允许实现者修改对象但不允许移动，对应的闭包特性为FnMut
+链式方法调用  // 通过在方法内部返回self来做到这一点
+静态方法  // 即不含self参数的关联函数
 
-vectors（向量）
-vector，是一个动态，可增长的数组，被实现为标准库类型Vec<T>
-可以使用vec!宏来创建它
-let v = vec![1, 2, 3, 4, 5];  // v: Vec<i32>
-let v = vec![0; 10];  // 十个0
-访问元素
-[]，必须用usize类型的值来索引
-越界访问
-尝试访问并不存在的索引，前的线程会panic，如果想处理越界错误而不是panic，可以使用像get或get_mut这样的方法，他们在给出一个无效的索引时返回None
-迭代
-for var in vector
-
-泛型
-泛型在类型理论中叫做参数多态
-泛型函数
-fn takes_anything<T>(x: T) {
-  // do something with x
-}
-泛型结构体
-impl<T> Point<T> {  // 给泛型struct增加一个实现
-  fn swap(&mut self) {
-    std::mem::swap(&mut self.x, &mut self.y);
-  }
-}
-
-traits
-trait，告诉 Rust 编译器一个类型必须提供哪些功能
+trait  // 特性，描述某类型可以实现的抽象接口，即告诉rust编译器，一个类型需要提供哪些功能，可以为任何类型实现一个trait，特性也可以接受泛型参数
+默认方法  // 在trait中已经实现的方法
+几个有用的标准库内置的特性（trait）：Drop, Borrow, AsRef, Deref<Target=T>（强制转换）, Iterator, Sized...
 struct Circle {
   x: f64,
   y: f64,
@@ -279,7 +243,37 @@ impl HasArea for Circle {
     std::f64::consts::PI * (self.radius * self.radius)
   }
 }
-泛型函数的trait bound（限制）
+trait继承
+trait Foo {
+  fn foo(&self);
+}
+trait FooBar : Foo {
+  fn foobar(&self);
+}
+
+通用函数调用语法  // 如果两个不同特性的方法具有相同的名称，可以使用通用函数调用语法
+Trait::method(args);  // 简写
+<Type as Trait>::method(args);  // 展开
+
+Deriving  // 让rust自动实现某trait
+#[derive(Debug)]
+struct Foo;
+fn main() {
+  println!("{:?}", Foo);
+}
+deriving只适用于一些特定的trait：
+Clone
+Copy
+Debug
+Default
+Eq
+Hash
+Ord
+PartialEq
+PartialOrd
+
+trait bound
+泛型函数的trait bound  // 带有trait限制的泛型函数是单态的，所以它是静态分发的
 trait HasArea {
   fn area(&self) -> f64;
 }
@@ -298,10 +292,7 @@ impl<T: PartialEq> Rectangle<T> {
     self.width == self.height
   }
 }
-可以为任何类型实现一个trait
-带有trait限制的泛型函数是单态（monomorphization）（mono：单一，morph：形式）的，所以它是静态分发（statically dispatched）的
 多trait bound
-如果需要多于1个限定，可以使用+
 fn foo<T: Clone + Debug>(x: T) {
   x.clone();
   println!("{:?}", x);
@@ -312,137 +303,27 @@ fn bar<T, K>(x: T, y: K) where T: Clone, K: Clone + Debug {
   y.clone();
   println!("{:?}", y);
 }
-默认方法（Default methods）
-在trait中实现方法，可以使该方法成为默认方法
-继承（Inheritance）
-trait Foo {
-  fn foo(&self);
-}
-trait FooBar : Foo {
-  fn foobar(&self);
-}
-Deriving（获得）
-让Rust为我们自动实现trait
-#[derive(Debug)]
-struct Foo;
-fn main() {
-  println!("{:?}", Foo);
-}
-deriving限制为一些特定的 trait：
-Clone
-Copy
-Debug
-Default
-Eq
-Hash
-Ord
-PartialEq
-PartialOrd
 
-Drop
-一个由Rust标准库提供的特殊trait，Drop。Drop trait提供了一个当一个值离开作用域后运行一些代码的方法
-struct HasDrop;
-impl Drop for HasDrop {
-  fn drop(&mut self) {
-    println!("Dropping!");
+泛型
+泛型在类型理论中叫做参数多态，意为对于给定参数可以有多种形式的函数或类型
+泛型函数
+fn takes_anything<T>(x: T) {
+  // do something with x
+}
+泛型结构体
+impl<T> Point<T> {  // 给泛型struct增加一个实现
+  fn swap(&mut self) {
+    std::mem::swap(&mut self.x, &mut self.y);
   }
 }
-有一些细节，例如，值会以与它们声明相反的顺序被丢弃
-Drop用来清理任何与struct关联的资源
 
-if let
-if let允许你合并if和let来减少特定类型模式匹配的开销
-if let Some(x) = option {
-  foo(x);
-} else {
-}
-如果一个模式匹配成功，它绑定任何值的合适的部分到模式的标识符中，并计算这个表达式。如果模式不匹配，执行else
-while let
-while let Some(x) = v.pop() {
-  println!("{}", x);
-}
-
-trait对象
-当涉及到多态代码时，需要一个机制来决定哪个具体的版本应该得到执行，这叫做“分发”（dispatch）
-大体上有两种形式的分发：静态分发和动态分发（通过trait对象实现）
+特性对象（trait object）和多态函数
+多态函数有两种分发机制：静态分发和动态分发（通过trait对象实现）
 静态分发，允许函数被内联调用，能提高程序的运行效率，会导致“代码膨胀”（code bloat）。因为在编译出的二进制程序中，同样的函数，对于每个类型都会有不同的拷贝存在
-trait对象有时被称为“类型清除”（type erasure），通过as或&转型
 动态分发，它只有一份函数的代码，因为调用虚函数，会带来更大的运行时开销，也会大大地阻止任何内联以及相关优化的进行
-rust默认不用指针来存放数据，使用trait对象时，是用指针来储存值
-虚表（Representation）
-虚函数表（由编译器创建和管理），在一个trait对象上通过一个特殊的函数指针记录被调用的特性函数
-并不是所有trait都可以被用来作为一个 trait 对象，只有对象安全的 trait 才能成为 trait 对象，除了特殊情况，如果你的 trait 的方法使用了Self，它就不是对象安全的
-
-闭包
-let plus_two = |x| {
-  let mut result: i32 = x;
-  result += 1;
-  result += 1;
-
-  result
-};
-闭包，可以省略接收和返回参数的类型
-move关键字，强制使我们的闭包取得它环境的所有权，它给出了一个拥有自己栈帧的闭包。没有move，一个闭包可能会绑定在创建它的栈帧上
-闭包实际上是trait的语法糖
-闭包作为参数
-一个函数指针有点像一个没有环境的闭包
-返回闭包，通过把内部闭包变为move Fn，我们为闭包创建了一个新的栈帧。通过Box装箱，我们提供了一个已知大小的返回值，并允许它离开我们的栈帧
-
-通用函数调用语法
-Trait::method(args);
-尖括号形式，<Type as Trait>::method(args);
-
-包装箱（crate）和模块（module）
-包装箱，类似于lib和package
-定义模块，用mod关键字来定义我们的每一个模块
-导入外部的包装箱，extern crate name;
-Rust，默认一切都是私有的
-定义公有模块，pub mod name;
-用use导入模块，允许我们导入名字到我们本地的作用域中
-use phrases::english::{greetings, farewells};
-使用pub use重导出，可以在包装箱内用它重导出函数到另一个模块中
-复杂的导入
-extern crate phrases as sayings;
-use sayings::japanese::greetings as ja_greetings;
-use sayings::japanese::farewells::*;
-use sayings::english::{self, greetings as en_greetings, farewells as en_farewells};
-
-属性
-属性，以某种方式改变它们附加到的项的意义
-#[test]，作用于下一个项
-#![test]，作用于包含它的项
-属性可以有附加数据
-#[inline(always)]
-属性也可以有键值
-#[cfg(target_os = "macos")]
-目前，不能创建自己的属性，Rust编译器定义了它们
-
-type关键字
-定义某个类型的别名
-type NameA = String;
-
-类型转换
-as用于安全转换，transmute允许任意的转换
-自定义强转可以用Deref定义，强转是可传递的
-指针转换，裸指针与整型之间的转换是安全的
-transmute，transmute做了非常少的检查，至少它确保了这些类型是相同大小的
-use std::mem;
-unsafe {
-  let a = [0u8, 0u8, 0u8, 0u8];
-
-  let b = mem::transmute::<[u8; 4], u64>(a);
-}
-
-关联类型
-类型族，就是把多种类型归于一类
-trait Graph {
-  type N;
-  type E;
-
-  fn has_edge(&self, &Self::N, &Self::N) -> bool;
-  fn edges(&self, &Self::N) -> Vec<Self::E>;
-}
-关联类型使用type关键字，并出现在trait体和函数中
+虚函数表（由编译器创建和管理），在一个trait对象上通过一个特殊的函数指针记录可被调用的特性函数
+rust通过引入特性对象(trait object)来实现， 在运行期查找虚函数表来选择执行的方法。特性对象&Foo，具有和特性Foo相同的名称，通过转换或者强制多态化一个指向具体类型的指针来创建
+并不是所有trait都可以被用来作为一个trait对象，只有对象安全的trait才能成为trait对象，除了特殊情况，如果你的trait的方法使用了self，它就不是对象安全的
 
 不定长类型
 ?Sized，这个?，读作“T可能是Sized的”，意味着这个限制是特殊的：它让我们的匹配更宽松
@@ -450,14 +331,19 @@ struct Foo<T: ?Sized> {
   f: T,
 }
 
-运算符与重载
+类型转换
+as用于安全转换，transmute允许任意的转换
+指针转换，裸指针与整型之间的转换是安全的
+transmute，至少它确保了这些类型是相同大小的
+use std::mem;
+unsafe {
+  let a = [0u8, 0u8, 0u8, 0u8];
 
-Deref强制多态
-Deref，它一般用来重载*，解引用运算符
-Deref和方法调用，当调用一个方法时Deref也会出现
+  let b = mem::transmute::<[u8; 4], u64>(a);
+}
 
 宏
-宏允许我们在句法水平上进行抽象。宏是一个“展开后的”句法形式的速记。这个展开发生在编译的早期
+宏允许我们在句法层次上进行抽象。宏是一个“展开后的”句法形式的速记。这个展开发生在编译的早期
 vec!宏，用来初始化一个任意数量元素的vector
 macro_rules! vec { ... }  // 定义宏
 卫生宏，一些语言使用简单的文本替换来实现宏
@@ -469,11 +355,11 @@ try!，try!用来进行错误处理
 unreachable!，这个宏用于当你认为一些代码不应该被执行的时候
 unimplemented!，unimplemented!宏可以被用来当你尝试去让你的函数通过类型检查，同时你又不想操心去写函数体的时候
 
-外部函数接口(FFI，Foreign Function Interface)
-
 不安全代码
 unsafe关键字，使用unsafe的代码比正常代码有更少的限制
 常见用途：
 访问和更新一个静态可变变量
 解引用一个裸指针
 调用不安全函数
+
+外部函数接口（FFI，Foreign Function Interface）
