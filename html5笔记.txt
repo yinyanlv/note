@@ -160,7 +160,7 @@ localStorage.key(n);  // 获取第n个数据的key键键名
 sessionStorage  // 不能跨域访问，用于临时保存针对一个窗口（标签页）的数据，只要用户不关闭窗口（标签页），即使用户从你的网站跑到别的网站再回来，已存储的数据依然存在
 onstorage  // localStorage或sessionStorage发生变化时，该站点所有被打开的页面，都会触发onstorage事件，（firefox的window对象没有onstorage属性，但可以用addEventListener，注册侦听storage事件），事件对象e包含的属性，e.oldValue，e.newValue，e.url（导致此次变化的url）
 
-File api  // ie10+
+file api  // ie10+
 支持该标准的浏览器，能够从计算机硬盘的文件中读取数据，它不能修改、创建文件
 // 获得实际文件
 let file = document.getElementById('input').files[0];  // file.size（字节），file.type（MIME），file.name（不包括路径）
@@ -183,7 +183,7 @@ ondragenter
 ondragover
 ondrop  // e.dataTransfer.files，取得拖进来的文件
 
-IndexedDB  // ie10+
+indexedDB  // ie10+
 支持该标准的浏览器，内含一个完整的、微型的数据库引擎，一个IndexedDB数据库属于某个人，使用特定的电脑和特定的浏览器，访问特定的网站，任何一项发生变化，都会对应一个新的IndexedDB数据库，IndexedDB默认无限期保存数据
 let request = window.indexedDB.open('dbname', 1);  // 1，数据库的版本号，1，表示一个全新的数据库
 request.onsuccess = function (e) {
@@ -254,11 +254,67 @@ updateready  // 表示浏览器已经下载了新版本的应用，一般需要�
 error  // 缓存期间发生任何问题，都会触发
 obsolete  // 在检测更新时，发现描述文件不存在时，触发，然后，它会清除缓存，以后，加载页面时，都是从服务器取得实时、最新的页面
 
+服务器发送事件  // 单向的，只能由服务器发送到浏览器，因此，无法知道浏览器是否响应，目前，ie不支持，其它浏览器已支持
+让网页与web服务器保持连接，从而web服务器任何时候能够给浏览器发送消息
+服务器发送的消息必须遵守的格式
+id: 495\n
+retry: 15000\n  // 单位ms
+data: {\n
+data: "a": "test"\n
+data: }\n\n
+服务器事件的标准规定，需要设置消息内容的MIME类型为text/event-stream
+EventSource
+let source = new EventSource(url);  // 客户端发送请求，url，服务器端，消息的发送地址，
+source.onmessage = function (e) {
+  // e.data，得到消息内容
+}
+source.close();  // 让页面停止监听服务器事件
+
+web socket  // 双向的，浏览器能够保持对web服务器打开的连接，ie10+
+WebSocket
+let socket = new WebSocket('ws://' + url);  // ws://，一个表示web socket连接的新协议，wss://，表示安全、加密的web socket连接
+事件
+open
+message
+close
+error
+方法
+send();
+close();
+属性
+readyState  // 0，还没建立，1，打开并且准备就绪，2，关闭过程中，3，已关闭
+
+web worker
+
 pjax
-ajax，负责更新内容，pushState负责更新url
+ajax，负责更新内容，pushState负责更新url，让浏览器url和当前内容同步
 window.history.pushState(stateObj, name, url);  // name，一般为null
 popstate事件，用户后退或前进导致状态堆位置发生改变时触发
 window.addEventListener('popstate', function (e) {}, false);  // e.state，stateObj
+
+geolocation  // 地理定位，实际上不属于html5，使用该功能的页面，要经过web服务器转发，ie9+
+navigator.geolocation对象
+方法
+getCurrentPosition(function (position) {  // 成功
+  // position对象，属性，timestamp，确定地理位置的时间，coords，地理坐标
+  // coords对象的属性
+  // latitude  纬度
+  // longitude  经度
+  // accuracy  精度，单位米
+  // altitude  海拔高度，尚无浏览器支持
+  // heading  移动方向，尚无浏览器支持
+  // speed  移动速度，尚无浏览器支持
+}, function (error) {  // 失败
+  // error对象的属性
+  // code，一个数值，表示问题类型，1，用户未允许，2，网络异常，3，超时
+  // message，对问题的简短描述
+}, {
+  enableHighAccuracy: true,  // 要求高精度的gps位置检测，耗电，默认为false
+  timeout: 10000,  // 最终放弃之前，等待位置数据的时间，ms，默认0，无限期等待
+  maximumAge: 60000  // 缓存位置数据，默认0，即不使用缓存的地理数据
+});  // 异步
+watchPosition(function () {}, function () {}, options);  // 跟踪访客移动，浏览每次检测到新位置时触发，该方法返回一个数值，可传给clearWatch();使用
+clearWatch();
 
 html编辑功能
 contenteditable  // ture/false，使用户能够编辑某个元素
