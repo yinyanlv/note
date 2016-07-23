@@ -284,11 +284,30 @@ close();
 属性
 readyState  // 0，还没建立，1，打开并且准备就绪，2，关闭过程中，3，已关闭
 
-web worker
+web worker  // 可创建多个worker，可在worker线程中，递归创建worker，ie10+
+let worker = new Worker('file.js');  // 让worker允许的代码都要放到一个单独的文件中，以防止出现数据共享和竞争
+worker.postMessage(data);  // 只能传入一个参数
+worker.close();  // 取消后台任务
+worker.terminate();  // 取消后台任务，更常用
+worker.onmessage = function (e) {
+  // e.data  传入的数据
+};
+worker.onerror = function (error) {
+  // error.message
+  // error.lineno
+  // error.filename
+};
+worker线程执行的代码的基本格式：
+onmessage = function (e) {
+  ...
+  postMessage(result);
+};
+importScripts('func.js');  // 该方法，可在worker中导入另一个js文件
 
-pjax
-ajax，负责更新内容，pushState负责更新url，让浏览器url和当前内容同步
-window.history.pushState(stateObj, name, url);  // name，一般为null
+会话历史  // ie10+
+pjax，ajax，负责更新内容，pushState负责更新url，让浏览器url和当前内容同步
+window.history.pushState(stateObj, name, url);  // stateObj，页面的当前状态，可以为任何形式，name，页面的标题（目前没有浏览器支持，一般写为null），url，定义地址栏需要显示的新的url，通过该方法可以改变浏览器地址栏中的url，同时不导致页面刷新
+window.history.replaceState(stateObj);  // 修改当前页面相关的状态信息，且不会向历史记录添加任何记录，用的较少
 popstate事件，用户后退或前进导致状态堆位置发生改变时触发
 window.addEventListener('popstate', function (e) {}, false);  // e.state，stateObj
 
