@@ -34,7 +34,7 @@ appearance: none;  // 控制元素外观，normal, icon, window, button, menu, f
 
 hyphens: auto;  // 连字符断行，none，manual(默认)，auto
 
-white-space: pre;  // 保留源代码中的空白符和换行符，pre，pre-line，pre-wrap
+white-space: pre;  // 保留源代码中的空白符和换行符，pre，pre-line，pre-wrap，nowrap
 
 tab-size: 2;  // 缩进两个字符，也可以用长度值，如：2em
 
