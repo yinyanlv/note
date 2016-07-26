@@ -336,8 +336,8 @@ watchPosition(function () {}, function () {}, options);  // 跟踪访客移动�
 clearWatch();
 
 html编辑功能
-contenteditable  // ture/false，使用户能够编辑某个元素
-designMode  // on/off，使用户能够编辑整个页面，通常与iframe配合使用，iframe.contentWindow.document.designMode = 'on';
+contenteditable  // ture/false，使用户能够编辑某个元素，ie6+
+designMode  // on/off，使用户能够编辑整个页面，通常与iframe配合使用，iframe.contentWindow.document.designMode = 'on'; ie6+
 
 标签
 当浏览器遇到不认识的标签时，会把它们当成内联元素（早版本ie(6, 7, 8)，拒绝给无法识别的元素应用样式），大多数html5元素都是块级元素
