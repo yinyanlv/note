@@ -17,7 +17,6 @@ sudo dpkg -l
 apt-get删除包
 sudo apt-get --purge remove {packageName} //--purge，清除配置
 
-
 安装git
 sudo apt-get install git
 
