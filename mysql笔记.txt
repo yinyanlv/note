@@ -1,15 +1,15 @@
 三大数据类型
 数值类型
-整数: tinyint、smallint、mediumint、int、bigint
-浮点数: float、double、real、decimal
+整数: tinyint, smallint, mediumint, int, bigint
+浮点数: float, double, real, decimal
 
 时间日期
-date、time、datetime、timestamp、year
+date, time, datetime, timestamp, year
 
 字符串类型
-字符串: char、varchar
-文本: tinytext、text、mediumtext、longtext
-二进制(可用来存储图片、音乐等): tinyblob、blob、mediumblob、longblob
+字符串: char, varchar
+文本: tinytext, text, mediumtext, longtext
+二进制(可用来存储图片、音乐等): tinyblob, blob, mediumblob, longblob
 
 创建数据库
 create database [dbName] [options];
