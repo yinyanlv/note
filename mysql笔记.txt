@@ -1,4 +1,83 @@
-mysql模块
+三大数据类型
+数值类型
+整数: tinyint、smallint、mediumint、int、bigint
+浮点数: float、double、real、decimal
+
+时间日期
+date、time、datetime、timestamp、year
+
+字符串类型
+字符串: char、varchar
+文本: tinytext、text、mediumtext、longtext
+二进制(可用来存储图片、音乐等): tinyblob、blob、mediumblob、longblob
+
+创建数据库
+create database [dbName] [options];
+
+显示所有数据库
+show databases;
+
+删除数据库
+drop database [dbName];
+
+选择指定的数据库
+登陆时选择
+mysql -D [dbName] -h [hostName] -u [username] -p
+登陆后选择
+use [dbName];  // use语句可不加分号
+
+创建表
+create table [tableName] (
+  ...  //  列声明
+  id int unsigned not null auto_increment primary key,
+	name char(8) not null,
+	sex char(4) not null,
+	age tinyint unsigned not null,
+	tel char(13) null default "-"
+);
+从外部导入并执行sql脚本
+mysql -D [dbName] -h [hostName] -u [username] -p < createTable.sql
+
+查看库中所有的表
+show tables;
+
+查看某张表的详细信息
+describe [tableName];
+
+删除表
+drop table [tableName];
+
+向表中插入数据
+insert [into] [tableName] [(key1, key2, ...)] values [(value1, value2, ...)];
+
+查询表中的数据
+select [key1, key2, ...] from [tableName] where [condition];
+condition
+1、=, >, <, >=, <=, !=
+2、is, [not] null, in, like...  //  如：select * from students where name like "%王%";
+3、or, and
+
+更新表中的数据
+update [tableName] set [key1=value1, key2=value2, ...] where [condition];
+
+删除表中的数据
+delete from [tableName] where [condition];  // 删除表中所有数据，delete from [tableName];
+
+创建表后对表进行修改
+alter table  // alter，改变
+追加列
+alter table [tableName] add keyName1 valueType1 [after keyName2];
+修改列
+alter table [tableName] change oldKeyName newKeyName newValueType;
+删除列
+alter table [tableName] drop keyName;
+重命名表
+alter table [oldTableName] rename [newTableName];
+
+修改root用户密码
+mysqladmin -u root -p password [newPassword]
+
+nodejs中mysql模块
 
 连接mysql数据库
 var connection = mysql.createConnection({
@@ -17,20 +96,20 @@ connection.release();
 connection.query('select * from table', function (err, rows, fields) {});
 
 插入
-connection.query('insert into table (id, name, pwd) values (7, "test", "111111")', function (err, insertInfo) { // insertInfo，插入操作返回的信息
+connection.query('insert into table (id, name, pwd) values (7, "test", "111111")', function (err, insertInfo) {  // insertInfo，插入操作返回的信息
 });
 
 删除
-connection.query('delete from table where id=7', function (err, deleteInfo) { // deleteInfo，删除操作返回的信息
+connection.query('delete from table where id=7', function (err, deleteInfo) {  // deleteInfo，删除操作返回的信息
 });
 
 更新
-connection.query('update table set pwd="222222" where pwd="111111"', function (err, updateInfo) { // updateInfo，更新操作返回的信息
+connection.query('update table set pwd="222222" where pwd="111111"', function (err, updateInfo) {  // updateInfo，更新操作返回的信息
 });
 
 操作mysql数据库连接池
 数据库连接池，负责分配、管理和释放数据库连接，将数据库连接作为对象存储在内存中，以便重复利用数据库连接
-pool.getConnection(function () { // 建立数据库连接池
+pool.getConnection(function () {  // 建立数据库连接池
   connection.query('...', function (err, rows) {
     connection.release();
   });
