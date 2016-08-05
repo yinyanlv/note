@@ -18,7 +18,7 @@ jsonp callback name  设置jsonp请求的默认回调函数名，默认为?callb
 json replacer  定义json replacer回调函数，默认为null
 json spaces  格式化json响应时使用的空格数量。默认2，生产中为0
 case sensitive routing  启用/禁用路由区分大小写。默认disabled
-strict routing  启用/禁用严格路由，/home和/home/不一样。默认disabled
+strict routing  启用/禁用严格路由，/home和/home/不一样。默认false
 view cache  启用/禁用视图模板编译缓存。默认enabled
 view engine  指定呈现模板时，如果从视图中省略了文件扩展名，应该使用默认模板引擎扩展。
 views  指定模板引擎用来查找视图模板的路径。默认./views
