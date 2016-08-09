@@ -68,7 +68,6 @@ schema.methods.fullName = function () {  // this,Document对象
 	return this.first + ' ' + this.last;
 };
 
-
 编译模型
 var model = mongoose.model(name, [schema], [collection], [skipinit]);
 name  以后用model(name)发现该模型可以使用的字符串
