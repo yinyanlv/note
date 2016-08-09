@@ -81,7 +81,7 @@ Query对象
 Model对象中的方法与底层的Collection对象的方法匹配。这些方法的参数在大多数情况下与Collection对象的参数完全相同，但有一个主要区别，callback参数。
 使用mongoose对象的Model对象时，你既可以传入callback参数，也可以忽略它。
 如果传入callback函数，该方法的行为会与你期望的完全一致。
-如果没有传入callback参数，mongodb请求不会发送，相反会返回一个Query对象，允许你在执行它之前添加额外的功能。当你装备好执行数据库调用时，可以在Query对象上使用exec(callback)，开始执行。
+如果没有传入callback参数，mongodb请求不会发送，相反会返回一个Query对象，允许你在执行它之前添加额外的功能。当你准备好执行数据库调用时，可以在Query对象上使用exec(callback)，开始执行。
 
 可在Query对象和Model对象上执行数据库操作的方法
 create(objects, [callback]);
