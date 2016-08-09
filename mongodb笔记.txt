@@ -105,13 +105,13 @@ db.shutdownServer();
 mongodb的shell命令
 help <option>
 use <database>
-show <option>  //option参数：dbs(admin数据库自动创建),collections,profile(轮廓，用户配置文件),log [name]
+show <option>  // option参数：dbs(admin数据库自动创建),collections,profile(轮廓，用户配置文件),log [name]
 exit
 
 mongodb的shell方法
-load(script_path);  //运行shell脚步，还有另一种方法,--eval "javascript string"
-UUID(string);  //把一个32字节的十六进制字符串转换成BSON的UUID。
-db.auth(username, password);  //对当前数据库，进行身份验证
+load(script_path);  // 运行shell脚步，还有另一种方法,--eval "javascript string"
+UUID(string);  // 把一个32字节的十六进制字符串转换成BSON的UUID。
+db.auth(username, password);  // 对当前数据库，进行身份验证
 ...
 
 管理用户账户
@@ -125,7 +125,7 @@ use admin
 show users
 2、在相应的db.system.users集合上使用查询，如find。
 use admin
-cur = db.system.users.find();  //返回一个游标对象
+cur = db.system.users.find();  // 返回一个游标对象
 
 创建用户账户
 一旦你创建了一个用户管理员，就可以使用该账户创建可管理、读取和写入数据库的其他用户账户。
@@ -139,13 +139,13 @@ otherDBRoles  {<database>: array, ...}  可选，只能在admin数据库上使�
 
 用户账户可分配的角色
 read
-readAnyDatabase  //只能应用到admin数据库中的用户中，因为必须适用于所有数据库
+readAnyDatabase  // 只能应用到admin数据库中的用户中，因为必须适用于所有数据库
 readWrite
-readWriteAnyDatabase  //只能应用到admin数据库中的用户中，因为必须适用于所有数据库
+readWriteAnyDatabase  // 只能应用到admin数据库中的用户中，因为必须适用于所有数据库
 dbAdmin
-dbAdminAnyDatabase  //只能应用到admin数据库中的用户中，因为必须适用于所有数据库
+dbAdminAnyDatabase  // 只能应用到admin数据库中的用户中，因为必须适用于所有数据库
 userAdmin
-userAdminAnyDatabase  //只能应用到admin数据库中的用户中，因为必须适用于所有数据库
+userAdminAnyDatabase  // 只能应用到admin数据库中的用户中，因为必须适用于所有数据库
 clusterAdmin
 
 删除用户
@@ -193,7 +193,7 @@ show dbs
 切换当前数据库
 使用在mongodb中内置的句柄db来执行数据库操作。
 两种方法
-1、db = db.getSibingDB(database);
+1、db = db.getSiblingDB(database);
 2、use database
 
 创建数据库
@@ -203,7 +203,7 @@ db.createCollection('newCollection');
 
 删除数据库
 use newDb
-db.dropDatabase()  //它不会改变当前的数据库句柄
+db.dropDatabase();  // 它不会改变当前的数据库句柄
 
 复制数据库
 use origin
@@ -276,11 +276,11 @@ readPreference
 ssl
 poolSize
 socketOptions
-auto_reconnect // 自动重连
+auto_reconnect  // 自动重连
 
 Client对象连接到mongodb
 通过MongoClient对象连接到mongodb，首先要创建MongoClient对象的一个实例。
-var client = new MongoClient(Server, options);  //第一个参数为一个Server对象
+var client = new MongoClient(Server, options);  // 第一个参数为一个Server对象
 options参数的可配置项
 w  写入关注级别
 wtimeout
@@ -292,7 +292,7 @@ bufferMaxEntries  默认值-1，没有限制
 示例：
 var client = new MongoClient(new Server('localhost', 27017, {poolSize: 5}), {retryMilliSeconds: 500});
 打开到mongodb数据库的连接
-client.open(function (err, client) {//如果连接成功，client表示MongoClient对象
+client.open(function (err, client) {  // 如果连接成功，client表示MongoClient对象
 
 });
 连接到特定的数据库，需要在client对象上调用db(database)方法，来创建数据库实例。
@@ -306,7 +306,7 @@ client.close();
 
 通过一个连接字符串连接到mongodb
 通过调用MongoClient类的connect()方法，不需要实例。
-MongoClient.connect(connString, options, function (err, db) {//Db对象的实例作为第二个参数，关闭连接可在Db对象上调用db.close()
+MongoClient.connect(connString, options, function (err, db) {  // Db对象的实例作为第二个参数，关闭连接可在Db对象上调用db.close()
 
 });
 connString字符串的语法:
@@ -326,7 +326,7 @@ close([forceClose], callback);
 admin();
 collectionInfo([name], callback);
 collectionsNames(callback);
-collection(name, [options], callback); // options，{safe: true}，保证操作成功后执行回调函数
+collection(name, [options], callback);  // options，{safe: true}，保证操作成功后执行回调函数
 collections(callback);
 logout(callback);
 authenticate(username, password, callback);
@@ -360,7 +360,7 @@ db.createColleciton(collectionName, function (err, collection) {
 
 });
 Collection对象上的方法
-insert(docs, [options], [callback]); // options，{safe: true}，保证操作成功后执行回调函数，如果不设置该项，插入出错后无反馈提示，并且仍可能会执行回调函数
+insert(docs, [options], [callback]);  // options，{safe: true}，保证操作成功后执行回调函数，如果不设置该项，插入出错后无反馈提示，并且仍可能会执行回调函数
 remove([query], [options], [callback]);
 rename(newName, callback);
 save([doc], [options], [callback]);
@@ -441,7 +441,7 @@ new
 数据库更新运算符
 在mongodb中可以实现update对象与运算符来定义如何更改文档中的数据。
 示例：
-{  //update对象
+{  // update对象
 	$inc: {countA: 5, countB: 1},
 	$set: {name: 'test'},
 	$push: {days: 'friday'},
@@ -468,11 +468,11 @@ $bit
 coll.insert(docs, [options], callback);
 
 从集合获取文档
-coll.find(query, [options], callback);  //返回一个可遍历的Cursor对象。要显示结果要使用toArray方法遍历该Cursor对象
-coll.findOne(query, [options], callback);  //返回单个对象
+coll.find(query, [options], callback);  // 返回一个可遍历的Cursor对象。要显示结果要使用toArray方法遍历该Cursor对象
+coll.findOne(query, [options], callback);  // 返回单个对象
 
 更新集合中文档
-coll.upadate(query, update, [options], callback);  //如果在options选项中实现写入关注，则callback参数是必须的。
+coll.upadate(query, update, [options], callback);  // 如果在options选项中实现写入关注，则callback参数是必须的。
 当调用update()更新多个文档时，可以在query参数中，使用$isolate: 1来隔离写入，以防止对文档进行其它写入，这并不能提供全有或全无的原子写，而只能禁止其它写进程更新你正在写入的同一个对象。
 coll.update({type: 'test', $isolate: 1}, ...);
 
@@ -489,7 +489,7 @@ coll.save(doc, [options], [callback]);
 在update方法的options参数中，配置upsert:true选项。实现有则更新，无则追加。
 
 从集合中删除文档
-coll.remove([query], [options], [callback]);  //callback的results参数，是被删除的文档的数量
+coll.remove([query], [options], [callback]);  // callback的results参数，是被删除的文档的数量
 
 从集合中删除单个文档
 coll.findAndRemove(query, sort, [options], callback);
@@ -498,7 +498,7 @@ sort参数是一个[field, sort_order]数组，sort_order值为1表示升序，-
 从nodejs访问mongodb文档
 query对象来限制返回的文档和用来限制查询结果中的字段和文档的数量。
 query对象的属性被称为运算符，可带有mongodb驱动程序理解的特殊属性名。
-{count: {$gt: 10}, name: 'test'}  //count字段大于10，name字段值为test
+{count: {$gt: 10}, name: 'test'}  // count字段大于10，name字段值为test
 可在query对象中使用句点符号来指定子文档字段
 {stats.eyes: 'blue'}
 query对象的运算符
@@ -549,7 +549,7 @@ coll.count([query], [options], callback);
 对结果集进行限制
 有3种方法
 按大小限制结果
-coll.find(query, {limit: 5}, function () {  //在options参数使用配置limit属性，限制返回的数量
+coll.find(query, {limit: 5}, function () {  // 在options参数使用配置limit属性，限制返回的数量
 
 });
 限制对象返回的字段
@@ -559,19 +559,19 @@ coll.find(query, {fields: {'name': 0, 'type': 1}}, function () {
 });
 对结果进行分页
 使用options对象的limit和skip选项，实现文档的分页。
-coll.find(query, {limit: 10, skip: 10}, function () {  //skip值是一个动态的值，表示要跳过的文档数
+coll.find(query, {limit: 10, skip: 10}, function () {  // skip值是一个动态的值，表示要跳过的文档数
 
 });
 
 对结果集进行排序
 使用options对象的sort选项，实现文档的排序
-coll.find(query, {sort: [[name, 1], [value, -1]]}, function () {  //先对name字段升序排序，再对value字段降序排序
+coll.find(query, {sort: [[name, 1], [value, -1]]}, function () {  // 先对name字段升序排序，再对value字段降序排序
 
 });
 
 查询不同的字段值
 获得一组文档中单个字段所包含的不同值的清单
-coll.distinct(key, [query], [options], function () {  //key可以是字段名的字符串值。也可以使用句点如stats.name来指定子文档中的字段
+coll.distinct(key, [query], [options], function () {  // key可以是字段名的字符串值。也可以使用句点如stats.name来指定子文档中的字段
 
 });
 
@@ -590,8 +590,8 @@ options  此对象允许你定义readPreference
 使用MapReduce把数据库查询的结果简化成一个与原来的集合，完全不同的结构。
 mongodb有一个MapReduce框架，允许你使用聚合来简化把一个MapReduce操作传输到另一个MapReduce操作的一系列过程。
 聚合是指，把mongodb服务器的文档汇编成一个结果集时，对它们执行一系列的操作。
-Collection对象提供了一个aggregate()方法来对数据进行聚合操作。  //aggregate,聚合
-coll.aggregate(operators, [options], callback);  //operators参数，聚合运算符数组
+Collection对象提供了一个aggregate()方法来对数据进行聚合操作。  // aggregate,聚合
+coll.aggregate(operators, [options], callback);  // operators参数，聚合运算符数组
 注意：引用文档中的字段的值时，字段名用一个美元符号$做前缀，告诉总框架，把它作为一个字段值，而不是一个字符串。
 operators参数可配置的聚合运算符
 $project
@@ -696,17 +696,17 @@ GridFS一大特点是，利用跳过功能，你可以从文档的中间读取�
 在nodejs中实现Grid对象
 Grid对象充当GridFS的表示。它提供一个简单的接口来在GridFS中读取和写入二进制数据。
 MongoClient.connect('mongodb://localhost/', function (err, db) {
-	var grid = new Grid(db, 'fs');  //创建连接到fs集合的Grid对象
+	var grid = new Grid(db, 'fs');  // 创建连接到fs集合的Grid对象
 });
 Grid对象提供的方法
-grid.put(data, [options], callback);  //options参数可配置项，_id、root、content_type、chunk_size、metadata
+grid.put(data, [options], callback);  // options参数可配置项，_id、root、content_type、chunk_size、metadata
 grid.get(id, callback);
 grid.delete(id, callback);
 
 在nodejs中实现GridStore对象
 GridStore对象充当存储在MongoDB GridFS中二进制文件的表示。提供了基本的文件接口来读取和写入在GridFS中存储的文件。
 MongoClient.connect('mongodb://localhost/', function (err, db) {
-	var gridStore = new GridStore(db, 'word_file', 'w');  //'wrod_file'，GridFS中文件的唯一id，'w'，GridStore打开的模式
+	var gridStore = new GridStore(db, 'word_file', 'w');  // 'wrod_file'，GridFS中文件的唯一id，'w'，GridStore打开的模式
 });
 GridStore对象读取和写入文件的方法
 Properties
