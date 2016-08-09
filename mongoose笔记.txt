@@ -34,7 +34,7 @@ options对象的可配置项
 autoIndex
 bufferCommands
 capped
-collecion  指定用于此Schema模型的集合名称。Mongoose编译模式模型时，会自动连接到该集合
+collecion  指定用于此Schema模型作用的集合名称。Mongoose编译模式模型时，会自动连接到该集合
 id
 _id
 read
@@ -64,15 +64,15 @@ schema.requiredPaths();
 添加Schema对象的方法
 mongoose模式使你能够在Schema对象中添加在文档对象中自动可用的方法。你可以利用Document对象，调用这些方法。
 通过指定一个函数到schema.methods属性来把方法添加到schema对象。
-schema.methods.fullName = function () {  //this,Document对象
-	return this.first + ' ' + this.last;	
+schema.methods.fullName = function () {  // this,Document对象
+	return this.first + ' ' + this.last;
 };
 
 
 编译模型
 var model = mongoose.model(name, [schema], [collection], [skipinit]);
 name  以后用model(name)发现该模型可以使用的字符串
-schema  
+schema
 collection  要连接的集合名，如果Schema对象中没有指定时定义
 skipInit  默认false，如果为true，则初始化过程被跳过，并创建一个没有连接到数据库的一个简单的Model对象。
 访问编译后的Model对象
@@ -193,7 +193,7 @@ mongoose验证框架
 mongoose提供了一个内置的验证框架，你只需要定义在需要验证的特定字段执行的验证函数。
 实现方式
 在想要应用验证的Model对象的具体路径上调用validate()方法，并传入验证函数。
-Words.schema.path('word').validate(function (value) {  //Words是一个model对象
+Words.schema.path('word').validate(function (value) {  // Words是一个model对象
 	return value.length < 20
 }, 'error message');
 验证抛出的错误对象有以下字段：
@@ -220,7 +220,7 @@ schema.pre('save', true, function (next, done) {
 
 在init、validate、sava或remove操作已处理后调用post中间件函数。允许你在应用操作时做任何必要的清理操作。
 schema.post('save', function (doc) {
-	
+
 });
 
 保存文档时，执行validate和save函数
