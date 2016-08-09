@@ -79,8 +79,8 @@ use sayings::english::{self, greetings as en_greetings, farewells as en_farewell
 注释
 //  行注释
 /**/  块注释
-///  文档注释，内建markdown标记支持，注释之后的项，会生成库文档
-//!  文档注释，用来注释包含它的项（crate，模块或者函数），而不是注释位于它之后的项，会生成库文档  // crate，箱
+///  文档注释，内建markdown标记支持，注释之后的项，会生成库文档，一般用于函数或结构体（字段）的说明
+//!  模块注释，用来注释包含它的项（crate，模块或者函数），而不是注释位于它之后的项，会生成库文档  // crate，箱
 
 let关键字
 有变量绑定和模式匹配的作用
@@ -160,7 +160,7 @@ if x == 5 {
 if let  // 模式匹配，if let Some(x) = option {} else {}
 
 循环
-loop {}  // 无限循环，直到一些终止语句被执行
+loop {}  // 无限循环，直到一些终止语句被执行，与while true的主要区别在于编译阶段的静态分析
 while judge {}  // 不确定应该循环多少次
 while let  //  模式匹配，while let Some(x) = v.pop() {}
 for var in expression {}  // 循环特定的次数，expression是一个迭代器如1..10（不包括上限值10）
