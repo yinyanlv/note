@@ -34,7 +34,7 @@ options对象的可配置项
 autoIndex
 bufferCommands
 capped
-collecion  指定用于此Schema模型作用的集合名称。Mongoose编译模式模型时，会自动连接到该集合
+collecion  指定此Schema模型作用的集合名称。Mongoose编译模式模型时，会自动连接到该集合
 id
 _id
 read
