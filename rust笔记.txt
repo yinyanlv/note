@@ -315,7 +315,7 @@ fn bar<T, K>(x: T, y: K) where T: Clone, K: Clone + Debug {
   println!("{:?}", y);
 }
 
-泛型
+泛型  // 泛型是一种多态
 泛型在类型理论中叫做参数多态，意为对于给定参数可以有多种形式的函数或类型
 泛型函数
 fn takes_anything<T>(x: T) {
