@@ -237,8 +237,9 @@ self  // 允许实现者移动和修改对象，对应的闭包特性为FnOnce
 链式方法调用  // 通过在方法内部返回self来做到这一点
 静态方法  // 即不含self参数的关联函数，此时，通过::调用
 
-trait  // 特性，描述某类型可以实现的抽象接口，即告诉rust编译器，一个类型需要提供哪些功能，可以为任何类型实现一个trait，特性也可以接受泛型参数
+trait  // 特性，描述某类型需要实现的抽象接口，即告诉rust编译器，一个类型需要提供哪些功能，可以为任何类型实现一个trait，特性也可以接受泛型参数
 默认方法  // 在trait中已经实现的方法
+在调用trait中定义的方法时，需要引入该trait，否则，会报错
 几个有用的标准库内置的特性（trait）：Drop, Borrow, AsRef, Deref<Target=T>（强制转换）, Iterator, Sized...
 struct Circle {
   x: f64,
@@ -271,7 +272,7 @@ struct Foo;
 fn main() {
   println!("{:?}", Foo);
 }
-deriving只适用于一些特定的trait：
+derive只适用于一些特定的trait：
 Clone
 Copy
 Debug
@@ -328,6 +329,7 @@ impl<T> Point<T> {  // 给泛型struct增加一个实现
 }
 
 特性对象（trait object）和多态函数
+trait对象在rust中是指使用指针封装了的trait，比如&SomeTrait和Box<SomeTrait>，&SomeTrait类型和普通的指针类型&i32不同。它不仅包括指向真实对象的指针，还包括一个指向虚函数表的指针，其内部实现定义在std::raw模块
 多态函数有两种分发机制：静态分发和动态分发（通过trait对象实现）
 静态分发，允许函数被内联调用，能提高程序的运行效率，会导致“代码膨胀”（code bloat）。因为在编译出的二进制程序中，同样的函数，对于每个类型都会有不同的拷贝存在
 动态分发，它只有一份函数的代码，因为调用虚函数，会带来更大的运行时开销，也会大大地阻止任何内联以及相关优化的进行
