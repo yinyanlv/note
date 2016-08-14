@@ -356,6 +356,32 @@ trait对象在rust中是指使用指针封装了的trait，比如&SomeTrait和Bo
 rust通过引入特性对象(trait object)来实现， 在运行期查找虚函数表来选择执行的方法。特性对象&Foo，具有和特性Foo相同的名称，通过转换或者强制多态化一个指向具体类型的指针来创建
 并不是所有trait都可以被用来作为一个trait对象，只有对象安全的trait才能成为trait对象，除了特殊情况，如果你的trait的方法使用了self，它就不是对象安全的
 
+Option
+enum Option<T> {
+  Some(T),
+  None
+}
+方法：
+unwrap  // 遇到None值会panic
+map  // 如果有值，会执行作为参数传入的函数，反之直接返回None
+unwrap_or  // 可传入一个默认值，当值为None时会返回该默认值
+and_then  // 与map类似，但and_then会返回另一个Option
+ok_or  // 在值为None时，返回一个Result::Err(E)，值为Some(T)时，返回Ok(T)
+
+Result  // Result是Option的更通用的版本，比起Option，结果为None时，它解释了结果错误的原因
+enum Result<T, E> {
+  Ok(T),
+  Err(E)
+}
+方法：  // 拥有很多与Option类似的方法
+unwrap
+unwrap_or
+and_then
+map_err  // 当值为Err(E)时，调用作为参数传入的函数来处理错误
+or_else
+
+try!  // 事实上就是match Result的封装，当遇到Err(E)时会提早返回，所有的错误都转化成Box<Error>，try!不能直接放在main函数里，此时，编译器会报错，因为main函数无返回值
+
 不定长类型
 ?Sized，这个?，读作“T可能是Sized的”，意味着这个限制是特殊的：它让我们的匹配更宽松
 struct Foo<T: ?Sized> {
@@ -374,10 +400,15 @@ unsafe {
 }
 
 宏
-宏允许我们在句法层次上进行抽象。宏是一个“展开后的”句法形式的速记。这个展开发生在编译的早期
+宏，是一个“展开后的”句法形式的速记，是用来生成代码的，在调用宏的地方，编译器会先将宏进行展开，生成代码，然后再编译展开后的代码
 vec!宏，用来初始化一个任意数量元素的vector
 macro_rules! vec { ... }  // 定义宏
-卫生宏，一些语言使用简单的文本替换来实现宏
+卫生宏
+一些语言使用简单的文本替换来实现宏，而卫生宏，编译器或运行时会保证宏里面定义的变量或函数不会与外面的冲突，在宏里面以普通方式定义的变量作用域不会跑到宏外面
+#[macro_use]  // 宏导入
+#[macro_export]  // 宏导出
+调试宏
+--pretty=expanded  // 使得可以看到展开后的代码
 常用宏
 panic!，这个宏导致当前线程恐慌
 vec!，它也让你可以用重复值创建vector
@@ -394,3 +425,5 @@ unsafe关键字，使用unsafe的代码比正常代码有更少的限制
 调用不安全函数
 
 外部函数接口（FFI，Foreign Function Interface）
+
+智能指针（smart pointer）是存储指向动态分配(堆)对象指针的类，用于生存期控制，能够确保自动正确的销毁动态分配的对象，防止内存泄露，一种通用的实现技术是使用引用计数
