@@ -69,13 +69,16 @@ fn bar<'a>(x: &'a mut i32) {
 除非编译器无法自动推导出Lifetime，否则不建议显式指定Lifetime标识符，会降低程序的可读性
 
 包装箱（crate）和模块（module）
-包装箱，类似于lib和package
-定义模块，用mod关键字来定义我们的每一个模块
-导入外部的包装箱，extern crate name;
+包装箱，类似于lib和package，一个独立的可编译单元，编译后，会对应着生成一个可执行文件或一个库
+定义模块，用mod关键字来定义我们的每一个模块，分隔逻辑块
+导入外部的包装箱，extern crate xxx;  // 必须在Cargo.toml的dependecies字段，加上xxx="version num" 这种依赖说明，才能使引用生效
 定义公有模块，pub mod name;
-用use导入模块，允许我们导入名字到我们本地的作用域中
+mode xxx;  // 引用外部文件模块，xxx，不可包含::，只能为一级
+use  // 导入模块，允许导入名字到本地作用域中
 use phrases::english::{greetings, farewells};
-使用pub use重导出，可以在包装箱内用它重导出函数到另一个模块中
+pub use  // 重导出，可以在包装箱内用它重导出函数到另一个模块中
+self和super关键字
+as关键字
 复杂的导入
 extern crate phrases as sayings;
 use sayings::japanese::greetings as ja_greetings;
@@ -190,6 +193,8 @@ continue;  // while, for
 'test: for i in 0..10 {  // 注意，标签名单引号并未闭合
   continue 'test;
 }
+
+迭代器 => 适配器（惰性求值，对序列进行筛选等操作，生成另一个迭代器，可以链式调用） => 消费者（将迭代器转换成其他类型的值，而非另一个迭代器）
 
 match  // 匹配，属于模式匹配的范畴，每个分支的表达式的最终返回值类型必须相同
 match x {
