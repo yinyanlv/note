@@ -427,3 +427,13 @@ unsafe关键字，使用unsafe的代码比正常代码有更少的限制
 外部函数接口（FFI，Foreign Function Interface）
 
 智能指针（smart pointer）是存储指向动态分配(堆)对象指针的类，用于生存期控制，能够确保自动正确的销毁动态分配的对象，防止内存泄露，一种通用的实现技术是使用引用计数
+几种智能指针：
+Rc和Arc使用引用计数的方法，让程序在同一时刻，实现同一资源的多个所有权拥有者，多个拥有者共享资源
+Rc  // 用于同一线程内部，从use std::rc::Rc来引入
+Rc Weak  // Rc是一个引用计数指针，而Weak是一个指针，但不增加引用计数，不会对资源回收管理造成影响，从use std::rc::Weak来引入
+Arc  // Rc的多线程版本，用于跨线程共享一个对象，从std::sync::Arc引入
+Arc Weak  // 从std::sync::Weak引入
+Mutex  // Mutex意为互斥对象，通过锁，来保护共享数据，同时只有一个线程的Mutex对象获取到锁，从use std::sync::Mutex引入
+RwLock  // 读写锁，同时允许多个读，最多只能有一个写，读和写不能同时存在
+Cell  // 不受编译期静态借用规则束缚，Cell<T>只能用于T实现了Copy的情况
+RefCell  // 在不确定一个对象是否实现了Copy时，直接选RefCell，只能用于线程内部，不能跨线程
