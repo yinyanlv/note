@@ -84,6 +84,8 @@ extern crate phrases as sayings;
 use sayings::japanese::greetings as ja_greetings;
 use sayings::japanese::farewells::*;
 use sayings::english::{self, greetings as en_greetings, farewells as en_farewells};
+几种crate类型
+bin, lib, rlib, dylib, staticlib
 
 属性  // 目前，不能创建自己的属性，rust编译器定义了它们
 属性，以某种方式改变它们附加到的项的意义
@@ -425,6 +427,7 @@ unsafe关键字，使用unsafe的代码比正常代码有更少的限制
 调用不安全函数
 
 外部函数接口（FFI，Foreign Function Interface）
+需要引入libc库来表达对应ffi函数中的数据类型
 
 智能指针（smart pointer）是存储指向动态分配(堆)对象指针的类，用于生存期控制，能够确保自动正确的销毁动态分配的对象，防止内存泄露，一种通用的实现技术是使用引用计数
 几种智能指针：
@@ -437,3 +440,10 @@ Mutex  // Mutex意为互斥对象，通过锁，来保护共享数据，同时�
 RwLock  // 读写锁，同时允许多个读，最多只能有一个写，读和写不能同时存在
 Cell  // 不受编译期静态借用规则束缚，Cell<T>只能用于T实现了Copy的情况
 RefCell  // 在不确定一个对象是否实现了Copy时，直接选RefCell，只能用于线程内部，不能跨线程
+
+裸指针（原始指针）
+不能保证指向有效的内存，甚至不能保证是非空的
+没有任何自动清除，所以需要手动管理资源
+是普通旧式类型，它不移动所有权，因此rust编译器不能保证不出像释放后使用这种bug
+缺少任何形式的生命周期，不像&，因此编译器不能判断出悬垂指针
+除了不允许直接通过*const T改变外，没有别名或可变性的保障
