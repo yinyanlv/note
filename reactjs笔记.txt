@@ -81,7 +81,7 @@ this.props.children  // 组件标签里面包含的子元素会通过this.props.
 
 数据流
 
-flux，一套前段应用的架构模式，主要包含4个部分：
+flux，一套前端应用的架构模式，主要包含4个部分：
 action -> dispatch -> store -> view
 
 redux
