@@ -120,7 +120,6 @@ mix-blend-mode: luminosity;  // 为整个元素设置混合模式，不可动画
 
 transform
 多个变换函数间，使用空格分隔
-skew(x, y);  //
 matrix(a, b, c, d, e, f);  // 3*3矩阵，各坐标相对于中心点，(x, y)每个点变换之前的坐标，(ax + cy + e, bx + dy + f)每个点变换之后的坐标
 a c e   x   ax + cy + e
 b d f * y = bx + dy + f
