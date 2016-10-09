@@ -86,6 +86,32 @@ range(start, end, step)  // 返回在特定区间的自然数序列，返回的�
 
 推导式  // 元组是没有推导式
 [expression for item in iterable if condition]  // 列表推导式
-{ key_expression : value_expression for expression in iterable }  // 字典推导式
-{expression for expression in iterable if condition }  // 集合推导式
+{key_expression : value_expression for expression in iterable}  // 字典推导式
+{expression for expression in iterable if condition}  // 集合推导式
 (number for number in range(1, 6))  // 生成器推导式，圆括号之间的是生成器推导式(元组没有推导式)，它返回的是一个生成器对象，一个生成器只能运行一次，但是生成器仅在运行中产生值，不会被存下来，所以不能重新使用或者备份一个生成器
+
+is关键字
+
+函数
+def func_name():  // 位置参数，关键字参数，默认参数，默认参数值在函数被定义时已经计算出来,而不是在程序运行时
+*  // 当参数被用在函数内部时,星号将一组可变数量的位置参数集合成参数值的元组
+**  // 收集关键字参数，将参数收集到一个字典中
+在函数体开始的部分附上函数定义说明的文档,这就是函数的文档字符串，help(func)，参数列表和文档字符串，help(func.__doc__)，文档字符串
+
+lambda 函数是用一个语句表达的匿名函数。如：edit_story(stairs, lambda word: word.capitalize() + '!')
+
+生成器  // 用来创建python序列的一个对象，内部使用yield关键字，返回的是一个生成器对象
+
+装饰器  // 实质上是一个函数。它把一个函数作为输入并且返回另外一个函数，@decorator_name，靠近函数定义(def上面)的装饰器最先执行,然后依次向上执行
+
+global关键字  // 读取全局变量而不是函数中的局部变量
+locals()  // 返回一个局部命名空间内容的字典
+globals()  // 返回一个全局命名空间内容的字典
+
+try:
+except IndexError as err:  // 一个IndexError异常赋给变量err
+
+自定义异常
+class UppercaseException(Exception):  // 即使没有定义UppercaseException的行为(注意到只使用pass),也可以通过继承其父类Exception在抛出异常时输出错误提示
+  pass
+raise UppercaseException('error info')
