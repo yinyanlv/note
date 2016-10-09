@@ -61,7 +61,6 @@ dict.values()
 dict.items()
 dict.copy()
 
-
 集合  // 不允许元素重复，且不关注元素顺序，集合就像舍弃了值，仅剩下键的字典一样
 set() | {1, 2, 3}  // 只有{}时，会创建空字典
 &  // 交集运算符，a & b == a.intersection(b)
