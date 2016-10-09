@@ -55,7 +55,7 @@ dict.update(otherDict)  // 将一个字典的键值对复制到另一个字典�
 del dict[key]
 dict.clear()
 key in dict  // true | false
-dict.get(key, value)  // 可避免越界异常，value，可选值，当key不存在时，返回该可选值，无可选值时，返回None
+dict.get(key, value)  // 可避免越界异常，value，可选值，当key不存在时，返回该可选值，无可选值时，返回None(null类型)
 dict.keys()  // 获取所有键
 dict.values()
 dict.items()
@@ -71,3 +71,21 @@ set() | {1, 2, 3}  // 只有{}时，会创建空字典
 <  // 真子集
 >=  // 超集，a >= b == a.issuperset(b)
 >  // 真超集
+
+条件语句
+if elif else
+
+循环语句
+while else(没有break时，将执行else部分代码段)
+
+迭代
+for else(没有break时，将执行else部分代码段)
+
+zip()  // 并行迭代，返回的是一个可迭代的对象
+range(start, end, step)  // 返回在特定区间的自然数序列，返回的是一个可迭代的对象
+
+推导式  // 元组是没有推导式
+[expression for item in iterable if condition]  // 列表推导式
+{ key_expression : value_expression for expression in iterable }  // 字典推导式
+{expression for expression in iterable if condition }  // 集合推导式
+(number for number in range(1, 6))  // 生成器推导式，圆括号之间的是生成器推导式(元组没有推导式)，它返回的是一个生成器对象，一个生成器只能运行一次，但是生成器仅在运行中产生值，不会被存下来，所以不能重新使用或者备份一个生成器
