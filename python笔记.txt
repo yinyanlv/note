@@ -1,0 +1,74 @@
+基本数据类型
+int（可超过64位）
+float
+bool
+str
+str[start:end:step]  // 切片，不包含end
+len(str)
+str.split(',')
+','.join(list)
+str.startswith('a')
+str.endswith('z')
+str.find('abc')
+str.rfind('abc')  // 最后一个'abc'的位置
+str.count('a')
+str.isalnum()  // 所有字符都是字母或数字，true | false
+str.strip('.')  // 去除字符串尾部的'.'
+str.capitalize()  // 字符串首字母大写
+str.title()  // 所有单词首字母大写
+str.upper()  // 所有字母大写
+str.lower()
+str.swapcase()  // 所有字母大小写转换
+str.center(30)  // 居中字符串
+str.ljust(30)  // 字符串左对齐
+str.rjust(30)  // 字符串右对齐
+str.replace('a', 'b', 100)  // 100，替换多少处
+
+复杂数据类型
+列表  // 允许元素重复
+list  // []
+list() | []  // 创建列表
+list[start:end:step]  // 切片，不包含end
+list.append(elem)
+list.extend(list1)  // 合并列表，也可以使用 +=
+list.insert(index, elem)  // index越界时，如果偏移量超过了尾部，则插入到列表最后
+del list[index]  // 删除指定位置的元素，无del方法
+list.remove(elem)  // 删除具有指定值的元素
+list.pop(0)  // 获取并删除指定位置的元素
+list.index(elem)  // 查询具有特定值的元素位置
+elem in list  // 判断值是否存在，true | false
+list.count(elem)  记录特定值出现的次数
+','.join(list)
+list.sort(reverse=True)  // 原始列表改变，默认升序
+sorted(list)  // 不改变原始列表
+len(list)
+list.copy()  // 复制
+
+元组（不可变）
+tuple  // ()，元组占用的空间比列表小，函数的参数以元组的形式传递
+tuple() | ()
+
+字典  // 在其他语言中，字典可能会被称作关系型数组、哈希表或哈希图
+dictionary  // {}，字典中元素的顺序是无关紧要的，实际存储顺序可能取决于你添加元素的顺序，字典的键必须为不可变对象，因此，元组可以作为字典的键
+dict(list) | {}  // 将包含双值子元素的序列（或元组等）转换成字典，如：[ ['a', 'b'], ['c', 'd'], ['e', 'f'] ]
+dict.update(otherDict)  // 将一个字典的键值对复制到另一个字典中
+del dict[key]
+dict.clear()
+key in dict  // true | false
+dict.get(key, value)  // 可避免越界异常，value，可选值，当key不存在时，返回该可选值，无可选值时，返回None
+dict.keys()  // 获取所有键
+dict.values()
+dict.items()
+dict.copy()
+
+
+集合  // 不允许元素重复，且不关注元素顺序，集合就像舍弃了值，仅剩下键的字典一样
+set() | {1, 2, 3}  // 只有{}时，会创建空字典
+&  // 交集运算符，a & b == a.intersection(b)
+|  // 并集运算符，a | b == a.union(b)
+-  // 差集运算符，a - b == a.difference(b)
+^  // 异或集运算符，a ^ b == a.symmetric_difference(b)
+<=  // 判断一个集合是否是另一个集合的子集，a <= b == a.issubset(b)
+<  // 真子集
+>=  // 超集，a >= b == a.issuperset(b)
+>  // 真超集
