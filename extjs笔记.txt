@@ -1,3 +1,64 @@
+extjs6
+
+类系统
+
+Ext类
+Ext.application({  // 该方法返回一个名为MyApp的全局变量，应用的所有类都会挂在该变量下
+	name: 'MyApp',
+	extend: 'MyApp.Application',
+	launch: function () {  // 页面加载后触发
+	}
+});
+
+Ext.define('ClassB', {  // 创建或重写一个类
+	a: 'data',
+	extend: 'ClassA',  // 需要继承时配置
+	singleton: true,  // 需要单例时配置
+	override: 'Ext.form.field.Text',  // 需要重写基类的扩展时配置
+	setValue: function () {  // 重写基类方法
+		this.callParent(['override']);
+		return this;
+	}
+}, function () {  // 该类创建后的回调
+});
+
+Ext.create('ClassB', {  // 创建类的实例，也可通过new创建，var a = new ClassB('B');，当Ext.Loader开启时，此时会自动请求并加载对应的js类文件，'ClassB'可以是widget名，如：widget.panel
+	name: 'B'
+});
+
+Ext.onReady(function () {  // 页面加载后触发
+
+});
+
+Ext.widget('panel', {  // widget通过xtype创建实例，xtype即原始类名的别名
+	renderTo: Ext.getBody()
+});
+
+Ext.getClass(new Ext.Button());  // 返回创建该实例的类，Ext.Button
+
+Ext.getClassName(new Ext.Button());  // 返回创建该实例的类名，'Ext.Button'
+
+Ext.Base  // 所有类的基类
+Ext.Class  // 底层的类，用于创建class，不应该直接访问，而是通过使用Ext.define()
+Ext.ClassManager  // 管理所有的class，将class名称字符串映射到真实的class
+
+Ext.Loader  // 用于动态加载依赖
+Ext.require  // Ext.loader的快捷方法，文件加载的路径依据当前类的类名，Ext.require(['widget.*', 'layout.*', 'Ext.data.*']); or Ext.exclude('Ext.data.*').require('*');
+
+事件
+
+var btn = Ext.create('Ext.button', {
+	renderTo: Ext.getBody(),
+	listeners: {  // 绑定事件，也可以在实例创建成功后通过on绑定，如：btn.on({'click': function () {}, 'mouseout': function () {}}); or btn.on('click', function () {});
+		mouseout: function () {},
+		click: function () {}
+	}
+});
+移除事件
+btn.un('click', listener);
+
+-------------------------------------------------------------------------------------
+
 dom操作
 
 Ext.Element类 ExtJs对dom对象的封装
