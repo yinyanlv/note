@@ -115,3 +115,68 @@ except IndexError as err:  // 一个IndexError异常赋给变量err
 class UppercaseException(Exception):  // 即使没有定义UppercaseException的行为(注意到只使用pass),也可以通过继承其父类Exception在抛出异常时输出错误提示
   pass
 raise UppercaseException('error info')
+
+模块  // 不管模块在程序中被引用多少次，始终只有一个实例被加载，和对象不同
+from package_name | module_name import python_file_name | func_name  // 不带.py后缀，import可以放置在函数内部
+as关键字
+
+类
+class A:
+  def __init__(self):  // 对象的初始化方法，__init__并不是必需的，只有当需要区分由该类创建的不同对象时，才需要指定__init__方法，self，必须是第一个参数
+    pass  // pass表示这个类是一个空类
+类继承
+class B(A):  // A，父类
+
+super()  // 可通过它，调用父类的方法
+
+属性  // 通常用于getter，setter
+name = property(get_name, set_name)
+或
+@property  // 修饰符
+def name(self):
+  print('inside the getter')
+@name.setter
+def name(self, input_name):
+  print('inside the setter')
+
+私有特性
+__{name}  // 名称以__为前缀的类的特性，python通过名称重整让特性私有
+
+类方法
+class A:
+  @classmethod  // @classmethod指定的方法都是类方法
+  def test(cls):  // 类方法的第一个参数是类本身，这个参数常被写作cls
+    pass
+
+静态方法
+class A:
+  @staticmethod
+  def test():  // 它既不需要self参数也不需要class参数，通过类名直接调用
+    pass
+
+特殊方法  // 可自定义重写，改变python原始操作
+__eq__(self, other) self == other
+__ne__(self, other) self != other
+__lt__(self, other) self < other
+__gt__(self, other) self > other
+__le__(self, other) self <= other
+__ge__(self, other) self >= other
+__add__(self, other) self + other
+__sub__(self, other) self - other
+__mul__(self, other) self * other
+__floordiv__(self, other) self // other
+__truediv__(self, other) self / other
+__mod__(self, other) self % other
+__pow__(self, other) self ** other
+__str__(self) str(self)  // 定义如何打印对象信息
+__repr__(self) repr(self)  // 交互式解释器则用__repr__()方法输出变量
+__len__(self) len(self)
+
+组合  // 多继承
+tail = Tail('long')
+bill = Bill('wide orange')
+duck = Duck(bill, tail)
+
+命名元组  // 命名元组并不是python自动支持的类型，命名元组是不可变的，与使用对象相比，使用命名元组在时间和空间上效率更高
+from collections import namedtuple
+命名元组是元组的子类，你既可以通过名称（使用 .name）来访问其中的值，也可以通过位置进行访问（使用 [offset]）
