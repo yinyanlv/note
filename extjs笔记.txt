@@ -2,7 +2,7 @@ extjs6
 
 类系统
 
-Ext类
+Ext
 Ext.application({  // 该方法返回一个名为MyApp的全局变量，应用的所有类都会挂在该变量下
 	name: 'MyApp',
 	extend: 'MyApp.Application',
@@ -35,15 +35,13 @@ Ext.widget('panel', {  // widget通过xtype创建实例，xtype即原始类名�
 });
 
 Ext.getClass(new Ext.Button());  // 返回创建该实例的类，Ext.Button
-
 Ext.getClassName(new Ext.Button());  // 返回创建该实例的类名，'Ext.Button'
 
 Ext.Base  // 所有类的基类
 Ext.Class  // 底层的类，用于创建class，不应该直接访问，而是通过使用Ext.define()
 Ext.ClassManager  // 管理所有的class，将class名称字符串映射到真实的class
-
 Ext.Loader  // 用于动态加载依赖
-Ext.require  // Ext.loader的快捷方法，文件加载的路径依据当前类的类名，Ext.require(['widget.*', 'layout.*', 'Ext.data.*']); or Ext.exclude('Ext.data.*').require('*');
+Ext.require()  // Ext.loader的快捷方法，文件加载的路径依据当前类的类名，Ext.require(['widget.*', 'layout.*', 'Ext.data.*']); or Ext.exclude('Ext.data.*').require('*');
 
 事件
 
@@ -54,61 +52,32 @@ var btn = Ext.create('Ext.button', {
 		click: function () {}
 	}
 });
-移除事件
-btn.un('click', listener);
+btn.un('click', listener);  // 移除事件绑定
 
--------------------------------------------------------------------------------------
-
-dom操作
-
-Ext.Element类 ExtJs对dom对象的封装
-Ext.Element.get(id); => Ext.get(id); 返回Ext.Element实例。Ext.get(id).dom得到原生dom对象
-Ext.fly(id); //作用与Ext.get(id)一样，但是它不开辟新内存空间，每次调用都会覆盖前一次的信息
-Ext.getBody();
-Ext.getDoc();
-Ext.getDom(id); //原生dom
-
-Ext.CompositeElement类 ExtJs对dom对象集合的封装
-Ext.select('#div1');
-Ext.select('div[title=abc]');
-e.first().getAttribute('title');
-e.getValue();
-e.set({value: 111});
-e.first().set({title: 'abc'});
-e.addCls('a');
-e.removeCls('a');
-e.toggleCls('a');
-e.hasCls('a');
-e.first().dom.innerHTML;
-e.first().update('<b>更新后的Html</b>');
-e.item(num);
-e.filter('div[title=aaa]');
-e.first();
-e.last();
-e.prev();
-e.next();
-e.wrap({tag: 'p'});
-e.replaceElement(4, 'text1', true); //用text1，替换集合中的第四个元素
-e.removeElement(2, true); //移除第三个元素
-e.first().replace('div2', true);
-e.first().remove();
-e.setStyle('width', '550px');
-e.applyStyles({height: '500px', color: 'red'});
-e.setHeight(100, true);
-e.setLeft('50px');
-e.setTop('10px');
-e.setLeftTop('50px', '10px');
-e.setSize('100px', '200px');
-e.setXY([10, 10]);
-e.getWidth();
-e.getXY();
-e.on('click', function () {});
-e.un('click', function () {});
+DOM
 
 Ext.DomQuery类
-Ext.DomQuery.select(); => Ext.query(); 返回原生dom对象
-Ext.query('div');
-Ext.query('[id="domid"]');
+Ext.query(cssSelector, rootNode);  // 即Ext.DomQuery.select()，rootNode，原生节点，返回原生dom对象
+
+Ext.Element类
+Ext.get('id');  // 即Ext.Element.get(id)，返回Ext.Element对象，Ext.get('id').dom得到原生dom对象
+Ext.fly('id'); // 作用与Ext.get('id')一样，但是它不开辟新内存空间，每次调用都会覆盖前一次的信息
+Ext.getDom('id'); // 返回原生dom对象
+Ext.getBody();
+Ext.getDoc();
+
+Ext.CompositeElement类
+Ext.select(cssSelector);  // 返回一个CompositeElement对象，其是对dom对象集合的封装，可迭代
+Ext.get('id').select(cssSelector);  // 等价于Ext.select(cssSelector, true, 'id');
+
+Ext.ComponentQuery类  // 可通过id，属性，xtype查找component
+Ext.ComponentQuery.query("button[title='my button']");  // button，xtype
+Ext.ComponentQuery.query('formpanel numberfield');
+component.child('button[itemId=save]');
+window.down('form');
+form.up('window');
+window.down('treep'); // xtype
+window.down('button[action=save]');
 
 Ext.DomHelper类
 Ext.DomHelper.append(id, '<a>aaa</a>');
@@ -118,16 +87,31 @@ Ext.DomHelper.overwrite(id, '<a>aaa</a>'); //相当于原生的innerHTML
 var tpl = Ext.DomHelper.createTemplate('<li>{content}</li>');
 tpl.overwrite(id, {content: '内容'});
 
-Ext.ComponentQuery类，查找容器内的组件
-window.down('form');
-form.up('window');
-window.down('treep'); //xtype
-window.down('button[action=save]');
+组件  // 每个组件都有一个xtype，xtype可以使组件懒加载
+
+容器  // 基类，Ext.container.Container，常见的容器如：Ext.toolbar.Toolbar, Ext.panel.Panel, Ext.Editor...
+
+布局
+absolute  // absolute布局继承Ext.layout.container.Anchor布局方式，子组件可配置x，y等属性
+accordion  // 手风琴布局，在任何时间里，只有一个面板处于激活状态，子组件可配置title，html等属性
+anchor  // anchor布局将使组件固定于父容器的某一个位置，使用anchor布局的子组件尺寸相对于容器的尺寸，子组件可配置anchor属性
+  anchor: '75% 25%'，表示宽度为父容器的75%，高度为父容器的25%，未定义高度时，使用框架默认值
+  anchor: '-295 -300'，表示组件右侧距离父容器右侧295，底部相对于父容器的底部300
+  anchor: '-250 10%'，混合模式，表示组件右侧相对于容器右侧250，高度为父容器的10%
+border  // 常用作页面整体布局，子组件可配置region: north, south, east, west, center
+card  // 类似向导，上一步，下一步，总是只有一个子组件可见，setActiveItem(index) setDisabled(index) getNext() getPrev()
+fit  // 子组件会自适应于父容器（用了fit布局子容器设置宽度无效），如果父容器有多个子组件，只会显示第一个
+hbox  // 所有的子元素横向排列，可不定义高度，自动stretch，layout: {type: 'hbox', pack: 'start', align: 'stretch'}，子组件可配置width，flex等属性
+vbox  // 所有的子元素纵向排列，可不定义宽度，自动stretch，layout: {type: 'vbox', pack: 'start', align: 'stretch'}，子组件可配置height，flex等属性
+table  // layout:{type: 'table', columns: 3, tableAttrs: {style: {width: '100%'}}}  子组件可配置rowspan: 2 // 合并行  colspan: 2 // 合并列 合并行列的时候记得指明高和宽
+center  // 使子组件水平且垂直居中于父容器
+column  // 子组件可配置columnWidth，需要指定高度height，如：columnWidth: .7
+form  // 一行一控件的形式
 
 form
 默认布局： layout: 'anchor'
 From和FormBasic
-form.getForm(); => formBasic
+form.getForm(); => FormBasic
 加载数据：
 record
 form.loadRecord(record);
@@ -161,36 +145,19 @@ Ext.apply(Ext.form.field.VTypes, {
     IPAddressMask: /[\d\.]/i
 });
 
-
-布局
-border布局: 常用作页面整体布局，region: north, south, east, west, center
-column布局: columnWidth: .7
-fit布局: 子容器会自适应于父容器（用了fit布局子容器设置宽度无效），注意，如果父容器有多个子容器，只会显示第一个
-table布局: layoutConfig:{columns:3}  rowspan: 2 //合并行  colspan: 2 //合并列  合并行列的时候记得指明高和宽
-form布局: 一行一控件的形式
-accordion布局: 手风琴布局，在任何时间里，只有一个面板处于激活状态
-card布局： 类似向导，上一步，下一步 setActiveItem setDisabled getNext() getPrev()
-anchor布局： anchor布局将使组件固定于父容器的某一个位置，使用anchor布局的子组件尺寸相对于容器的尺寸，其子组件都有一个anchor属性
-	anchor:'75% 25%'，表示宽度为父容器的75%，高度为父容器的25%
-    anchor:'-295 -300'，表示组件相对于父容器右边距为295，相对于父容器的底部位300
-    anchor:'-250 10%'，混合模式，表示组件党对于如容器右边为250，高度为父容器的10%
-absolute布局: absolute布局继承Ext.layout.container.Anchor布局方式，并增加了x，y配置选项对子组件进行定位
-vbox布局: 所有的子元素纵向排列
-hbox布局: 所有的子元素横向排列
-
 常规开发模式：
 Ext.onReady(function () {
-    //1.定义Model
+    // 1.定义Model
     Ext.define("MyApp.model.User", {
         extend: "Ext.data.Model",
         fields: [
-            { name: 'name', type: 'string', mapping: 'test', convert: function (val) {return val;}}, //mapping，对应服务器字段名
+            { name: 'name', type: 'string', mapping: 'test', convert: function (val) {return val;}},  // mapping，对应服务器字段名
             { name: 'age', type: 'int' },
             { name: 'phone', type: 'string' }
         ]
     });
 
-    //2.创建store
+    // 2.创建store
     var store = Ext.create("Ext.data.Store", {
         model: "MyApp.model.User",
         data: [
@@ -199,7 +166,7 @@ Ext.onReady(function () {
         ]
     });
 
-    //3.创建grid
+    // 3.创建grid
     var viewport = Ext.create("Ext.container.Viewport", {
         layout: "fit",
         items: {
@@ -214,10 +181,10 @@ Ext.onReady(function () {
         }
     });
 
-    //4.添加双击编辑
+    // 4.添加双击编辑
     var grid = viewport.down("grid");
     grid.on("itemdblclick", function (me, record, item, index, e, eopts) {
-        //5.创建编辑表单
+        // 5.创建编辑表单
         var win = Ext.create("Ext.window.Window", {
             title: "编辑用户",
             width: 300,
@@ -253,18 +220,17 @@ Ext.onReady(function () {
     });
 });
 
-
-mvc开发模式
+mvc开发模式：
 1、宿主页面，引用入口文件
 2、入口文件
 app.js
 
-//Ext.Loader.setConfig({
-//    enabled: true,
-//    paths: {
-//        'Ext.ux': extjsConfig.uxFolder
-//    }
-//});
+// Ext.Loader.setConfig({
+//     enabled: true,
+//     paths: {
+//         'Ext.ux': extjsConfig.uxFolder
+//     }
+// });
 
 Ext.application({
     name: 'MyApp',
@@ -272,7 +238,7 @@ Ext.application({
     controllers: ["User"],
     autoCreateViewport: true,
     launch: function () {
-        //Ext.create('viewportName'); 手动加载viewport
+        // Ext.create('viewportName'); 手动加载viewport
     }
 });
 
