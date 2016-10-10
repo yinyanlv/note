@@ -1,3 +1,6 @@
+/  浮点数除法 7 / 2 => 3.5
+//  整数除法 7 // 2 => 3
+
 基本数据类型
 int（可超过64位）
 float
@@ -79,7 +82,7 @@ if elif else
 while else(没有break时，将执行else部分代码段)
 
 迭代
-for else(没有break时，将执行else部分代码段)
+for in else(没有break时，将执行else部分代码段)
 
 zip()  // 并行迭代，返回的是一个可迭代的对象
 range(start, end, step)  // 返回在特定区间的自然数序列，返回的是一个可迭代的对象
