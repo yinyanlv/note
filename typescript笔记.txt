@@ -18,6 +18,14 @@ never  // 表示永远无法到达终点的类型，如异常，never类型是�
 类型断言  // 这种方式可以告诉编译器，“相信我，我知道自己在干什么”，它没有运行时的影响，只是在编译阶段起作用
 let strLength: number = (<string>someValue).length;  or let strLength: number = (someValue as string).length;
 
+类型别名
+type Name = string;
+type Tree<T> = {
+    value: T;
+    left: Tree<T>;
+    right: Tree<T>;
+}
+
 declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法于属性。这会让你通过编译，但是没有自动完成和类型检查
 declare var $: any;
 
