@@ -108,6 +108,13 @@ center  // 使子组件水平且垂直居中于父容器
 column  // 子组件可配置columnWidth，需要指定高度height，如：columnWidth: .7
 form  // 一行一控件的形式
 
+store
+Ext.data.StoreManager.lookup('myStore');   // myStore，storeId，Ext.getStore是其简便方法
+this.getViewModel().getStore('myStore');  // view model，this为controller
+
+template
+var tpl = new Ext.XTemplate(str1, str2, ...);  // 用于xtype，dataview
+
 form
 默认布局： layout: 'anchor'
 From和FormBasic
