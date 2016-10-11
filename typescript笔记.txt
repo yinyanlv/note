@@ -1,0 +1,160 @@
+基础类型
+number  // let isDone: number = 0xf11d;
+boolean
+string  // 支持模版字符串，嵌入表达式，${age + 1}
+数组  // let list: number[] = [1, 2, 3]; or let list: Array<number> = [1, 2, 3];（数组泛型）
+元组  // 表示一个已知元素数量和类型的数组，各元素的类型不必相同，let x: [string, number];当访问一个越界的元素，会使用联合类型（string | null | undefined）替代
+枚举  // enum Color {Red = 1, Green, Blue};  let c: Color = Color.Green;默认情况下，从0开始为元素编号，枚举类型可以为一组数值赋予友好的名字，可以通过值得到名字，如Color[1] => Red
+any  // 任意值，let list: any[] = [1, true, "free"]; or let a: any = 1;
+Object  // Object类型与any类似，但只允许你给它赋任意值，但是却不能够在它上面调用任意的方法，即便它真的有这些方法
+void  // 与any类型相反，它表示没有任何类型，void类型的变量没有什么大用，因为你只能为它赋予undefined和null
+undefined  // --strictNullChecks标记，null和undefined只能赋值给void和它们各自，默认情况下null和undefined是所有类型的子类型
+null
+never  // 表示永远无法到达终点的类型，如异常，never类型是任何类型的子类型，也可以赋值给任何类型，然而，没有类型是never的子类型或可以赋值给never类型（除了never本身之外）
+
+联合类型
+|  // 用'|'分隔每个类型，所以number | string | boolean
+
+类型断言  // 这种方式可以告诉编译器，“相信我，我知道自己在干什么”，它没有运行时的影响，只是在编译阶段起作用
+let strLength: number = (<string>someValue).length;  or let strLength: number = (someValue as string).length;
+
+declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法于属性。这会让你通过编译，但是没有自动完成和类型检查
+declare var $: any;
+
+变量声明
+let  // 不能重复声明同名变量，模式匹配
+const  // let的升级，阻止对变量进行再一次赋值
+
+接口  // 类型检查器不会去检查属性的顺序，只要相应的属性存在并且类型也是对的就可以
+interface SquareConfig {
+  color?: string;  // 可选属性
+  readonly x: number;  // 只读属性
+  [propName: string]: any;  // 表示的是SquareConfig可以有任意数量的属性，并且只要它们不是color和width，那么就无所谓它们的类型是什么
+  (source: string, subString: string): boolean;  // 函数类型，boolean，函数返回值类型
+  [index: number]: string;  // 可索引的类型
+}
+
+interface ClockInterface {  // 类类型
+    currentTime: Date;
+}
+
+class Clock implements ClockInterface, TestA {  // mixins
+    currentTime: Date;
+    constructor(h: number, m: number) { }
+}
+
+interface Square extends Shape, PenStroke {  // 接口继承
+    sideLength: number;
+}
+
+类
+class Animal {  // 类可以当成接口使用
+    static origin = {x: 0, y: 0};  // 静态属性
+    public name: string;  // 默认
+    private _fullName: string;  //  不能在声明它的类的外部访问
+    protected height: string;  // protected成员在派生类中仍然可以访问，构造函数也可以被标记成protected。 这意味着这个类不能在包含它的类外被实例化，但是能被继承
+    readonly numberOfLegs: number = 8;  // 只读属性必须在声明时或构造函数里被初始化
+    public constructor(theName: string) { this.name = theName; }
+    public move(distanceInMeters: number) {
+        console.log(`${this.name} moved ${distanceInMeters}m.`);
+    }
+    get fullName(): string {  // getter
+        return this._fullName;
+    }
+    set fullName(newName: string) {  // setter
+        if (passcode && passcode == "secret passcode") {
+            this._fullName = newName;
+        }
+        else {
+            console.log("Error: Unauthorized update of employee!");
+        }
+    }
+}
+
+class Snake extends Animal {  // 继承，只能单继承，要想多继承使用implements，mixins
+    constructor(name: string) { super(name); }
+    move(distanceInMeters = 5) {
+        console.log("Slithering...");
+        super.move(distanceInMeters);
+    }
+}
+
+abstract class Department {  // 抽象类做为其它派生类的基类使用，一般不会直接被实例化，abstract关键字是用于定义抽象类和在抽象类内部定义抽象方法
+    constructor(public name: string) {
+    }
+    printName(): void {
+        console.log('Department name: ' + this.name);
+    }
+    abstract printMeeting(): void;  // 必须在派生类中实现
+}
+
+函数
+let myAdd: (baseValue:number, increment:number) => number =
+    function(x: number, y: number): number { return x + y; };
+重载  // 在定义重载的时候，一定要把最精确的定义放在最前面
+function pickCard(x: {suit: string; card: number; }[]): number;
+function pickCard(x: number): {suit: string; card: number; };
+function pickCard(x): any {}
+
+泛型
+function find<T, U extends Findable<T>>(n: T, s: U) {  // 泛型约束
+}
+let output = identity<string>("myString");  // 可类型推论
+
+命名空间  // 即内部模块
+namespace Validation {
+    export interface StringValidator {
+        isAcceptable(s: string): boolean;
+    }
+}
+
+外部模块  // 模块
+declare module "SomeModule" {
+    export function fn(): string;
+}
+
+装饰器  // Decorators，用来支持标注或修改类及其成员，目前是一项实验性特性
+装饰器是一种特殊类型的声明，它能够被附加到类声明，方法， 访问符，属性或参数上。 装饰器使用@expression这种形式，expression求值后必须为一个函数，它会在运行时被调用，被装饰的声明信息做为参数传入
+在TypeScript里，当多个装饰器应用在一个声明上时会进行如下步骤的操作：
+1、由上至下依次对装饰器表达式求值
+2、求值的结果会被当作函数，由下至上依次调用
+
+三斜线指令
+三斜线指令是包含单个XML标签的单行注释。 注释的内容会做为编译器指令使用
+
+编译前：
+class Student {  // 类
+    fullName: string;
+    constructor(public firstName, public middleInitial, public lastName) {
+        this.fullName = firstName + " " + middleInitial + " " + lastName;
+    }
+}
+
+interface Person {  // 接口
+    firstName: string;
+    lastName: string;
+}
+
+function greeter(person : Person) {
+    return "Hello, " + person.firstName + " " + person.lastName;
+}
+
+var user = new Student("Jane", "M.", "User");
+
+document.body.innerHTML = greeter(user);
+
+编译后：
+var Student = (function () {
+    function Student(firstName, middleInitial, lastName) {
+        this.firstName = firstName;
+        this.middleInitial = middleInitial;
+        this.lastName = lastName;
+        this.fullName = firstName + " " + middleInitial + " " + lastName;
+    }
+    return Student;
+}());
+function greeter(person) {
+    return "Hello, " + person.firstName + " " + person.lastName;
+}
+var user = new Student("Jane", "M.", "User");
+document.body.innerHTML = greeter(user);
