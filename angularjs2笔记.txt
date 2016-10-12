@@ -1,0 +1,55 @@
+angularjs 8个主要构造块
+模块 (Modules)
+组件 (Components)
+模板 (Templates)
+元数据 (Metadata)
+数据绑定 (Data Binding)
+指令 (Directives)
+服务 (Services)
+依赖注入 (Dependency Injection)
+
+模块
+angular模块是一个带有@NgModule装饰器的类
+@NgModule可接受一个描述模块属性的元数据对象
+@NgModule({
+  declarations: [AppComponent],  // 声明，本模块拥有的视图类，angular有3种视图类，组件、指令、管道（模板中使用管道转换成可显示的值，如：price | currency:'USD':true）
+  exports: [AppComponent],  // declaration的子集，可用于其它模块中的组件模板
+  imports: [BrowserModule],  // 本模块组件模板中需要由其它模块导出的类
+  providers: [Logger]  // 服务的创建者。本模块把它们加入全局的服务表中，让它们在应用中的任何部分都可被访问到
+  bootstrap: [AppComponent]  // 标识出应用的主视图（被称为 根组件），它是所有其它视图的宿主。只有根模块才能设置bootstrap属性
+})
+模块库  // 每个angular库的名字都带有@angular前缀
+
+组件  // 组件用于控制视图，模板、元数据和组件共同描绘出这个视图，严格来说组件就是一个指令，即带模板的指令
+
+模板  // 模板语法，*ngFor、 {{hero.name}}、 (click)、 [hero]和<hero-detail>
+
+元数据  // 告诉angular如何处理一个类
+@Component({
+  moduleId: module.id,  //  为与模块相关的URL（如 templateUrl）提供基地址
+  selector: 'hero-list',  // cssSelcector，告诉angular在父级HTML中寻找一个<hero-list>标签，然后创建该组件，并插入此标签中
+  templateUrl: 'hero-list.component.html',  // 组件HTML模板的模块相对地址
+  providers: [HeroService]  // 包含组件所依赖的服务类
+})
+
+数据绑定
+<li>{{hero.name}}</li>  // 插值表达式
+<hero-detail [hero]="selectedHero"></hero-detail>  // 属性绑定，把父组件HeroListComponent的selectedHero的值传到子组件HeroDetailComponent的hero属性中
+<li (click)="selectHero(hero)"></li>  // 事件绑定，click，dom事件名称
+<input [(ngModel)]="hero.name">  // ngModel指令，数据双向绑定，数据属性的值会从具有属性绑定的组件传到输入框。通过事件绑定，用户的修改被传回到组件，把属性值设置为最新的值
+
+指令  // angular根据指令提供的操作指南对dom进行修改，要通过@Directive装饰器把元数据附加到指令类上
+结构型指令  // 通过在dom中添加、移除和替换元素来修改布局
+<li *ngFor="let hero of heroes"></li>  // 告诉angular为heroes列表中的每个英雄生成一个<li>标签
+<hero-detail *ngIf="selectedHero"></hero-detail>  // 表示只有在选择的英雄存在时，才会包含HeroDetail组件
+属性型指令  // 修改一个现有元素的外观或行为
+<input [(ngModel)]="hero.name">  // ngModel指令，它实现了数据双向绑定，一般用于<input>，还有一些其它指令，如：ngSwitch, ngStyle, ngClass
+
+服务  // 服务分为很多种，包括：值、函数，以及应用所需的特性，几乎任何东西都可以是一个服务，典型的服务是一个类，具有专注的、良好定义的用途，可通过依赖注入来在组件中使用这些服务
+
+依赖注入
+angular创建组件时，会首先为组件所需的服务找一个注入器（ Injector ），注入器是一个维护服务实例的容器，存放着以前创建的实例。 如果容器中还没有所请求的服务实例，注入器就会创建一个服务实例，并且添加到容器中，然后把这个服务返回给angular。 当所有的服务都被解析完并返回时，angular会以这些服务为参数去调用组件的构造函数。这就是依赖注入
+@Component({
+  ...
+  providers: [HeroService]  // 注入器能使用服务类创建一个新的服务实例，注入到组件中
+})
