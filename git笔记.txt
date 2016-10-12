@@ -28,6 +28,7 @@ git diff HEAD -- test_git.txt  // --后面要有空格，查看工作区和版�
 
 git rm <file>
 git rm --cached <file>  // 会直接从暂存区删除文件，工作区则不做出改变
+git rm -r --cached   // 删除暂存区的缓存
 
 git reset HEAD <file>  // 丢弃暂存区中该文件的修改，工作区不受影响
 git reset HEAD  // 暂存区的目录树会被重写，被master分支指向的目录树所替换，但是工作区不受影响
