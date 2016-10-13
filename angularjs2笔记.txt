@@ -38,7 +38,7 @@ angular模块是一个带有@NgModule装饰器的类
 <li>{{hero.name}}</li>  // 插值表达式
 <hero-detail [hero]="selectedHero"></hero-detail>  // 属性绑定，把父组件HeroListComponent的selectedHero的值传到子组件HeroDetailComponent的hero属性中
 <li (click)="selectHero(hero)"></li>  // 事件绑定，click，dom事件名称
-<input (keyup)="onKey($event)">  // $event，原生dom事件对象
+<input (keyup)="onKey($event)">  // $event，原生dom事件对象，该名称不可以改为如：e、 event等
 <input [(ngModel)]="hero.name">  // ngModel指令，数据双向绑定，数据属性的值会从具有属性绑定的组件传到输入框。通过事件绑定，用户的修改被传回到组件，把属性值设置为最新的值
 
 指令  // angular根据指令提供的操作指南对dom进行修改，要通过@Directive装饰器把元数据附加到指令类上
