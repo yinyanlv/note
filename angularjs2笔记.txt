@@ -12,7 +12,7 @@ angularjs 8个主要构造块
 angular模块是一个带有@NgModule装饰器的类
 @NgModule可接受一个描述模块属性的元数据对象
 @NgModule({
-  declarations: [AppComponent],  // 声明，本模块拥有的视图类，angular有3种视图类，组件、指令、管道（模板中使用管道转换成可显示的值，如：price | currency:'USD':true）
+  declarations: [AppComponent],  // 声明，本模块拥有的视图类，angular有3种视图类，组件、指令、管道（模板中使用管道转换成可显示的值，如：currentHero?.birthdate | date:'longDate'）
   exports: [AppComponent],  // declaration的子集，可用于其它模块中的组件模板
   imports: [BrowserModule],  // 本模块组件模板中需要由其它模块导出的类
   providers: [Logger]  // 服务的创建者。本模块把它们加入全局的服务表中，让它们在应用中的任何部分都可被访问到，另一种写法：[{provide: Logger, useClass: BetterLogger, useExisting: NewLogger, useValue: silentLogger, useFactory: heroServiceFactory}]，useExisting定义别名
@@ -39,14 +39,14 @@ angular模块是一个带有@NgModule装饰器的类
 <hero-detail [hero]="selectedHero"></hero-detail>  // 属性绑定，把父组件HeroListComponent的selectedHero的值传到子组件HeroDetailComponent的hero属性中
 <li (click)="selectHero(hero)"></li>  // 事件绑定，click，dom事件名称
 <input (keyup)="onKey($event)">  // $event，原生dom事件对象，该名称不可以改为如：e、 event等
-<input [(ngModel)]="hero.name">  // ngModel指令，数据双向绑定，数据属性的值会从具有属性绑定的组件传到输入框。通过事件绑定，用户的修改被传回到组件，把属性值设置为最新的值
+<input [(ngModel)]="hero.name">  // ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模块，数据属性的值会从具有属性绑定的组件传到输入框。通过事件绑定，用户的修改被传回到组件，把属性值设置为最新的值
 
 指令  // angular根据指令提供的操作指南对dom进行修改，要通过@Directive装饰器把元数据附加到指令类上
 结构型指令  // 通过在dom中添加、移除和替换元素来修改布局
-<li *ngFor="let hero of heroes"></li>  // 告诉angular为heroes列表中的每个英雄生成一个<li>标签
+<li *ngFor="let hero of heroes; let i=index; trackBy:func;"></li>  // 告诉angular为heroes列表中的每个英雄生成一个<li>标签
 <hero-detail *ngIf="selectedHero"></hero-detail>  // 表示只有在选择的英雄存在时，才会包含HeroDetail组件
 属性型指令  // 修改一个现有元素的外观或行为
-<input [(ngModel)]="hero.name">  // ngModel指令，它实现了数据双向绑定，一般用于<input>，还有一些其它指令，如：ngSwitch, ngStyle, ngClass
+<input [(ngModel)]="hero.name">  // ngModel指令，它实现了数据双向绑定，一般用于<input>，还有一些其它指令，如：ngSwitch（*ngSwitchCase、*ngSwitchDefault）, ngStyle, ngClass
 
 服务  // 服务分为很多种，包括：值、函数，以及应用所需的特性，几乎任何东西都可以是一个服务，典型的服务是一个类，具有专注的、良好定义的用途，可通过依赖注入来在组件中使用这些服务
 
