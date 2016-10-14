@@ -31,7 +31,8 @@ angular模块是一个带有@NgModule装饰器的类
   moduleId: module.id,  //  为与模块相关的URL（如 templateUrl）提供基地址
   selector: 'hero-list',  // cssSelcector，告诉angular在父级HTML中寻找一个<hero-list>标签，然后创建该组件，并插入此标签中
   templateUrl: 'hero-list.component.html',  // 组件HTML模板的模块相对地址
-  providers: [HeroService]  // 包含组件所依赖的服务类
+  providers: [HeroService],  // 包含组件所依赖的服务类
+  pipes: [LowercasePipe]  // 定义组件需要使用的管道
 })
 
 数据绑定
@@ -60,3 +61,5 @@ angular创建组件时，会首先为组件所需的服务找一个注入器（ 
 @Injectable()  // 标志着一个类（依赖者而非被依赖者）可以被一个注入器实例化。通常来讲，在试图实例化一个没有被标识为@Injectable()的类时候，注入器将会报告错误
 @Inject(APP_CONFIG)  // let APP_CONFIG = new OpaqueToken('app.config');
 @Optional()  // 可选依赖
+@Pipe()  // 可以通过添加元数据的方式把类声明为一个管道
+@RouteConfig()  // 定义路由
