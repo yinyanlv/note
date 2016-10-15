@@ -32,7 +32,9 @@ angular模块是一个带有@NgModule装饰器的类
   selector: 'hero-list',  // cssSelcector，告诉angular在父级HTML中寻找一个<hero-list>标签，然后创建该组件，并插入此标签中
   templateUrl: 'hero-list.component.html',  // 组件HTML模板的模块相对地址
   providers: [HeroService],  // 包含组件所依赖的服务类
-  pipes: [LowercasePipe]  // 定义组件需要使用的管道
+  pipes: [LowercasePipe],  // 定义组件需要使用的管道
+  directives: [Tooltip],  // 定义组件及子组件需要使用的指令
+  changeDetection: [OnPush],  // 脏值检测策略，CheckOnce、Checked、CheckAlways、Detached（分离，此时这个脏值检测器子树被认为不是主树的一部分，被跳过）、Default、OnPush
 })
 
 数据绑定
