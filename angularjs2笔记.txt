@@ -65,3 +65,8 @@ angular创建组件时，会首先为组件所需的服务找一个注入器（ 
 @Optional()  // 可选依赖
 @Pipe()  // 可以通过添加元数据的方式把类声明为一个管道
 @RouteConfig()  // 定义路由
+
+生命周期
+OnChanges  OnInit  DoCheck  OnDestroy
+  AfterContentInit      AfterViewInit
+  AfterContentChecked   AfterViewChecked
