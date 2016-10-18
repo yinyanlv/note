@@ -74,11 +74,12 @@ TTF（trueTye）、OTF（openType postscript）  // 桌面应用中常用的字�
 SVG（scalable vector graphics）  // 速度慢，文本质量不高，兼容旧版ipad和iphone
 @font-face {  // 正式注册字体，使用字体前，必须先注册该字体
   font-family: 'fontname';  // 命名字体
-  src: url('test.eot');  // 必须首先注册eot格式字体，这样老版本ie不理解其它规则，也没关系
+  src: url('test.eot');  // ie9?，必须首先注册eot格式字体，这样老版本ie不理解其它规则，也没关系
   src: local('fontname'),  // 如果用户电脑恰好安装了该字体，浏览器会直接使用该本地字体，要避免误用同名的字体，可以传入一个无意义的字体名
-      url('fontname.woff') format('woff'),
-      url('fontname.ttf') format('truetype'),
-      url('fontname.svg') format('svg');
+      url('test.eot?#iefix') format('embedded-opentype'),  // ie6-ie8?
+      url('test.woff') format('woff'),
+      url('test.ttf') format('truetype'),
+      url('test.svg') format('svg');
 }
 
 透视
