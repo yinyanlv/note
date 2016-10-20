@@ -1,5 +1,5 @@
 配置scss
-'Arguments': --no-cache --update --sourcemap --watch $FileName$:$FileParentDir$\css\$FileNameWithoutExtension$.css
+'Arguments': --no-cache --update --sourcemap --watch --style expanded $FileName$:$ProjectFileDir$\lib\$FileNameWithoutExtension$.css
 'Output paths to refresh': $FileNameWithoutExtension$.css:$FileNameWithoutExtension$.css.map
 
 --style，表示解析后的css是什么格式，如：--style compressed，有四种取值分别为：nested，expanded，compact，compressed
