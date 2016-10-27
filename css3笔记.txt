@@ -1,6 +1,20 @@
 inherit可以用在任何css属性中，对于伪元素，则会取生成该伪元素的宿主元素对应的该属性的值
 伪元素无法设置内联样式
 
+去除chrome浏览器input黄色背景
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
+  -webkit-text-fill-color: #333;
+}
+或
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-transition-delay: 9999s;
+  -webkit-transition: color 9999s ease-out, background-color 9999s ease-out;
+}
+
 ios overflow: auto;滚动无惯性
 -webkit-overflow-scrolling: touch;
 
