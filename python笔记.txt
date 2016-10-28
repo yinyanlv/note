@@ -101,7 +101,7 @@ def func_name():  // 位置参数，关键字参数，默认参数，默认参�
 **  // 收集关键字参数，将参数收集到一个字典中
 在函数体开始的部分附上函数定义说明的文档,这就是函数的文档字符串，help(func)，参数列表和文档字符串，help(func.__doc__)，文档字符串
 
-lambda 函数是用一个语句表达的匿名函数。如：edit_story(stairs, lambda word: word.capitalize() + '!')
+lambda函数是用一个语句表达的匿名函数。如：edit_story(stairs, lambda word: word.capitalize() + '!')
 
 生成器  // 用来创建python序列的一个对象，内部使用yield关键字，返回的是一个生成器对象
 
@@ -115,7 +115,7 @@ try:
 except IndexError as err:  // 一个IndexError异常赋给变量err
 
 自定义异常
-class UppercaseException(Exception):  // 即使没有定义UppercaseException的行为(注意到只使用pass),也可以通过继承其父类Exception在抛出异常时输出错误提示
+class UppercaseException(Exception):  // 即使没有定义UppercaseException的行为(注意，使用了pass),也可以通过继承其父类Exception在抛出异常时输出错误提示
   pass
 raise UppercaseException('error info')
 
@@ -151,7 +151,7 @@ class A:
   def test(cls):  // 类方法的第一个参数是类本身，这个参数常被写作cls
     pass
 
-静态方法
+静态方法  // 可以被类或实例调用
 class A:
   @staticmethod
   def test():  // 它既不需要self参数也不需要class参数，通过类名直接调用
@@ -182,4 +182,4 @@ duck = Duck(bill, tail)
 
 命名元组  // 命名元组并不是python自动支持的类型，命名元组是不可变的，与使用对象相比，使用命名元组在时间和空间上效率更高
 from collections import namedtuple
-命名元组是元组的子类，你既可以通过名称（使用 .name）来访问其中的值，也可以通过位置进行访问（使用 [offset]）
+命名元组是元组的子类，你既可以通过名称（使用 .name）来访问其中的值，也可以通过位置进行访问（使用[offset]）
