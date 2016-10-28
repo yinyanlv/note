@@ -237,7 +237,7 @@ try {
 
 }
 如果try-catch代码块中,存在return
-try -> catch -> finally -> finally.return -> catch.return -> try.return，没有相应的阶段忽略该阶段，任何阶段的return被执行，则整个语句块结束。
+try -> catch -> finally -> finally.return -> catch.return -> try.return，没有相应的阶段忽略该阶段，任何阶段的return被执行，则整个语句块结束
 异常链
 throws关键字
 throw关键字
