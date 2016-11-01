@@ -37,7 +37,7 @@ const  // let的升级，阻止对变量进行再一次赋值
 interface SquareConfig {
   color?: string;  // 可选属性
   readonly x: number;  // 只读属性
-  [propName: string]: any;  // 表示的是SquareConfig可以有任意数量的属性，并且只要它们不是color和width，那么就无所谓它们的类型是什么
+  [propName: string]: any;  // 表示的是SquareConfig可以有任意数量的属性，并且只要它们不是color，那么就无所谓它们的类型是什么
   (source: string, subString: string): boolean;  // 函数类型，boolean，函数返回值类型
   [index: number]: string;  // 可索引的类型
 }
