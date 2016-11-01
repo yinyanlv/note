@@ -16,7 +16,7 @@ angular模块是一个带有@NgModule装饰器的类
   exports: [AppComponent],  // declaration的子集，可用于其它模块中的组件模板
   imports: [BrowserModule],  // 本模块组件模板中需要由其它模块导出的类
   providers: [Logger]  // 服务的创建者。本模块把它们加入全局的服务表中，让它们在应用中的任何部分都可被访问到，另一种写法：[{provide: Logger, useClass: BetterLogger, useExisting: NewLogger, useValue: silentLogger, useFactory: heroServiceFactory}]，useExisting定义别名
-  bootstrap: [AppComponent]  // 标识出应用的主视图（被称为 根组件），它是所有其它视图的宿主。只有根模块才能设置bootstrap属性
+  bootstrap: [AppComponent]  // 标识出应用的主视图（被称为根组件），它是所有其它视图的宿主。只有根模块才能设置bootstrap属性
 })
 模块库  // 每个angular库的名字都带有@angular前缀
 
