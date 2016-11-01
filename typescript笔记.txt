@@ -26,7 +26,7 @@ type Tree<T> = {
     right: Tree<T>;
 }
 
-declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法于属性。这会让你通过编译，但是没有自动完成和类型检查
+declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法与属性。这会让你通过编译，但是没有自动完成和类型检查
 declare var $: any;
 
 变量声明
