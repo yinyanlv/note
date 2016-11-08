@@ -11,7 +11,7 @@ exports
 npm命令行选项
 init
 search
-install  // npm install express@0.1.1
+install  // npm install express@0.1.1，--production，安装时排除devDependencies下的包
 install -g
 update
 remove
