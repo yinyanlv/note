@@ -11,12 +11,12 @@ module id: 文件名(可包括路径)
 
 requirejs.config({
 	baseUrl: 'js/lib',
-	paths: {  //paths的路径设置是相对于baseUrl，不能包含“.js”后缀
-		app: '../app'  //该配置解析的结果，app模块的加载路径为js/app.js
+	paths: {  // paths的路径设置是相对于baseUrl，不能包含“.js”后缀
+		app: '../app'  // 该配置解析的结果，app模块的加载路径为js/app.js
 	}
 });
 
-requirejs(['jQuery', 'app/sub' ], function ($, sub)　{//解析结果：js/lib/jQuery.js  js/app/sub.js
+requirejs(['jQuery', 'app/sub' ], function ($, sub)　{  // 解析结果：js/lib/jQuery.js  js/app/sub.js
 	
 });
 
@@ -33,7 +33,7 @@ define({
 });
 2、函数式的定义
 define(function ()　{
-	//todo
+	// todo
 	return {
 		a: 1,
 		b: 2
@@ -45,7 +45,7 @@ define('./a', './b', function (a, b) {
 		c: a + b
 	};
 });
-4、以CommonJS模式定义模块  //只是一个语法糖，该包装方法，依赖Function.prototype.toString()将函数内容赋予一个有意义的字符串。有兼容性问题
+4、以CommonJS模式定义模块  // 只是一个语法糖，该包装方法，依赖Function.prototype.toString()将函数内容赋予一个有意义的字符串。有兼容性问题
 define(function (require, exports, module) {
 	var a = require('a');
 
@@ -54,28 +54,28 @@ define(function (require, exports, module) {
 	};
 });
 5、定义一个明确命名的模块
-define('foo/title', ['my/a', 'my/b'], function (a, b) {  //这样的模块不具备移植性，文件结构变动，会使得该模块不可用
+define('foo/title', ['my/a', 'my/b'], function (a, b) {  // 这样的模块不具备移植性，文件结构变动，会使得该模块不可用
 	
 });
 
 注意事项：
 1、一个文件一个模块
-2、define()的回调函数中调用require  //将require作为依赖注入
+2、define()的回调函数中调用require  // 将require作为依赖注入
 define(['require'], function (require) {
 	var a = require('./a');
 
 });
-3、生成相对于模块的url地址  //将require作为依赖注入
+3、生成相对于模块的url地址  // 将require作为依赖注入
 define(['require'], function (require) {
 	var cssUrl = require.toUrl('./style.css');
 });
 4、控制台调试
-require('module/name').callSomeFunction();  //'module/name'模块必须之前已经加载完成
+require('module/name').callSomeFunction();  // 'module/name'模块必须之前已经加载完成
 
 循环依赖(TODO)
 
 jsonp服务依赖
-在requirejs中使用json服务，需将callback参数的值指定为'define'  //仅仅支持返回值类型为json object的jsonp服务，不适用long-polling类的jsonp连接，同一url地址，会存在缓存
+在requirejs中使用json服务，需将callback参数的值指定为'define'  // 仅仅支持返回值类型为json object的jsonp服务，不适用long-polling类的jsonp连接，同一url地址，会存在缓存
 require('http://www.abc.com/data.json?callback=define', function (data) {
 	console.log(data);
 });
@@ -84,7 +84,7 @@ undefining a module
 全局函数requirejs.undef();用来undefine一个模块。重置loader
 
 配置选项
-另一种配置require方式  //'require'在require.js加载之前定义，它会被自动应用
+另一种配置require方式  // 'require'在require.js加载之前定义，它会被自动应用
 var require = {
 	deps: ['some/module1', 'some/module2', 'a.js', 'b.js'],
 	callback: function (module1, module2) {
@@ -93,28 +93,28 @@ var require = {
 };
 <script src="js/require.js"></script>
 
-baseUrl  //baseUrl跟requirejs页面可处于不同的域下。唯一的限制是使用text!plugins加载文本内容时，这些路径应跟页面同域。
-paths  //映射那些不直接放置于baseUrl下的 模块名。设置path的起始位置是相对于baseUrl的
-shim  //为那些没有用define声明依赖关系的库或模块，作依赖或导出配置，shim本身不会触发代码的加载
+baseUrl  // baseUrl跟requirejs页面可处于不同的域下。唯一的限制是使用text!plugins加载文本内容时，这些路径应跟页面同域。
+paths  // 映射那些不直接放置于baseUrl下的 模块名。设置path的起始位置是相对于baseUrl的
+shim  // 为那些没有用define声明依赖关系的库或模块，作依赖或导出配置，shim本身不会触发代码的加载
 requirejs.config({
 	shim: {
 		'backbone': {
 			deps: ['underscore', 'jquery'],
-			exports: 'Backbone',  //可以是一个函数，这种情况下启到init属性的功能
+			exports: 'Backbone',  // 可以是一个函数，这种情况下启到init属性的功能
 			init: function (bar) {
 				return this.Foo.noConflict();
 			}
 		}
 	},
-	shim: {  //作为插件不导出任何变量的模块
+	shim: {  // 作为插件不导出任何变量的模块
 		'abc.abc': ['jquery']
 	}
-	//若想在IE中使用404加载检测以启用path备选(fallbacks)或备错(errbacks)，则需要给定一个字串值的exports以使loader能够检查出脚本是否实际加载了(init中的返回值不会用于enforceDefine检查)
+	// 若想在IE中使用404加载检测以启用path备选(fallbacks)或备错(errbacks)，则需要给定一个字串值的exports以使loader能够检查出脚本是否实际加载了(init中的返回值不会用于enforceDefine检查)
 });
 map  对于给定的模块前缀，使用模块id来加载该模块
 requirejs.config({
 	map: {
-		'some/module1': {  //只能使用绝对模块id，可以使用通配符*
+		'some/module1': {  // 只能使用绝对模块id，可以使用通配符*
 			'foo': 'foo1.1'
 		},
 		'some/module2': {
@@ -177,13 +177,13 @@ paths备错配置  aths配置项允许数组值
 指定文本文件依赖  text.js,如果一个依赖使用了text!前缀，它就会被自动加载
 
 页面加载事件及DOM Ready  requirejs加载模块速度很快，很有可能在页面DOM Ready之前脚本已经加载完毕
-require(['domReady'], function (domReady) {  //返回domReady
+require(['domReady'], function (domReady) {  // 返回domReady
   domReady(function () {
 
   });
 });
 基于DOM Ready是个常规需求，像上述API中的嵌套调用方式，理想情况下应避免。domReady模块也实现了Loader Plugin API，因此你可以使用loader plugin语法（注意domReady依赖的!后缀）来强制require()回调函数在执行之前等待DOM Ready。当用作loader plugin时，domReady会返回当前的document
-require(['domReady!'], function (doc) {  //返回document
+require(['domReady!'], function (doc) {  // 返回document
 
 });
 
