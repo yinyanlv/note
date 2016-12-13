@@ -1,6 +1,8 @@
 指定虚拟窗口大小
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">  // device-width,其实并非设备真实的宽度
 
+<meta name="format-detection" content="telephone=no">
+
 http-equiv，元信息，把content属性关联到http头部，等效设置了http报头，http报头优先级最高
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta http-equiv="content-type" content="...">
