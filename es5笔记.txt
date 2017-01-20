@@ -42,3 +42,18 @@ previous = (6 + 4) =  10, current = undefined (退出)
 
 reduceRight  reduceRight是从数组的末尾开始实现。
 array.reduceRight(callback[, initialValue]);
+
+
+Object
+Object.create(prototype[,descriptors]);  // 创建一个对象，并把prototype赋值为第一个参数，同时可以设置多个descriptors
+Object.defineProperty(object, property, descriptor); 
+Object.defineProperties(object, descriptors);
+Object.getOwnPropertyDescriptor(object, property);
+Object.getOwnPropertyNames(object);  // 获取所有的属性名，返回一个数组
+Object.keys(object);  // 和getOwnPropertyNames方法类似，但是只获取所有的可枚举的属性
+Object.preventExtensions(object);  // 用于锁住对象属性，使其不能够拓展，也就是不能增加新的属性，但是属性的值仍然可以更改，也可以把属性删除，Object.isExtensible用于判断对象是否可以被拓展
+Object.isExtensible(object);
+Object.seal(object);  // 用于把对象密封，也就是让对象既不可以拓展也不可以删除属性（每个属性的configurable被设为false）,但是属性值仍然可以修改，Object.isSealed用于判断对象是否被密封
+Object.isSealed(object);
+Object.freeze(object);  // 完全冻结对象，在seal的基础上，属性值也不可以修改（每个属性的wirtable被设为false），Object.isFrozen用于判断对象是否被冻结
+Object.isFrozen(object);
