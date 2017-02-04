@@ -40,7 +40,7 @@ double a = 1.300;
 int b = (int)a;
 
 常量，程序运行过程中不可改变
-final String ABC = "hello java!"; // 变量名，全部大写
+final String ABC = "hello java!";  // 变量名，全部大写
 
 通过javadoc命令，可将注释生成api帮助文档，javadoc -d out test.java
 
@@ -52,20 +52,20 @@ final String ABC = "hello java!"; // 变量名，全部大写
 条件运算符, a ? b : c
 
 流程控制语句
-if () { // 判断值必须是boolean类型
+if () {  // 判断值必须是boolean类型
 } else if () {
 } else {
 }
 
-switch () { // 判断值必须是数值、字符、字符串（java 7）或枚举类型（不必在每个标签中指明枚举名）
-	case 'a': // 可以是表达式，但不可是带变量的表达式
+switch () {  // 判断值必须是数值、字符、字符串（java 7）或枚举类型（不必在每个标签中指明枚举名）
+	case 'a':  // 可以是表达式，但不可是带变量的表达式
 		...
 	break;
 	...
 	default:
 }
 
-while () { // 判断值必须是boolean类型
+while () {  // 判断值必须是boolean类型
 }
 
 do {
@@ -79,9 +79,9 @@ continue;
 break;
 
 数组
-int[] list = {1, 2, 3}; or int list2[] = {1, 2, 3}; // 注意，字面量用{}
+int[] list = {1, 2, 3}; or int list2[] = {1, 2, 3};  // 注意，字面量用{}
 int[] a = new int[5];
-int[] b = {1, 2, 3, 4, 5}; 等价于 int[] c = new int[]{1, 2, 3, 4, 5}; // 此时不能指定元素个数
+int[] b = {1, 2, 3, 4, 5}; 等价于 int[] c = new int[]{1, 2, 3, 4, 5};  // 此时不能指定元素个数
 
 for
 foreach:
@@ -90,7 +90,7 @@ for (int i : arr) {
 
 二维数组
 int[][] a = {{1, 2, 3}, {1, 2, 3}};
-int[][] b = new int[2][3]; // 2行3列
+int[][] b = new int[2][3];  // 2行3列
 
 Arrays类
 import java.util.Arrays;
@@ -99,7 +99,7 @@ Arrays.toString(arr);
 
 方法
 public class Test {
-	public int print(String a, int b) { // 方法名驼峰
+	public int print(String a, int b) {  // 方法名驼峰
 		return b;
 	}
 }
@@ -117,7 +117,7 @@ int a = test.print();
 构造方法（类的构造函数，默认系统自动生成）
 无返回值，方法名和类名相同
 public class Test {
-	public Test(String a) { // 可以定义多个构造方法，重载
+	public Test(String a) {  // 可以定义多个构造方法，重载
 		System.out.println('construct');
 	}
 }
@@ -129,7 +129,7 @@ static修饰，为整个类所有，被所有对象共享。可通过类名访�
 静态初始化块(static {}, 只在类加载时初始化一次) -> 初始化块({}) -> 构造方法
 
 包
-package com.test; // 必须写在源代码第一行，包名命名规范为全部小写
+package com.test;  // 必须写在源代码第一行，包名命名规范为全部小写
 import com.test.*;
 
 访问修饰符
@@ -172,7 +172,7 @@ final可修饰类,属性,方法和变量
 
 super关键字
 代表父类的实例对象
-super(); // 调用父类构造函数
+super();  // 调用父类构造函数
 
 Object类
 toString();
@@ -187,18 +187,18 @@ Animal a = new Dog();
 
 引用类型转换
 Dog a = new Dog();
-Animal b = a; // 自动类型转换,向上类型转换,无风险
-Dog c = b; // 向下类型转换,存在安全性风险,编译器不会通过
+Animal b = a;  // 自动类型转换,向上类型转换,无风险
+Dog c = b;  // 向下类型转换,存在安全性风险,编译器不会通过
 instanceof运算符
 解决引用类型转换的安全性问题
 if (b instanceof Dog) {
-  Dog d = (Dog)b; // 强制向下类型转换,且无风险
+  Dog d = (Dog)b;  // 强制向下类型转换,且无风险
 }
 
 抽象类
 abstract关键字
 作用:不关注子类的实现,但约束子类有哪些特征
-public abstract class A { // 抽象类不能直接创建,定义抽象方法的类必须是抽象类
+public abstract class A {  // 抽象类不能直接创建,定义抽象方法的类必须是抽象类
   public abstract void call();
 }
 
@@ -250,10 +250,10 @@ java中的字符串一旦创建,就不可改变,如果要创建一个可改变�
 通过字面量声明的相同字符串,其内存地址一致,其它方式生成的相同字符串,内存地址不一致
 String a = 'abc';
 String b = 'abc';
-a == b; // true
+a == b;  // true
 String c = new String('abc');
 String d = new String('abc');
-c == d; // false
+c == d;  // false
 
 StringBuffer是线程安全的，而StringBuilder没有实现线程安全功能，所以性能略高
 StringBuilder a = new StringBuilder('abc');
