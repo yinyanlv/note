@@ -284,7 +284,7 @@ Map --- HashMap(哈希表,存储值类型为Entry类<key, value>)
 
 泛型
 规定了某集合只能存储特定类型的对象,会在编译时,检查类型
-public List<ABC> a; // ABC为泛型约束的类型
+public List<ABC> a;  // ABC为泛型约束的类型
 
 Comparable接口
 定义默认比较规则
