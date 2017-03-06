@@ -387,7 +387,7 @@ try!  // 事实上就是match Result的封装，当遇到Err(E)时会提早返�
 不定长类型
 ?Sized，这个?，读作“T可能是Sized的”，意味着这个限制是特殊的：它让我们的匹配更宽松
 struct Foo<T: ?Sized> {
-  f: T,
+  f: T
 }
 
 类型转换
