@@ -32,8 +32,10 @@ git rm -r --cached   // 删除暂存区的缓存
 
 git reset HEAD <file>  // 丢弃暂存区中该文件的修改，工作区不受影响
 git reset HEAD  // 暂存区的目录树会被重写，被master分支指向的目录树所替换，但是工作区不受影响
-git reset --hard HEAD^  // --hard，暂存区，工作区全部替换
-git reset --hard 版本号（7位）  // 到指定版本号，可前进和后退
+git reset --hard HEAD^  // --hard，暂存区，工作区全部替换，再次提交，会产生冲突
+git reset --hard 版本号（7位）  // 到指定版本号，可前进和后退，再次提交，会产生冲突
+
+git revert 版本号（7位）  // 回撤远程版本库，再次提交，不会产生冲突
 
 git checkout -- <file>  // 丢弃工作区中某文件的修改，没有--，就变成创建一个分支的命令
 git checkout .  // 丢弃工作区中所有修改
