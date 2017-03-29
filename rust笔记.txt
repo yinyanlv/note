@@ -73,7 +73,7 @@ fn bar<'a>(x: &'a mut i32) {
 定义模块，用mod关键字来定义我们的每一个模块，分隔逻辑块
 导入外部的包装箱，extern crate xxx;  // 必须在Cargo.toml的dependecies字段，加上xxx="version num" 这种依赖说明，才能使引用生效
 定义公有模块，pub mod name;
-mode xxx;  // 引用外部文件模块，xxx，不可包含::，只能为一级
+mod xxx;  // 引用外部文件模块，xxx，不可包含::，只能为一级
 use  // 导入模块，允许导入名字到本地作用域中
 use phrases::english::{greetings, farewells};
 pub use  // 重导出，可以在包装箱内用它重导出函数到另一个模块中
