@@ -364,7 +364,7 @@ or
   没有泛型参数
   不是静态函数
   除了self之外的其它参数和返回值不能使用Self类型
-如果一个trait是object-safe的，它需要满足：
+如果一个trait是对象安全的，它需要满足：
 所有的方法都是对象安全的，并且trait不要求Self: Sized约束
 
 Option
