@@ -329,7 +329,7 @@ fn foo<T: Clone + Debug>(x: T) {
   x.clone();
   println!("{:?}", x);
 }
-where 从句（Where clause）
+where从句
 fn bar<T, K>(x: T, y: K) where T: Clone, K: Clone + Debug {
   x.clone();
   y.clone();
