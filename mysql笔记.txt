@@ -1,23 +1,27 @@
 关键字和函数名，规定大写
 
-三大数据类型
-数值类型
 整数: tinyint, smallint, mediumint, int, bigint
 浮点数: float(m, d), double(m, d)
 
 定点数  // 浮点型在数据库中存放的是近似值，而定点类型在数据库中存放的是精确值
 decimal(m, d)
 
+字符串类型
+字符串: char(m), varchar(m)  // 固定长度
+文本: tinytext, text, mediumtext, longtext  // 可变长度
+
+enum('v1', 'v2', ...)
+set('v1', 'v2', ...)
+
 时间日期
 date, time, datetime, timestamp, year
 
-字符串类型
-字符串: char, varchar  // 固定长度
-文本: tinytext, text, mediumtext, longtext  // 可变长度
-二进制(可用来存储图片、音乐等): tinyblob, blob, mediumblob, longblob
+二进制数据(可用来存储图片、音乐等)  // blob(binary large object)
+tinyblob, blob, mediumblob, longblob
 
-my.ini文件中[client]与[mysqld]下设置：
+配置mysql：
 default-character-set＝utf8
+default-storage-engine=INNODB  // 默认存储引擎
 
 参数
 －h
@@ -29,9 +33,11 @@ default-character-set＝utf8
 -V  // 版本
 
 常用命令
-select version();  // 打印数据库版本
-select now();  // 打印当前时间
-select user();  // 打印当前用户
+set names gbk;  // 设置shell客户端文字编码
+select version();  // 数据库版本
+select now();  // 当前时间
+select user();  // 当前用户
+select database();  // 当前数据库
 
 创建数据库
 create database [dbName] [options];
@@ -90,11 +96,13 @@ alter table  // alter，改变
 追加列
 alter table [tableName] add keyName1 valueType1 [after keyName2];
 修改列
-alter table [tableName] change oldKeyName newKeyName newValueType;
+alter table [tableName] {change | modify} oldKeyName newKeyName newValueType;  // change可以修改列名
 删除列
 alter table [tableName] drop keyName;
 重命名表
-alter table [oldTableName] rename [newTableName];
+alter table [oldTableName] rename [newTableName];  
+or
+remame table [oldTableName] to [newTableName];
 
 修改root用户密码
 mysqladmin -u root -p password [newPassword]
