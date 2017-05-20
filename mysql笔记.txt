@@ -1,3 +1,5 @@
+关键字和函数名，规定大写
+
 三大数据类型
 数值类型
 整数: tinyint, smallint, mediumint, int, bigint
@@ -10,6 +12,23 @@ date, time, datetime, timestamp, year
 字符串: char, varchar
 文本: tinytext, text, mediumtext, longtext
 二进制(可用来存储图片、音乐等): tinyblob, blob, mediumblob, longblob
+
+my.ini文件中[client]与[mysqld]下设置：
+default-character-set＝utf8
+
+参数
+－h
+－u
+－p  
+－P  // 端口
+--prompt  // 修改命令提示符
+－D  // 选择数据库
+-V  // 版本
+
+常用命令
+select version();  // 打印数据库版本
+select now();  // 打印当前时间
+select user();  // 打印当前用户
 
 创建数据库
 create database [dbName] [options];
