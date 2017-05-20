@@ -3,14 +3,17 @@
 三大数据类型
 数值类型
 整数: tinyint, smallint, mediumint, int, bigint
-浮点数: float, double, real, decimal
+浮点数: float(m, d), double(m, d)
+
+定点数  // 浮点型在数据库中存放的是近似值，而定点类型在数据库中存放的是精确值
+decimal(m, d)
 
 时间日期
 date, time, datetime, timestamp, year
 
 字符串类型
-字符串: char, varchar
-文本: tinytext, text, mediumtext, longtext
+字符串: char, varchar  // 固定长度
+文本: tinytext, text, mediumtext, longtext  // 可变长度
 二进制(可用来存储图片、音乐等): tinyblob, blob, mediumblob, longblob
 
 my.ini文件中[client]与[mysqld]下设置：
