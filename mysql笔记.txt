@@ -32,12 +32,13 @@ default-storage-engine=INNODB  // 默认存储引擎
 －D  // 选择数据库
 -V  // 版本
 
-常用命令
+常用命令和函数
 set names gbk;  // 设置shell客户端文字编码
-select version();  // 数据库版本
-select now();  // 当前时间
-select user();  // 当前用户
-select database();  // 当前数据库
+delimiter //;  // 自定义命令结束符
+version();  // 数据库版本
+now();  // 当前时间
+user();  // 当前用户
+database();  // 当前数据库
 
 创建数据库
 create database [dbName] [options];
