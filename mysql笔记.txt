@@ -1,23 +1,23 @@
 关键字和函数名，规定大写
 
-整数: tinyint, smallint, mediumint, int, bigint
-浮点数: float(m, d), double(m, d)
+整数: tinyint, smallint, mediumint, int, bigint  // 1字节，2字节，3字节，4字节，8字节
+浮点数: float(m, d), double(m, d)  // 4字节，8字节
 
 定点数  // 浮点型在数据库中存放的是近似值，而定点类型在数据库中存放的是精确值
 decimal(m, d)
 
+时间日期
+date, time, datetime, timestamp, year  // 3字节，3字节，8字节，4字节，1字节
+
 字符串类型
-字符串: char(m), varchar(m)  // 固定长度
-文本: tinytext, text, mediumtext, longtext  // 可变长度
+字符串: char(m), varchar(m)  // 0-255字节，0-65535字节
+文本: tinytext, text, mediumtext, longtext  // 0-255字节，0-65535字节，0-16777215字节，0-4294967295字节
 
 enum('v1', 'v2', ...)
 set('v1', 'v2', ...)
 
-时间日期
-date, time, datetime, timestamp, year
-
 二进制数据(可用来存储图片、音乐等)  // blob(binary large object)
-tinyblob, blob, mediumblob, longblob
+tinyblob, blob, mediumblob, longblob  // 0-255字节，0-65535字节，0-16777215字节，0-4294967295字节
 
 配置mysql：
 default-character-set＝utf8
