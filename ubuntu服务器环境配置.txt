@@ -1,0 +1,58 @@
+ubuntu系统常识：
+/etc/profile: 此文件为系统的每个用户设置环境信息，当用户第一次登录时,该文件被执行，并从/etc/profile.d目录的配置文件中搜集shell的设置
+/etc/bashrc: 为每一个运行bash shell的用户执行此文件.当bash shell被打开时，该文件被读取
+~/.bash_profile: 每个用户都可使用该文件输入专用于自己使用的shell信息，当用户登录时，该文件仅仅执行一次，默认情况下，它设置一些环境变量，执行用户的.bashrc文件
+~/.bashrc: 该文件包含专用于你的bash shell的bash信息，当登录时以及每次打开新的shell时，该文件被读取
+~/.bash_logout: 当每次退出系统(退出bash shell)时，执行该文件
+
+/etc/profile中设定的变量(全局)的可以作用于任何用户,而~/.bashrc等中设定的变量(局部)只能继承/etc/profile中的变量,他们是"父子"关系
+~/.bash_profile是交互式login方式进入bash运行的
+~/.bashrc是交互式non-login方式进入bash运行的
+
+通常二者设置大致相同，所以通常前者会调用后者
+
+su  // switch user，切换到某某用户模式，提示输入密码时该密码为切换后账户的密码，用法为“su 账户名称”。如果后面不加账户时系统默认为root账户，密码也为超级账户的密码。没有时间限制
+su - {username}  // 这里加了"-"后，表示切换当前的环境变量到新用户的环境变量
+su {username}  // 表示不切换环境变量到当前用户下
+sudo // 暂时切换到超级用户模式（root）以执行超级用户权限，提示输入密码时该密码为当前用户的密码，而不是超级账户的密码。有时间限制，ubuntu默认为一次时长15分钟
+sudo -i  // 为了频繁的执行某些只有超级用户才能执行的权限，而不用每次输入密码，可以使用该命令。提示输入密码时该密码为当前账户的密码。没有时间限制。执行该命令后提示符变为“#”而不是“$”。想退回普通账户时可以执行“exit”或“logout” ，运行结果，PWD=/root
+sudo su  // 运行sudo命令给su命令提权（实质上就是su，而su默认是获得root权限），运行结果，PWD=/home/用户名（当前用户主目录）
+
+安全软件
+iptables  // 与最新的3.5版本Linux内核集成的IP信息包过滤系统，有利于在Linux系统上更好地控制IP信息包过滤和防火墙配置
+fail2ban  // 可以监视系统日志，然后匹配日志的错误信息（正则式匹配）执行相应的屏蔽动作
+
+ubuntu，查看所有安装包
+sudo dpkg -l
+
+apt-get删除包
+sudo apt-get --purge remove {packageName}  // --purge，清除配置
+
+安装git
+sudo apt-get install git
+
+安装vim
+sudo apt-get install vim
+
+安装nvm
+1、git clone https://github.com/creationix/nvm.git ~/.nvm && cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`
+2、. ~/.nvm/nvm.sh
+3、在~/.bashrc, ~/.profile, 或 ~/.zshrc，添加如下行：
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+
+nvm install 4.4.0
+nvm use 4.4.0
+
+安装mongodb
+sudo apt-get install mongodb
+
+安装redis
+sudo apt-get install redis-server
+自动安装redis-cli，安装完，自动运行redis，默认端口号为6379
+
+安装nginx
+sudo apt-get install nginx
+
+安装pm2
+npm install -g pm2
