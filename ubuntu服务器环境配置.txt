@@ -22,6 +22,9 @@ sudo su  // 运行sudo命令给su命令提权（实质上就是su，而su默认�
 iptables  // 与最新的3.5版本Linux内核集成的IP信息包过滤系统，有利于在Linux系统上更好地控制IP信息包过滤和防火墙配置
 fail2ban  // 可以监视系统日志，然后匹配日志的错误信息（正则式匹配）执行相应的屏蔽动作
 
+定时任务
+crontab
+
 ubuntu，查看所有安装包
 sudo dpkg -l
 
