@@ -61,7 +61,8 @@ git pull origin master --allow-unrelated-histories  // 解决通过pull合并两
 git push origin master
 git push -u origin master  // 第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令
 
-git branch  // 查看所有的分支
+git branch  // 查看本地所有分支
+git branch -a  // 查看远程所有分支
 git branch -d dev  // 删除dev分支
 git branch -D feature  // 强行丢弃一个没有被合并过的分支
 git checkout -b dev  // 创建并切换分支，相当于git branch dev，git checkout dev
@@ -70,6 +71,8 @@ git branch --set-upstream dev origin/dev  // 指定本地分支和远程分支�
 
 git merge dev  // 合并指定分支到当前分支，Fast forward模式（快进模式），在这种模式下，删除分支后，会丢掉分支信息
 git merge --no-ff -m "merge with no-ff" dev  // 强制禁用Fast forward模式，--no-ff参数就可以用普通模式合并，合并后的历史有分支记录，可以看出做过合并，而Fast forward合并就看不出来曾经做过合并
+
+git rebase dev  // 合并指定分支到当前分支，会丢弃分支的合并与提交信息
 
 git stash  // 储存工作现场
 git stash list
