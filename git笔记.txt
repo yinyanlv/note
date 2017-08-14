@@ -92,6 +92,7 @@ git tag -d v0.9
 git push origin v1.0  // 向远程推送标签
 git push origin --tags  // 向远程一次性推送所有未推送的标签
 git push origin :refs/tags/v1.0  // 从远程库删除标签，必须先本地删除
+git clone --branch v1.0 https://github.com/username/repo.git  // 获取某tag版本号下的资源
 
 git config --global user.name "bugong"
 git config --global user.email "1761869346@qq.com"
