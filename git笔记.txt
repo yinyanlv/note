@@ -84,6 +84,7 @@ git stash clear  // 清空
 
 git tag v1.0
 git tag  // 查看所有标签，按字母排序
+git tag -n  // 查看所有标签及标签描述
 git tag v0.9 e6bb687
 git show v0.9  // 查看标签信息
 git tag -a v0.8 -m "version 0.8 released" e6bb687  // -a指定标签名，-m添加标签描述
