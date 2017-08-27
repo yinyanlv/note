@@ -4,6 +4,8 @@ jdk (java development kit)
 
 *.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
 
+JNI(java native interface)  // 允许java与其它语言写的代码交互
+
                             --- java ee 企业应用 (jsp, ejb, service)
                             |
 基础核心 java se (api, jvm) -
@@ -126,11 +128,18 @@ public class Test {
 static修饰，为整个类所有，被所有对象共享。可通过类名访问（推荐），也可以通过对象名访问
 
 实例化时，赋值流程
-静态初始化块(static {}, 只在类加载时初始化一次) -> 初始化块({}) -> 构造方法
+静态初始化块(static {}, 只在类第一次加载时初始化一次) -> 初始化块({}) -> 构造方法
+
+特殊的初始化成员
+A a = new A() {{a = 1;}} 
+相当于
+A a = new A();
+a.a = 1;
 
 包
 package com.test;  // 必须写在源代码第一行，包名命名规范为全部小写
 import com.test.*;
+import static java.util.Calendar.*;  // 导入Calendar类上定义静态方法或属性，可直接使用
 
 访问修饰符
 private 本类
@@ -143,15 +152,27 @@ this关键字
 
 面向对象三大特性：封装， 继承， 多态
 
-封装，将类的某些信息隐藏在类的内部，使外部不能直接访问，只能通过该类提供的方法来进行访问
+封装，将类的某些信息隐藏在类的内部，使外部不能直接访问，只能通过该类提供的方法来进行访问，bean
 private修饰变量 -> 创建getter和setter方法 -> 在getter和setter中实现控制语句
 
-内部类
-定义在类内部的类(可定义在方法中)
+内部类  // static修饰的内部类，实际上是外部类，此时下面所说的都不成立，内部类 对象名 = new 外部类类名.内部类();
+定义在类内部的类(可定义在方法中)，是外部类的成员，同外部类属性和方法一个级别
 必须使用外部类对象来创建内部类对象，而不能直接去 new 一个内部类对象，即：内部类 对象名 = 外部类对象.new 内部类();
 内部类的.class文件文件名格式为：外部类名$内部类名.class
 内部类可访问外部类，外部类不可访问内部类
 要访问外部类的同名变量，可通过：类名.this.{name}访问
+
+局部类  // 定义在方法中内部类，一次性使用，可简化为匿名类
+
+匿名类  // 特殊的内部类，一次性使用，局部类简化而来，定义类的同时生成该类的一个实例
+return new abc() {  // 匿名类,A为该匿名类，父类或接口的名字
+  public toString() {  // 匿名类的方法
+  }
+}
+
+lambda表达式  // 在java中实际上是一个匿名类的实例，jdk1.8  
+() -> {} 
+能写成lambda表达式的接口，要求包含且最多只能有一个抽象函数，这样的接口用@FunctionalInterface（可不写）注解，称为函数式接口
 
 继承
 java的继承是单继承
@@ -177,6 +198,9 @@ super();  // 调用父类构造函数
 Object类
 toString();
 equals();
+
+enum类型  // jdk1.5，与类同级别，内部也可定义属性、方法、构造函数，可以用在switch语句等，底层通过class实现
+enum A {B, C, D}
 
 多态
 对象的多种形态,两个类要有继承关系
@@ -213,6 +237,34 @@ public class A extends B implements interface1, interface2, ... {
 }
 可以通过匿名内部类实现接口
 
+反射  
+java.lang.reflect.*;
+Class类
+得到Class对象  // Class对象上包含很多信息
+类名.class
+对象.getClass()
+Class.forName("类全名");
+Class对象.newInstance();  // 动态创建对象
+参数类型
+int.class
+DebugTime.class
+...
+
+注解  // jdk1.5，所有的注解都是java.lang.annotation.Annotation的子类
+@Override  // 重写父类方法
+@Deprecated  // 过时的方法
+@SupressWarnings  // 让编译器不产生警告
+自定义注解
+@Target(ElementType.METHOD)  // 该注解用于方法上
+@RetentionPolicy(RetentionPolicy.RUNTIME)  // 该注解可以通过反射读取
+@Documented  // 该注解会生成到javadoc中
+public @interface A { 
+  int abc() default 1;  // 方法名相当于属性名，default关键字，定义默认值，属性值可以是数值、字符、布尔值或数组
+}
+通过反射读取注解
+方法.getAnnotation("参数类型")  // 得到注解的类，参数的类型如：int.class
+方法.getAnnotations()  
+
 UML(unified modeling language)
 统一建模语言
 类图
@@ -222,7 +274,7 @@ UML(unified modeling language)
 虚线,表示接口
 
 异常
-          --- Error 硬伤,终结程序
+          --- Error 硬伤，终结程序，JVM错误
           |
 Throwable -
           |
@@ -237,12 +289,12 @@ try {
 
 }
 如果try-catch代码块中,存在return
-try -> catch -> finally -> finally.return -> catch.return -> try.return，没有相应的阶段忽略该阶段，任何阶段的return被执行，则整个语句块结束
+try -> catch -> finally（总是会执行，即使try、catch用了return） -> finally.return -> catch.return -> try.return，没有相应的阶段忽略该阶段，任何阶段的return被执行，则整个语句块结束
 异常链
 throws关键字
 throw关键字
-public void test() throws AException {
-  throw new AException('test error!');
+public void test() throws AException {  // 有可能抛出
+  throw new AException('test error!');  // 不一定非要throw
 }
 
 字符串
@@ -274,20 +326,73 @@ boolean Boolean
 存储任意数量具有共同属性的对象,在类的内部,对数据进行组织
 集合长度可自动增长,数组的长度是固定的
 
-           --- List --- ArrayList
+           --- List(接口) --- ArrayList, Vector(有一个子类Stack), LinkedList
            |
-Collection --- Queue --- LinkedList(链表)
+Collection --- Queue(接口) --- LinkedList(链表), PriorityQueue, ArrayDeque
            |
-           --- Set --- HashSet
+           --- Set(接口，不允许重复元素) --- HashSet, TreeSet(底层用TreeMap实现)
 
 Map --- HashMap(哈希表,存储值类型为Entry类<key, value>)
+    |
+    --- TreeMap
+    |
+    --- HashTable (有一个子类Properties)
 
-泛型
+Dictionory --- HashTable      
+
+早期的几个集合类
+Vector  // ArrayList
+Stack  // ArrayList
+HashTable  // HashMap
+Enumeration  // Iterator
+
+Stream类型  // 流，不是io流，jdk1.8，用于函数式编程，用于数组和集合，map没有流，但有类似的方法
+Arrays.stream(arr);
+Stread<T> s = collection.stream();
+s.filter().map().sum();
+parallelStream()  // 并行流，底层运行多个线程
+
+泛型  // 只能用于引用类型
 规定了某集合只能存储特定类型的对象,会在编译时,检查类型
 public List<ABC> a;  // ABC为泛型约束的类型
+<>  // 针对类型时，写在类名后面，针对方法时，定义泛型方法时，写在方法返回值类型的前面，调用泛型方法时，写在方法名前面
+类型限定
+?  // 任意类型，相当于Object
+? extends A  // A的所有子类
+? super B  // B的所有父类、超类
 
 Comparable接口
 定义默认比较规则
 
 Comparator接口
 定义临时比较规则
+
+线程  // 使用方法：A extends Thread or A implements Runnable，编写相应的run方法
+Thread.sleep(100);  // 单位ms 
+Thread thread = new Thread(A);
+start()  // 启动线程
+setPriority(100)  // 设置线程优先级
+setDaemon(true)  // 设置是否是守护线程
+线程分两类
+普通线程  // 普通线程，非Daemon线程，若程序还有非Daemon线程，整个程序不会结束
+Daemon线程  // 又称守护线程、后台线程，普通线程结束了，Daemon线程自动终止，垃圾回收线程是后台线程
+synchronized关键字  // 取得锁，用于线程同步
+synchronized(对象) {}
+public synchronized void push() {}  // 相当于synchronized(this)
+this.wait()  // 可以释放对象锁
+this.notify()  // 通知一个wait的线程
+this.notifyAll()  // 通知所有wait的线程
+java.util.concurrent.*;  // 锁，集合等，jdk1.5，用于并发，底层用synchronized、wait、 notify、notifyAll实现
+线程池  // ExecutorSerice接口，ThreadPoolExecutor类，Executors工具类
+ExecutorSerice pool = Executors.newCachedTreadPool(); 
+pool.execute(Runnable r);
+java.util.Timer  // 底层用线程实现
+java.swing.Timer  // 底层用线程实现
+
+输入输出流
+字节流  // InputStream, OutputStream
+字符流  // Reader, Writer
+节点流  // 向一个特定的地方读写，文件流FileInputStream，内存流ByteArrayInputStream
+处理流  // 中间流，又称为过滤流，BufferedReader
+
+java.util.regex.*;  // 正则表达式包
