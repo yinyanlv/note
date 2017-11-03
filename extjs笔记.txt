@@ -356,3 +356,9 @@ Ext.define('MyApp.controller.User', {
         win.close();
     }
 });
+
+
+sencha build error: 'Registry key Error: Java version has value '1.8', but '1.7' is required'
+1. open regedit
+2. go to [HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java Runtime Environment]
+3. change value CurrentVersion from "1.8" to "1.7"
