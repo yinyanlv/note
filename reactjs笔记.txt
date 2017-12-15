@@ -12,14 +12,14 @@ for -> htmlFor
 事件
 合成事件和原生事件，合成事件中的event对象，并不是原生的event对象，且该event对象只在当前的event loop有效，如果想使用原生的e.stopPropagation()，需使用e.nativeEvent.stopPropagation();
 
+组合组件
+如果组件中包含通过循环插入的子元素，为了保证重新渲染ui的时候能够正确显示这些子元素，每个元素都需要通过一个特殊的key属性指定一个唯一值
+this.props.children  // 组件标签里面包含的子元素会通过this.props.children传递进来
+
 dom操作
 findDOMNode()  // 该方法不能用在无状态组件上
 refs  // 通过在要引用的dom元素上面设置一个ref属性指定一个名称，然后通过this.refs.{name}来访问对应的dom元素，ref不能设置在无状态组件上
 如果ref是设置在原生html元素上，它拿到的就是dom元素，如果设置在自定义组件上，它拿到的就是组件实例，这时候就需要通过findDOMNode来拿到组件的dom元素
-
-组合组件
-如果组件中包含通过循环插入的子元素，为了保证重新渲染ui的时候能够正确显示这些子元素，每个元素都需要通过一个特殊的key属性指定一个唯一值
-this.props.children  // 组件标签里面包含的子元素会通过this.props.children传递进来
 
 组件生命周期
 装载过程
@@ -43,3 +43,21 @@ this.forceUpdate()  // 可以通过shouldComponentUpdate停止更新过程，从
 
 propTypes  // PropTypes目前由独立的npm包prop-types提供。只在开发时有作用，即使报错，也不会影响组件的正常执行。线上部署时，可以通过babel-react-optimize包，将代码中的propTypes相关的代码去掉
 defaultProps
+
+flux
+action  // 生成并发送action，dispatcher.dispatch(...)
+dispatcher   // dispatcher.waitFor([...]);
+store  // 数据，dispatcher.register(...)，EventEmitter
+view  // 注册，监听，取消监听store，调用this.setState(...)触发更新
+
+redux
+action  // 只生成action
+reducer  // 参数state, action
+store  // 通过createStore(reducer, initialValue)创建，store.getState()可以获得状态
+view  // 发送action（store.dispatch(...)），监听store（store.subscribe(...)），调用this.setState(...)触发更新，取消监听store（store.unsubscribe(...)）
+
+容器组件和傻瓜组件  // 傻瓜组件可以写成函数形式，参数props，无状态组件
+
+Provider
+childContextTypes  // 必须定义，从而让Provider能够被react认可为一个Context的提供者，Provider必须实现getChildContext方法，返回context对象，其中包含store字段，render方法中直接返回this.props.children
+contextTypes  // 需要使用context的子组件必须定义，且定义必须和Provider的childContextTypes定义一致，子组件的constructor中需调用super(props, context)，从而子组件中可以通过this.context访问context
