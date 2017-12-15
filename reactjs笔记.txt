@@ -1,24 +1,7 @@
-import React, { Component } from 'react';
-import { render } from 'react-dom';
-
-React.createElement('a', propsObj, childNode);
-React.DOM.ul(propsObj, React.DOM.li(null, 'hello react!'));  // 工厂方法
-React.render(component, parentNode);
-React.createClass({
-  mixins: [],
-  componentDidMount: function () {},
-  render: function () {}
-});
-
-
 jsx
 小写的标签名默认是html标签，大写开头的标签名默认是react标签
 class -> className
 for -> htmlFor
-style  // 接受由css属性构成的js对象
-
-js表达式
-{}
 
 注释
 在一个组件的子元素位置使用注释要用{}包起来，如：{/* child comment, put {} around */}
@@ -26,41 +9,8 @@ js表达式
 转义
 <div dangerouslySetInnerHTML={{__html: 'cc &copy; 2015'}} />  // 禁止转义
 
-扩展属性运算符 ...
-{...props}  // 属性可覆盖
-
-
-组件
-props，组件的配置属性，不可变
-state，当组件状态state有改变时，react会自动调用组件的render方法重新渲染整个组件，通过this.setState方法更改
-class Test extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {test: true};
-  },
-  render() { // 必须包含
-
-  }
-}
-
-方法
-getInitialState
-getDefaultProps  // 如果是使用es6语法，可以直接在Test组建类上定义defaultProps这个类属性来设置初始化时的属性值，如：Test.defaultProps = {initialCount: 0};
-
-生命周期函数
-componentWillMount  // 只会在装载组件之前调用一次，在render之前调用，可以在这个方法里面调用setState改变状态，并且不会导致额外调用一次render
-componentDidMount  // 只会在装载组件完成之后调用一次，在render之后调用，从这里开始可以通过ReactDOM.findDOMNode(this)获取到该组件的dom节点
-componentWillReceiveProps  // 更新组件时触发，不会在首次render组件时调用
-shouldComponentUpdate  // 更新组件时触发，不会在首次render组件时调用
-componentWillUpdate  // 更新组件时触发，不会在首次render组件时调用
-componentDidUpdate  // 更新组件时触发，不会在首次render组件时调用
-componentWillUnmount  // 卸载组件时触发
-
-事件处理
-合成事件和原生事件，合成事件中的event对象，并不是原生的event对象，且该event对象只在当前的event loop有效，如果想使用原生的e.stopPropagation()，需使用e.nativeEvent.stopImmediatePropagation();
-
-事件参数传递
-this.handleClick.bind(this, arg1, arg2, ...);
+事件
+合成事件和原生事件，合成事件中的event对象，并不是原生的event对象，且该event对象只在当前的event loop有效，如果想使用原生的e.stopPropagation()，需使用e.nativeEvent.stopPropagation();
 
 dom操作
 findDOMNode()  // 该方法不能用在无状态组件上
@@ -71,48 +21,25 @@ refs  // 通过在要引用的dom元素上面设置一个ref属性指定一个�
 如果组件中包含通过循环插入的子元素，为了保证重新渲染ui的时候能够正确显示这些子元素，每个元素都需要通过一个特殊的key属性指定一个唯一值
 this.props.children  // 组件标签里面包含的子元素会通过this.props.children传递进来
 
-组件间通信
-在父组件给子组件设置props，然后子组件就可以通过props访问到父组件的数据/方法
-父组件访问子组件，用refs
-非父子组件间的通信，使用全局事件Pub/Sub模式，在componentDidMount里面订阅事件，在componentWillUnmount里面取消订阅，该模式不建议使用，建议使用flux等模式
+组件生命周期
+装载过程
+constructor
+getInitialState  // es6写法，无效
+getDefaultProps  // es6写法，无效
+componentWillMount
+render  // 必须有返回值，可以为null, false...，render只是返回jsx对象，并没有真正的渲染dom
+componentDidMount  // 服务器端渲染时，不触发
+更新过程
+componentWillReceiveProps  // 父组件的render函数被调用时触发，参数nextPorps，通过在函数内部调用this.setState(...)来触发组件更新
+shouldComponentUpdate  // 必须有返回值，用于控制是否需要渲染，默认返回true（更新时总是渲染），参数nextProps, nextState
+componentWillUpdate
+render
+componentDidUpdate
+卸载过程
+componentWillUnmount
 
-表单
-表单元素在react里面有两种表现形式，受控组件和非受控组件
+强制组件更新
+this.forceUpdate()  // 可以通过shouldComponentUpdate停止更新过程，从而控制渲染
 
-数据流
-
-flux，一套前端应用的架构模式，主要包含4个部分：
-action -> dispatch -> store -> view
-
-redux
-store.dispatch(action) -> reducer(state, action) -> store.getState()
-store不再拥有state，而只是管理state，store会保存root reducer返回的state树
-action需要通过store.dispatch();发送
-reducer，pure function，用来处理action触发的对state树的更改，(oldState, action) => newState;
-
-import {createStore, combineReducers} from 'redux';
-
-const app = combineReducers({
-  a: reducerA,
-  b: reducerB,
-  ...
-});
-const store = createStore(app, [initState]);  // initState，可选，对于服务器端渲染很有用
-store.getState();  // 获取state
-store.dispatch();  // 发送action，更改state
-store.subscribe();  // 注册回调函数监听state的更改
-
-react-redux
-<Provider store={store}>  // 容器组件，用来接受store，并让store对子组件可用，如：<App/>可使用connect方法关联store，利用了react暂时隐藏的特性context
-  <App/>
-</Provider>
-connect([mapStateToProps], [mapDispatchToProps], [mergeProps], [options]);  // 调用该方法会返回另一个函数，该返回的函数接受一个组件类作为参数，最后才返回一个和store关联起来的组件
-connect()(App);  // 此时，可在App组件里面通过props拿到store的dispatch方法，但现在App组件并未监听store状态的更改，要监听store的状态更改，必须指定mapStateToProps参数
-mapStateToProps(state, [ownProps]);  // 该参数是一个函数，只有指定了这个参数，组件才会监听store的更新，每次更新都会调用mapStateToProps这个函数，返回一个字面量对象将会合并到组件的props属性，ownProps，传递给组件的props
-mapDispatchToProps(dispatch, [ownProps]);  // 定义如何传递dispatch给组件，在这个函数里直接dispatch action creator，返回一个字面量对象将会合并到组件的props属性，这样组件就可以通过props调用到action（可在内部使用bindActionCreators()简化这种操作），如果省略该函数，默认直接把dispatch挂载到props传入
-
-context
-React.withContext({}, function () {});
-contextTypes  // React.PropTypes.string.isRequired
-childContextTypes
-getChildContext
+propTypes  // PropTypes目前由独立的npm包prop-types提供。只在开发时有作用，即使报错，也不会影响组件的正常执行。线上部署时，可以通过babel-react-optimize包，将代码中的propTypes相关的代码去掉
+defaultProps
