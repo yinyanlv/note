@@ -2,6 +2,7 @@ jsx
 小写的标签名默认是html标签，大写开头的标签名默认是react标签
 class -> className
 for -> htmlFor
+{}中只能是表达式，不能是for，while等语句
 
 注释
 在一个组件的子元素位置使用注释要用{}包起来，如：{/* child comment, put {} around */}
@@ -13,13 +14,15 @@ for -> htmlFor
 合成事件和原生事件，合成事件中的event对象，并不是原生的event对象，且该event对象只在当前的event loop有效，如果想使用原生的e.stopPropagation()，需使用e.nativeEvent.stopPropagation();
 
 组合组件
-如果组件中包含通过循环插入的子元素，为了保证重新渲染ui的时候能够正确显示这些子元素，每个元素都需要通过一个特殊的key属性指定一个唯一值
+对于动态数量的子组件，为了保证重新渲染ui的时候能够快速并正确的显示这些子元素，每个元素都需要通过一个特殊的key属性指定一个唯一值
 this.props.children  // 组件标签里面包含的子元素会通过this.props.children传递进来
 
 dom操作
 findDOMNode()  // 该方法不能用在无状态组件上
-refs  // 通过在要引用的dom元素上面设置一个ref属性指定一个名称，然后通过this.refs.{name}来访问对应的dom元素，ref不能设置在无状态组件上
+ref  // 需尽量避免使用ref
+如果ref绑定的值是一个函数，那么再组件完成装载过程后，会调用它，参数node
 如果ref是设置在原生html元素上，它拿到的就是dom元素，如果设置在自定义组件上，它拿到的就是组件实例，这时候就需要通过findDOMNode来拿到组件的dom元素
+refs  // 通过在要引用的dom元素上面设置一个ref属性指定一个名称，然后通过this.refs.{name}来访问对应的dom元素，ref不能设置在无状态组件上
 
 组件生命周期
 装载过程
@@ -55,9 +58,28 @@ action  // 只生成action
 reducer  // 参数state, action
 store  // 通过createStore(reducer, initialValue)创建，store.getState()可以获得状态
 view  // 发送action（store.dispatch(...)），监听store（store.subscribe(...)），调用this.setState(...)触发更新，取消监听store（store.unsubscribe(...)）
+createStore  // 参数，reducer, initialValue, storeEnhancers
+combineReducers  // 用于合并多个reducer，返回一个新的reducer，用于分发、合并state，这时每个子reducer接受的state只是完整的state树中对应的字段
+applyMiddleware  // 参数，middleware数组，注意顺序，返回storeEnhancer
+compose  // 组合多个storeEnhancer，参数，(applyMiddleware(...), ...)
+bindActionCreators  // 用于简化mapDispatchToProps的编写，bindActionCreators({handlerName: actionCreator, ...}, dispatch)
 
 容器组件和傻瓜组件  // 傻瓜组件可以写成函数形式，参数props，无状态组件
 
 Provider
 childContextTypes  // 必须定义，从而让Provider能够被react认可为一个Context的提供者，Provider必须实现getChildContext方法，返回context对象，其中包含store字段，render方法中直接返回this.props.children
 contextTypes  // 需要使用context的子组件必须定义，且定义必须和Provider的childContextTypes定义一致，子组件的constructor中需调用super(props, context)，从而子组件中可以通过this.context访问context
+
+react-redux
+connect(mapStateToProps, mapDispatchToProps, mergeProps, options)(DumbComponent)  // 返回容器组件，该容器组件已经默认实现了自定义的shouldComponentUpdate，实现逻辑是对比这次传递给内层傻瓜容器的props和上一次是否一致，如果一致，则直接返回false
+mapStateToProps  // 可以为空，参数，state, ownProps（父组件直接传人的props）
+mapDispatchToProps  // 可以为空，参数，dispatch, ownProps，可以使用bindActionCreators简化编写，还可以更进一步，直接使用一个handler和action构造函数的映射对象来充当mapDispatchToProps
+
+chrome开发辅助工具
+React Devtools  // 查看树形结构
+Redux Devtools  // 查看数据流，安装后windows对象上会有一个devToolsExtension属性方法，执行后返回storeEnhancer
+React Perf  // 查看react组建渲染的性能问题，配合react-addons-perf包使用
+
+npm包
+react-immutable-state-invariant  // 中间件，开发时添加，用于提示警告，是否在reducer中违背纯函数的原则，直接修改参数state
+react-addons-perf  // window.Perf = Perf;
