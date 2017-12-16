@@ -24,6 +24,8 @@ ref  // 需尽量避免使用ref
 如果ref是设置在原生html元素上，它拿到的就是dom元素，如果设置在自定义组件上，它拿到的就是组件实例，这时候就需要通过findDOMNode来拿到组件的dom元素
 refs  // 通过在要引用的dom元素上面设置一个ref属性指定一个名称，然后通过this.refs.{name}来访问对应的dom元素，ref不能设置在无状态组件上
 
+key和ref两个prop比较特殊，组件不能够直接读取key和ref
+
 组件生命周期
 装载过程
 constructor
@@ -75,6 +77,15 @@ connect(mapStateToProps, mapDispatchToProps, mergeProps, options)(DumbComponent)
 mapStateToProps  // 可以为空，参数，state, ownProps（父组件直接传人的props）
 mapDispatchToProps  // 可以为空，参数，dispatch, ownProps，可以使用bindActionCreators简化编写，还可以更进一步，直接使用一个handler和action构造函数的映射对象来充当mapDispatchToProps
 
+reselect  // npm包，提高数据获取性能，分两步执行，如果相关状态没有发生改变，就直接使用上一次的缓存结果，否则，进入正常的获取状态流程，createSelector，配合mapStateToProps使用
+
+高阶组件  // HOC（high order component）
+一个高阶组件就是一个函数，接受一个组件作为参数，返回另一个组件
+代理方式的高阶组件  // extends React.Component，操控props，抽取状态（容器组件），访问ref，包装组合多个组件...
+继承方式的高阶组件  // extends SomeComponent，新组件类中return super.render()，操控props，操控生命周期函数
+
+以函数为子组件  // 弥补高级组件对props操控不够灵活的缺点，子组件为函数，因此可以传入参数调用，this.props.children(...)
+
 chrome开发辅助工具
 React Devtools  // 查看树形结构
 Redux Devtools  // 查看数据流，安装后windows对象上会有一个devToolsExtension属性方法，执行后返回storeEnhancer
@@ -83,3 +94,4 @@ React Perf  // 查看react组建渲染的性能问题，配合react-addons-perf�
 npm包
 react-immutable-state-invariant  // 中间件，开发时添加，用于提示警告，是否在reducer中违背纯函数的原则，直接修改参数state
 react-addons-perf  // window.Perf = Perf;
+react-motion  // 动画库
