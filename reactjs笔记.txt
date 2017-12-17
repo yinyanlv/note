@@ -58,13 +58,30 @@ view  // 注册，监听，取消监听store，调用this.setState(...)触发更
 redux
 action  // 只生成action
 reducer  // 参数state, action
-store  // 通过createStore(reducer, initialValue)创建，store.getState()可以获得状态
+store  // 通过createStore(reducer, initialValue)创建，store.getState()可以获得状态，store对象必须包含的接口，dispatch，getState，subscribe，unsubscribe，replaceReducer
 view  // 发送action（store.dispatch(...)），监听store（store.subscribe(...)），调用this.setState(...)触发更新，取消监听store（store.unsubscribe(...)）
-createStore  // 参数，reducer, initialValue, storeEnhancers
+createStore  // 参数，reducer, initialValue, storeEnhancers，当第二个参数为函数时，就会被当作storeEnhancer使用
 combineReducers  // 用于合并多个reducer，返回一个新的reducer，用于分发、合并state，这时每个子reducer接受的state只是完整的state树中对应的字段
-applyMiddleware  // 参数，middleware数组，注意顺序，返回storeEnhancer
-compose  // 组合多个storeEnhancer，参数，(applyMiddleware(...), ...)
+applyMiddleware  // 有两种用法，1、配合compose使用，参数middlewareA, middlewareB...，返回storeEnhancer，2、包装createStore，参数middlewareA, middlewareB...，返回storeEnhancer，applyMiddleware(middleware)(createStore)
+compose  // 组合多个storeEnhancer，参数，(applyMiddleware(...), ...)，applyMiddleware(...)必须放置在第一个
 bindActionCreators  // 用于简化mapDispatchToProps的编写，bindActionCreators({handlerName: actionCreator, ...}, dispatch)
+
+扩展redux
+中间件  // 一个函数，用来增强dispatch方法，各个中间件对顺序应该无要求
+function middleware(dispatch, getState) {
+    return function (next) {
+        return function(action) {
+            next(action);
+        }
+    }
+}
+store enhancer  // 一个函数，用于改造、增强store
+function storeEnhancer(createStore) {
+    return function (reducer, preloadedState, enhancer) {
+        let store = createStore(reducer, preloadedState, enhancer);
+        return store;
+    }
+}
 
 容器组件和傻瓜组件  // 傻瓜组件可以写成函数形式，参数props，无状态组件
 
@@ -76,6 +93,9 @@ react-redux
 connect(mapStateToProps, mapDispatchToProps, mergeProps, options)(DumbComponent)  // 返回容器组件，该容器组件已经默认实现了自定义的shouldComponentUpdate，实现逻辑是对比这次传递给内层傻瓜容器的props和上一次是否一致，如果一致，则直接返回false
 mapStateToProps  // 可以为空，参数，state, ownProps（父组件直接传人的props）
 mapDispatchToProps  // 可以为空，参数，dispatch, ownProps，可以使用bindActionCreators简化编写，还可以更进一步，直接使用一个handler和action构造函数的映射对象来充当mapDispatchToProps
+
+redux-thunk  // 中间件
+异步action对象  // 一个函数，return (dispatch, getState) => {... dispatch(action)}
 
 reselect  // npm包，提高数据获取性能，分两步执行，如果相关状态没有发生改变，就直接使用上一次的缓存结果，否则，进入正常的获取状态流程，createSelector，配合mapStateToProps使用
 
