@@ -63,7 +63,7 @@ view  // 发送action（store.dispatch(...)），监听store（store.subscribe(.
 createStore  // 参数，reducer, initialValue, storeEnhancers，当第二个参数为函数时，就会被当作storeEnhancer使用
 combineReducers  // 用于合并多个reducer，返回一个新的reducer，用于分发、合并state，这时每个子reducer接受的state只是完整的state树中对应的字段
 applyMiddleware  // 有两种用法，1、配合compose使用，参数middlewareA, middlewareB...，返回storeEnhancer，2、包装createStore，参数middlewareA, middlewareB...，返回storeEnhancer，applyMiddleware(middleware)(createStore)
-compose  // 组合多个storeEnhancer，参数，(applyMiddleware(...), ...)，applyMiddleware(...)必须放置在第一个
+compose  // 组合多个storeEnhancer，参数，(applyMiddleware(...), ...)，applyMiddleware(...)一般放置在第一个
 bindActionCreators  // 用于简化mapDispatchToProps的编写，bindActionCreators({handlerName: actionCreator, ...}, dispatch)
 
 扩展redux
@@ -114,4 +114,13 @@ React Perf  // 查看react组建渲染的性能问题，配合react-addons-perf�
 npm包
 react-immutable-state-invariant  // 中间件，开发时添加，用于提示警告，是否在reducer中违背纯函数的原则，直接修改参数state
 react-addons-perf  // window.Perf = Perf;
-react-motion  // 动画库
+react-addons-css-transition-group  // ReactCssTransitionGroup，动画库，借助css3实现动画，用于组件装载和卸载时的动画，css类名规则：-enter, -enter-active, -leave, -leave-active, -appear, -appear-active
+react-motion  // 动画库，它不直接参与动画绘制，只是把动画参数不停的传递给子组件（函数式子组件），然后由子组件完成绘制，defaultStyles（初始值），styles（目标值），stiffness（刚度），damping（阻尼）
+react-router-redux  // 同步url和store
+react-router  // Router, Route, IndexRoute, Link, getComponent = (location, callback) => {require.ensure([], (require) => {...})}
+
+热加载
+webpack-dev-middleware  // 动态运行webpack打包生成文件
+webpack-hot-middleware  // 处理来自浏览器端的热加载请求或者推送代码到网页
+react-hot-loader  // 处理react组件的热加载
+webpack-manifest-plugin   // 生成静态资源说明文件
