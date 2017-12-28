@@ -80,12 +80,12 @@ flex-direction: row;   // 决定主轴方向，row（默认，主轴为水平方
 flex-wrap: nowrap;  // 定义，如果一条轴线排不下，如何换行，nowrap（默认，不换行） | wrap（第一行在上方） | wrap-reverse（第一行在下方）
 flex-flow: row nowrap;  // flex-direction属性和flex-wrap属性的简写形式，默认，row nowrap
 justify-content: center;  // 定义元素在主轴上的对齐方式，flex-start（默认，左对齐） | flex-end（右对齐） | center（居中） | space-between（两端对齐，元素之间的间隔都相等） | space-around（每个元素两侧的间隔相等）
-align-items: stretch;  // 定义元素在交叉轴上的对齐方式，flex-start（交叉轴的起点对齐） | flex-end（交叉轴的终点对齐） | center（交叉轴的中点对齐） | baseline（元素的第一行文字的基线对齐） | stretch（默认，如果元素未设置高度或设为auto，将占满整个容器的高度）
-align-content: stretch;  // 定义多根轴线的对齐方式。如果元素只有一根轴线，该属性不起作用，flex-start | flex-end | center | space-between | space-around | stretch
+align-content: stretch;  // 定义元素在非主轴上的对齐方式，如果元素只有一根主轴线，该属性不起作用，flex-start | flex-end | center | space-between | space-around | stretch
+align-items: stretch;  // 定义元素在其所在行上的对齐方式，flex-start（起点对齐） | flex-end（终点对齐） | center（中点对齐） | baseline（元素的第一行文字的基线对齐） | stretch（默认，如果元素未设置高度或设为auto，将占满整个容器的高度）
 元素的属性
 order： 238;  // 定义元素的排列顺序。数值越小，排列越靠前，默认为0
 flex-grow： 2;  // 定义元素的放大比例，默认为0，即如果存在剩余空间，也不放大
-flex-shrink: 1;  // 定义元素的缩小比例，默认为1，即如果空间不足，该元素等比将缩小 
+flex-shrink: 1;  // 定义元素的缩小比例，默认为1，即如果空间不足，该元素将等比缩小 
 flex-basis: 220px;  // 定义了在分配多余空间之前，元素占据的主轴空间，默认值为auto，即元素的本来大小
 flex: 1;  // flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto，该属性有两个快捷值：auto (1 1 auto) 和 none (0 0 auto)
 align-self: center;  // 允许单个元素有与其他元素不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch，auto | flex-start | flex-end | center | baseline | stretch
