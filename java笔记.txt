@@ -348,7 +348,7 @@ Enumeration  // Iterator
 
 Stream类型  // 流，不是io流，jdk1.8，用于函数式编程，用于数组和集合，map没有流，但有类似的方法
 Arrays.stream(arr);
-Stread<T> s = collection.stream();
+Stream<T> s = collection.stream();
 s.filter().map().sum();
 parallelStream()  // 并行流，底层运行多个线程
 
