@@ -237,18 +237,22 @@ public class A extends B implements interface1, interface2, ... {
 }
 可以通过匿名内部类实现接口
 
-反射  
-java.lang.reflect.*;
-Class类
-得到Class对象  // Class对象上包含很多信息
+反射  // java.lang.reflect.{Class, Filed, Method, Constructor, Array, ...};  
+在运行时分析类的能力
+在运行时查看对象  // 要访问对象中的值，可能需要调用对应Filed, Method, Constructor对象的setAccessible(true);来取得权限
+实现通用的数组操作代码  // Array.newInstance(componentType, length);componentType为数组元素类型，可以通过反射得到
+利用Method对象，动态调用方法  // method对象.invoke(Object obj, Object arg1, ...);第一个参数是隐式对象，其余对象提供了显式参数，对于静态方法第一个参数为null
+Class类  // 实际上是泛型类，如：A.class的类型是Class<A>
+得到Class对象  // Class对象上包含很多类的信息，Class对象表示一种类型，而这种类型未必是一种类，如：int不是类，而int.class是一个Class类型的对象
 类名.class
 对象.getClass()
 Class.forName("类全名");
-Class对象.newInstance();  // 动态创建对象
+Class对象.newInstance();  // 动态创建对象，如果需要传入参数，则必须使用Constructor类中的newInstance方法
 参数类型
 int.class
 DebugTime.class
 ...
+
 
 注解  // jdk1.5，所有的注解都是java.lang.annotation.Annotation的子类
 @Override  // 重写父类方法
@@ -383,7 +387,7 @@ this.wait()  // 可以释放对象锁
 this.notify()  // 通知一个wait的线程
 this.notifyAll()  // 通知所有wait的线程
 java.util.concurrent.*;  // 锁，集合等，jdk1.5，用于并发，底层用synchronized、wait、 notify、notifyAll实现
-线程池  // ExecutorSerice接口，ThreadPoolExecutor类，Executors工具类
+线程池  // ExecutorService接口，ThreadPoolExecutor类，Executors工具类
 ExecutorSerice pool = Executors.newCachedTreadPool(); 
 pool.execute(Runnable r);
 java.util.Timer  // 底层用线程实现
