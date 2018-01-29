@@ -253,7 +253,6 @@ int.class
 DebugTime.class
 ...
 
-
 注解  // jdk1.5，所有的注解都是java.lang.annotation.Annotation的子类
 @Override  // 重写父类方法
 @Deprecated  // 过时的方法
