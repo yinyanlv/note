@@ -399,3 +399,16 @@ java.swing.Timer  // 底层用线程实现
 处理流  // 中间流，又称为过滤流，BufferedReader
 
 java.util.regex.*;  // 正则表达式包
+
+jdbc  // 提供规范，具体驱动由数据库厂商提供
+DML  // 返回值，影响的数据行数 or 0 
+DQL  // 返回值，ResultSet，ResultSet.next()返回true or false
+DDL
+DCL
+基本流程：贾琏欲执事
+DAO  // 结合抽取出的jdbcUtil，精简、共用代码
+Statement和PreparedStatement
+事务  // 每一条DML语句，默认自动提交事务
+sql批处理  // mysql开启批处理，连接url增加后缀，?rewriteBatchedStatements=true
+获取自动生成的主键
+连接池  // 一般由服务器提供者提供，DBCP(spring推荐，apache维护)，DRUID(性能最好，阿里维护)，C3P0(性能最差，已停止维护)
