@@ -259,7 +259,7 @@ DebugTime.class
 @SupressWarnings  // 让编译器不产生警告
 自定义注解
 @Target(ElementType.METHOD)  // 该注解用于方法上
-@RetentionPolicy(RetentionPolicy.RUNTIME)  // 该注解可以通过反射读取
+@Retention(RetentionPolicy.RUNTIME)  // 该注解可以通过反射读取，CLASS(默认)，RUNTIME，SOURCE
 @Documented  // 该注解会生成到javadoc中
 public @interface A { 
   int abc() default 1;  // 方法名相当于属性名，default关键字，定义默认值，属性值可以是数值、字符、布尔值或数组
@@ -400,6 +400,7 @@ java.swing.Timer  // 底层用线程实现
 
 java.util.regex.*;  // 正则表达式包
 
+jpa  // 持久化规范
 jdbc  // 提供规范，具体驱动由数据库厂商提供
 DML  // 返回值，影响的数据行数 or 0 
 DQL  // 返回值，ResultSet，ResultSet.next()返回true or false
@@ -411,4 +412,6 @@ Statement和PreparedStatement
 事务  // 每一条DML语句，默认自动提交事务
 sql批处理  // mysql开启批处理，连接url增加后缀，?rewriteBatchedStatements=true
 获取自动生成的主键
-连接池  // 一般由服务器提供者提供，DBCP(spring推荐，apache维护)，DRUID(性能最好，阿里维护)，C3P0(性能最差，已停止维护)
+连接池  // DataSource，一般由服务器提供者提供，DBCP(spring推荐，apache维护)，DRUID(性能最好，阿里维护)，C3P0(性能最差(但测试环境性能较高)，已停止维护，hibernate推荐)
+jdbcTemplate
+BeanHandler和BeanListHandler
