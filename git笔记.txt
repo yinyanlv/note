@@ -37,7 +37,7 @@ git reset --hard 版本号（7位）  // 到指定版本号，可前进和后退
 
 git revert 版本号（7位）  // 回撤本地和远程版本库，再次提交，不会产生冲突
 
-git checkout -- <file>  // 丢弃工作区中某文件的修改，没有--，就变成创建一个分支的命令
+git checkout -- <file>  // 丢弃工作区中某文件的修改，没有--，就变成一个切换分支的命令
 git checkout .  // 丢弃工作区中所有修改
 git checkout HEAD <file>  // 丢弃工作区和暂存区中某文件的修改
 git checkout HEAD .  // 丢弃工作区和暂存区中所有修改
