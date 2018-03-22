@@ -5,43 +5,6 @@ git
 
 windows下要使用很多Linux和Unix工具时，需要Cygwin这样的模拟环境。打包好的git，msysgit.exe
 
-git init
-git add test_git.txt
-git add -A  // stages All
-git add .  // stages new and modified, without deleted
-git add -u  // stages modified and deleted, without new
-git commit -m "这是git的第一行"  // 描述文字，最好用英文，否则，会报出警告。
-
-git status
-git diff test_git.txt  // 查看某文件的修改内容
-
-git log --graph --pretty=oneline --abbrev-commit  // 查看分支合并记录，以及历史提交id，--graph，可以看到分支合并图
-git reflog  // 查看历史命令记录，包括拉取和提交
-
-HEAD当前版本（HEAD可全部小写）
-HEAD^ 上一个版本
-HEAD^^ 上上个版本
-HEAD^^...
-HEAD~199  上199个版本
-
-git diff HEAD -- test_git.txt  // --后面要有空格，查看工作区和版本库里面最新版本的区别
-
-git rm <file>
-git rm --cached <file>  // 会直接从暂存区删除文件，工作区则不做出改变
-git rm -r --cached   // 删除暂存区的缓存
-
-git reset HEAD <file>  // 丢弃暂存区中该文件的修改，工作区不受影响
-git reset {commit_id}  // 暂存区的目录树会被重写，被master分支指向的目录树所替换，但是工作区不受影响
-git reset --hard HEAD^  // --hard，暂存区，工作区全部替换，再次提交，会产生冲突
-git reset --hard 版本号（7位）  // 到指定版本号，可前进和后退，再次提交，会产生冲突
-
-git revert 版本号（7位）  // 回撤本地和远程版本库，再次提交，不会产生冲突
-
-git checkout -- <file>  // 丢弃工作区中某文件的修改，没有--，就变成一个切换分支的命令
-git checkout .  // 丢弃工作区中所有修改
-git checkout HEAD <file>  // 丢弃工作区和暂存区中某文件的修改
-git checkout HEAD .  // 丢弃工作区和暂存区中所有修改
-
 ssh-keygen -t rsa -C "1761869346@qq.com"  // 创建ssh key
 提示错误:ssh: connect to host github.com port 22: Connection timed out
 原因:The reason could be the firewall modification as you are under a network.(In which case they may deliberately block some ports)
@@ -49,6 +12,20 @@ ssh-keygen -t rsa -C "1761869346@qq.com"  // 创建ssh key
 ssh -T git@github.com  // 检测ssh连接是否超时
 git config --local -e  // 文本编辑器打开git本地配置文件
 url = git@github.com:username/repo.git => url = https://github.com/username/repo.git  // 更改连接方式为https
+
+HEAD当前版本（HEAD可全部小写）
+HEAD^ 上一个版本
+HEAD^^ 上上个版本
+HEAD^^...
+HEAD~199  上199个版本
+
+git init
+git add test_git.txt
+git add -A  // stages all
+git add .  // stages new and modified, without deleted
+git add -u  // stages modified and deleted, without new
+git status
+git commit -m "这是git的第一行"  // 描述文字，最好用英文，否则，会报出警告。
 
 git remote  // 查看远程库名称
 git remote -v  // 显示更详细的信息
@@ -60,6 +37,16 @@ git pull  // 从远程拉最新提交
 git pull origin master --allow-unrelated-histories  // 解决通过pull合并两个不同的项目时，出现fatal: refusing to merge unrelated histories的问题
 git push origin master
 git push -u origin master  // 第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令
+
+git checkout -- <file>  // 丢弃工作区中某文件的修改，没有--，就变成一个切换分支的命令
+git checkout .  // 丢弃工作区中所有修改
+git checkout HEAD <file>  // 丢弃工作区和暂存区中某文件的修改
+git checkout HEAD .  // 丢弃工作区和暂存区中所有修改
+
+git reset HEAD <file>  // 丢弃暂存区中该文件的修改，工作区不受影响
+git reset {commit_id}  // 暂存区的目录树会被重写，被master分支指向的目录树所替换，但是工作区不受影响
+git reset --hard HEAD^  // --hard，暂存区，工作区全部替换，再次提交，会产生冲突
+git reset --hard 版本号（7位）  // 到指定版本号，可前进和后退，再次提交，会产生冲突
 
 git branch  // 查看本地所有分支
 git branch -a  // 查看远程所有分支
@@ -74,14 +61,6 @@ git merge --no-ff -m "merge with no-ff" dev  // 强制禁用Fast forward模式�
 
 git rebase dev  // 合并指定分支到当前分支，会丢弃分支的合并与提交信息
 
-git stash  // 储存工作现场
-git stash list
-git stash apply  // 恢复工作现场，但不删除stash
-git stash apply stash@{0}  // 到指定工作现场
-git stash drop  // 删除stash
-git stash pop  // 恢复工作现场，并删除stash
-git stash clear  // 清空
-
 git tag v1.0
 git tag  // 查看所有标签，按字母排序
 git tag -n  // 查看所有标签及标签描述
@@ -94,6 +73,26 @@ git push origin v1.0  // 向远程推送标签
 git push origin --tags  // 向远程一次性推送所有未推送的标签
 git push origin :refs/tags/v1.0  // 从远程库删除标签，必须先本地删除
 git clone --branch v1.0 https://github.com/username/repo.git  // 获取某tag版本号下的资源
+
+git stash  // 储存工作现场
+git stash list
+git stash apply  // 恢复工作现场，但不删除stash
+git stash apply stash@{0}  // 到指定工作现场
+git stash drop  // 删除stash
+git stash pop  // 恢复工作现场，并删除stash
+git stash clear  // 清空
+
+git log --graph --pretty=oneline --abbrev-commit  // 查看分支合并记录，以及历史提交id，--graph，可以看到分支合并图
+git reflog  // 查看历史命令记录，包括拉取和提交
+
+git diff test_git.txt  // 查看某文件的修改内容
+git diff HEAD -- test_git.txt  // --后面要有空格，查看工作区和版本库里面最新版本的区别
+
+git rm <file>
+git rm --cached <file>  // 会直接从暂存区删除文件，工作区则不做出改变
+git rm -r --cached   // 删除暂存区的缓存
+
+git revert 版本号（7位）  // 回撤本地和远程版本库，再次提交，不会产生冲突
 
 git config --global user.name "bugong"
 git config --global user.email "1761869346@qq.com"
@@ -109,7 +108,7 @@ sudo adduser git
 搜集所有用户的id_rsa.pub文件，把所有公钥导入到/home/git/.ssh/authorized_keys文件里
 4、初始化git仓库
 sudo git init --bare sample.git
-sudo chown -R git:git sample.git  //将owner改为git
+sudo chown -R git:git sample.git  // 将owner改为git
 5、禁用shell登录
 编辑/etc/passwd文件完成。可正常通过ssh使用git，但无法登录shell
 6、克隆远程仓库
