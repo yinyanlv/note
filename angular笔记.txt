@@ -1,11 +1,67 @@
 生命周期
-constructor  OnChanges  OnInit  DoCheck                      OnDestroy
-                                         AfterContentInit     
-                                         AfterContentChecked  
-                                         AfterViewInit
-                                         AfterViewChecked  
+constructor   OnChanges   AfterContentInit      AfterViewInit      OnDestroy
+              OnInit      AfterContentChecked   AfterViewChecked      
+              DoCheck                      
 
-ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模块
+示例：
+<parent [value]="parent">
+    <child-a [value]="childA"></child-a>
+    <child-b [value]="childB"></child-b>
+</parent>
+
+组件初始化流程
+parent constructor
+child a constructor
+child b constructor
+parent ngOnChanges
+parent ngOnInit
+parent ngDoCheck
+child a ngOnChanges
+child a ngOnInit
+child a ngDoCheck
+child b ngOnChanges
+child b ngOnInit
+child b ngDoCheck
+child a ngAfterContentInit
+child a ngAfterContentChecked
+child b ngAfterContentInit
+child b ngAfterContentChecked
+parent ngAfterContentInit
+parent ngAfterContentChecked
+child a ngAfterViewInit
+child a ngAfterViewChecked
+child b ngAfterViewInit
+child b ngAfterViewChecked
+parent ngAfterViewInit
+parent ngAfterViewChecked
+parent ngDoCheck
+child a ngDoCheck
+child b ngDoCheck
+child a ngAfterContentChecked
+child b ngAfterContentChecked
+parent ngAfterContentChecked
+child a ngAfterViewChecked
+child b ngAfterViewChecked
+parent ngAfterViewChecked    
+
+组件更新流程
+parent ngOnChanges  // 当通过外部传入到输入属性的值发生改变时触发，注意，在组件内通过程序直接改变输入属性值时不触发，ngOnChanges是否执行与变化检测无关
+parent ngDoCheck
+child a ngOnChanges
+child a ngDoCheck
+child b ngOnChanges
+child b ngDoCheck
+child a ngAfterContentChecked
+child b ngAfterContentChecked
+parent ngAfterContentChecked
+child a ngAfterViewChecked
+child b ngAfterViewChecked
+parent ngAfterViewChecked 
+
+组件销毁流程       
+child a ngOnDestroy
+child b ngOnDestroy
+parent ngOnDestroy            
 
 装饰器
 @NgModule({
@@ -24,10 +80,10 @@ ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模
   providers: [HeroService],  // 在组件providers中定义的服务，只在该组件及其各级子组件中可用
   pipes: [LowercasePipe],
   directives: [Tooltip],
-  changeDetection: ChangeDetectionStrategy.OnPush,  // 脏值检测策略，CheckOnce、Checked、CheckAlways、Detached（分离）、Default、OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,  // 变化检测策略，Default、OnPush(当输入属性值通过外部传入且发生改变时，才执行变化检测，从而更新视图，不执行变化检测，不能更新视图，变化检测用于更新视图，与ngDoCheck等钩子函数无关，ngDoCheck总是触发，父组件的变化检测机制不影响子组件的变化检测，父子组件各自独立
 })
 
-@Directive
+@Directive()
 @Pipe()
 @Injectable()  // 标志着一个类（依赖者而非被依赖者）可以被一个注入器实例化。通常来讲，在试图实例化一个没有被标识为@Injectable()的类时候，注入器将会报告错误
 @Inject(APP_CONFIG)  // let APP_CONFIG = new OpaqueToken('app.config');
@@ -35,3 +91,21 @@ ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模
 @Optional()  // 依赖注入时，依赖可选非必须
 @SkipSelf()  // 依赖注入时，跳过依赖自身，防止循环依赖
 @Self()  // 依赖注入时，依赖自身
+@Input()
+@Output()
+@ViewChild()
+@ViewChildren()
+@ContentChild()
+@ContentChildren()
+@HostListener()
+@HostBinding()
+
+ChangeDetectorRef  // 组件的变化检测器的引用，markForCheck()（下一个周期，强制执行变化检测），detach()，reattach()，detectChanges()（ 从该组件到各个子组件执行一次变化检测）
+ElementRef  // 封装不同平台下视图层中的native元素
+TemplateRef  // 模板的引用，TemplateRef实例中引用ElementRef（comment元素的封装），createEmbeddedView(null)返回viewRef
+ViewRef  // 视图对象，表示angular视图元素，rootNodes属性包含了视图的所有节点
+EmbeddedViewRef  // 内嵌视图，表示模板中定义的视图元素，通常与TemplateRef配合使用，继承自ViewRef
+ViewContainerRef  // 表示一个视图容器，用于创建和管理内嵌视图（TemplateRef）或组件视图（ComponentRef），实例中引用ElementRef（comment元素的封装），createEmbeddedView(templateRef)简化通过模板创建视图，createComponent(...)
+ComponentRef  // 组件的引用
+
+ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模块
