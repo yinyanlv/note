@@ -29,7 +29,7 @@ git commit -m "这是git的第一行"  // 描述文字，最好用英文，否�
 
 git remote  // 查看远程库名称
 git remote -v  // 显示更详细的信息
-git remote add origin master git@github.com:woodjs/learn_git.git  // origin是默认远程仓库的名字，可更改
+git remote add origin git@github.com:woodjs/learn_git.git  // origin是默认远程仓库的名字，可更改
 
 git clone git@github.com:woodjs/learn_git_clone.git
 git clone -b branchName git@github.com:woodjs/learn_git_clone.git  // 克隆指定分支
@@ -76,10 +76,10 @@ git clone --branch v1.0 https://github.com/username/repo.git  // 获取某tag版
 
 git stash  // 储存工作现场
 git stash list
-git stash apply  // 恢复工作现场，但不删除stash
-git stash apply stash@{0}  // 到指定工作现场
+git stash apply  // 将最新储存的工作现场合并到当前commit，不删除stash
+git stash apply stash@{0}  // 将指定的工作现场合并到当前commit
 git stash drop  // 删除stash
-git stash pop  // 恢复工作现场，并删除stash
+git stash pop  // 将最新储存的工作现场合并到当前commit，并删除stash
 git stash clear  // 清空
 
 git log --graph --pretty=oneline --abbrev-commit  // 查看分支合并记录，以及历史提交id，--graph，可以看到分支合并图
