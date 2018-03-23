@@ -29,7 +29,7 @@ git commit -m "这是git的第一行"  // 描述文字，最好用英文，否�
 
 git remote  // 查看远程库名称
 git remote -v  // 显示更详细的信息
-git remote add origin git@github.com:woodjs/learn_git.git  // origin是默认远程仓库的名字，可更改
+git remote add origin master git@github.com:woodjs/learn_git.git  // origin是默认远程仓库的名字，可更改
 
 git clone git@github.com:woodjs/learn_git_clone.git
 git clone -b branchName git@github.com:woodjs/learn_git_clone.git  // 克隆指定分支

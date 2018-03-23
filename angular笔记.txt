@@ -10,7 +10,7 @@ ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模
 装饰器
 @NgModule({
   declarations: [AppComponent],  // 声明本模块拥有的视图类，angular有3种视图类，组件、指令、管道（如：currentHero?.birthdate | date:'longDate'）
-  exports: [AppComponent],  // declaration的子集，可用于其它模块中的组件
+  exports: [AppComponent],  // declarations的子集，定义可在其它模块中使用的组件
   imports: [BrowserModule],  // 本模块组件模板中需要由其它模块导出的类
   providers: [Logger]  // 在模块providers中定义的服务，会被注册到根注入器，在应用中的任何部分都可被访问到，注意，懒加载模块中通过providers定义的服务，并未注册到根注入器，因此，这些服务只能在子模块中使用，另一种用法：useClass，useExisting（定义别名），useValue，useFactory
   bootstrap: [AppComponent]  // 标识出应用的主视图（被称为根组件），它是所有其它视图的宿主，只有根模块才能设置bootstrap属性

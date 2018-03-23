@@ -155,9 +155,9 @@ animation
 animation-delay: -20s;  // 负的动画延时可直接跳至动画中对应的时间点
 animation-direction: alternate;  // normal(不反转循环周期)，alternate(反转偶数)，alternate-reverse(反转奇数)，reverse(反转每一个循环周期)
 animation-play-state: paused;  // paused/running，可通过交互控制动画状态
-animation-timing-function:  // timing-function作用于每两个关键帧之间，而不是整个动画
+animation-timing-function:  // 注意：timing-function作用于每两个关键帧之间，而不是整个动画
 cubic-bezier(x1, y1, x2, y2);  // 反向版本，锚点的水平坐标和垂直坐标互换，水平方向上[0, 1]，垂直方向上(-∞, +∞)
-steps(4, end);  // 根据指定的步进数，把整个动画切分为多帧，整个动画会在帧与帧之间硬切，不会插值处理，start/end(默认end，指定在每个间隔的起点或是终点发生阶跃变化，start跳过0%，end跳过100%)
+steps(4, end);  // 根据指定的步数，把每个间隔（两个相邻的keyframe之间的动画）切分为多帧，整个动画会在帧与帧之间硬切，不作插值处理，start/end(指定在每个间隔的起点或是终点发生阶跃变化，默认end，start跳过间隔的起点状态（类似跳过间隔的0%），end跳过间隔的终点状态（类似跳过间隔的100%）
 step-start;  // 单步切换，相当于steps(1, start)的简写
 step-end;  // 相当于steps(1, end)的简写
 事件
