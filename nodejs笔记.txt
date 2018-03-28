@@ -23,9 +23,9 @@ whoami
 owner  // 添加、删除、列出作者  add  rm  ls
 adduser
 login
-–save参数表示将该模块写入dependencies属性，
-–save-dev表示将该模块写入devDependencies属性。
-波浪号~+指定版本：比如~1.2.2，表示安装1.2.x的最新版本（不低于1.2.2），但是不安装1.3.x，也就是说安装时不改变大版本号和次要版本号。
+–save参数表示将该模块写入dependencies属性
+–save-dev表示将该模块写入devDependencies属性
+波浪号~+指定版本：比如~1.2.2，表示安装1.2.x的最新版本（不低于1.2.2），但是不安装1.3.x，也就是说安装时不改变大版本号和次要版本号
 使用cnpm时publish注意报错：no_perms Private mode enable, only admin can publish this module
 解决方案:npm config set registry http://registry.npmjs.org
 
@@ -47,7 +47,7 @@ dependencies
 bugs // 数组，提交bug的地址，可以是网址或邮件地址，如：{url: '...', email: '...'}
 licenses // 许可证数组，每个元素包含type(许可证类型)和url(链接到许可证文本的地址)字段
 bin  // 随项目安装的二进制文件
-scripts  // npm start [<name>]，npm stop [<name>]，npm test [<name>]触发。key是生命周期事件名，value是在事件点要跑的命令
+scripts  // npm start [name]，npm stop [name]，npm test [name]触发。key是生命周期事件名，value是在事件点要跑的命令
 engines  // 此包可使用的node的版本，{node: '4.2.x'}
 private
 
@@ -59,7 +59,7 @@ warn
 dir  // 把一个javascript对象的字符串表示形式写到控制台，底层调用util.inspect()方法
 time
 timeEnd
-trace  // 把代码当前位置的栈跟踪信息写到stderr，如果该方法传入参数，那么该参数便作为该栈跟踪信息的标签名，如：trace: label，底层调用assert.ok();
+trace  // 把代码当前位置的栈跟踪信息写到stderr，如果该方法传入参数，那么该参数便作为该栈跟踪信息的标签名，如：trace: label，底层调用assert.ok()
 assert  // 断言，当断言结果为false时，把消息和栈跟踪信息写到控制台，console.assert(expression, [message], ...); message，消息信息
 格式化，%s, %d, %j(json)，%%(单独一个百分号%，不会消耗一个参数)
 
@@ -99,7 +99,7 @@ timeId.ref();
 
 nextTick()
 nextTick()在io事件被触发之前执行。一次事件循环，可执行多个nextTick()
-通过process.maxTickDepth来限制事件队列每次循环可执行的nextTick()事件的数目
+通过process.maxTickDepth来限制事件队列每次循环最大可执行的nextTick的数量
 
 事件发射器和事件侦听器
 事件由一个EventEmitter对象发出，这个对象包含在events模块中
@@ -129,12 +129,12 @@ JSON.parse(str);
 JSON.stringify(obj);
 
 Buffer模块缓冲数据
-js对unicode友好，但是它不很擅长管理二进制数据。
-缓冲数据是由一系列的大端或小端格式的字节组成。它比文本数据占用更少的空间。
-nodejs提供Buffer（缓冲区）模块，允许你在缓冲区结构中创建、写入、读取、操作二进制数据。
-Buffer模块是全局性，不需要require。
-缓冲数据被存储在正常v8堆之外的原始内存分配区，因此缓冲区不能调整大小，创建时需确定其大小。
-当对缓冲区与字符串进行转换时，需要指定明确的编码方法。
+js对unicode友好，但是它不很擅长管理二进制数据
+缓冲数据是由一系列的大端或小端格式的字节组成。它比文本数据占用更少的空间
+nodejs提供Buffer（缓冲区）模块，允许你在缓冲区结构中创建、写入、读取、操作二进制数据
+Buffer模块是全局性，不需要require
+缓冲数据被存储在正常v8堆之外的原始内存分配区，因此缓冲区不能调整大小，创建时需确定其大小
+当对缓冲区与字符串进行转换时，需要指定明确的编码方法
 
 大端编码（BE）：高位字节放在内存中的低位
 0x0A 0x0B 0x0C  =>  [0x0A, 0x0B, 0x0C]
