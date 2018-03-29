@@ -70,7 +70,7 @@ options配置：
 input // 要监听的可读流，必需
 output // 要写入readline的可写流，必需
 completer // 用于tab自动补全的函数
-terminal // 为true时，input和output流会像TTY(计算机终端设备)一样，并且经由ANSI／VT100转码
+terminal // 为true时，input和output流会像TTY(计算机终端设备)一样，并且经由ANSI/VT100转码
 
 rl.question('your question?', callback); // 接受到用户输入后，触发callback
 rl.close(); // 结束readline，返回到系统上下文环境
@@ -143,7 +143,7 @@ Buffer模块是全局性，不需要require
 
 初始化buffer对象
 var buffer1 = new Buffer(['0x5e', '0x5e']);
-var buffer2 = new Buffer('nodejs', 'utf8'); // 常见的编码方式，utf8(nodejs默认),ascii, utf16le, base64, binary, hex ...
+var buffer2 = new Buffer('nodejs', 'utf8'); // 常见的编码方式，utf8(nodejs默认),ascii, utf16le, base64, binary, hex...
 var buffer3 = new Buffer(16);
 buffer3.write('this is buffer', 0, 'utf8');
 
@@ -189,8 +189,8 @@ Buffer.concat(list, [totalLength]);  // totalLength，定义缓冲区的最大�
 
 Stream模块传送数据
 Stream模块需要require
-数据流是可读、可写或即可读又可写的内存结构。
-流的目的是提供一种从一个地方向另一个地方传送数据的通用机制。它们公开各种事件。一般用于http和文件。
+数据流是可读、可写或即可读又可写的内存结构
+流的目的是提供一种从一个地方向另一个地方传送数据的通用机制。它们公开各种事件。一般用于http和文件
 
 Readable流
 Readable流有两种模式
@@ -208,8 +208,8 @@ readable.setEncoding(encoding);
 readable.pause();  // 暂停data事件，会触发end和close事件
 readable.resume();
 readable.push(data | buffer); // 发送数据，可多次调用，参数为null时，代表通知接收方数据已发送完毕
-readable.pipe(destination, [options]);  // 把这个流的输出传递到一个由destination指定writeable流对象。
-readable.unpipe([destination]); // 如果不指定目标，所有导流都会被解除
+readable.pipe(destination, [options]);  // 把这个流的输出传递到一个由destination指定的writeable流对象
+readable.unpipe([destination]); // 如果不指定目标，所有pipe都会被解除
 
 自定义Readable流
 var stream = require('stream');
@@ -218,7 +218,7 @@ util.inherits(MyReadableStream, stream.Readable);
 function MyReadableStream(opt) {
 	stream.Readable.call(this, opt);
 }
-还需要在MyReadableStream的原型上实现一个_read()方法，_read()方法通过调用this.push()来输出Readable对象中的数据。
+还需要在MyReadableStream的原型上实现一个_read()方法，_read()方法通过调用this.push()来输出Readable对象中的数据
 
 只需调用一次read()
 
@@ -239,7 +239,7 @@ util.inherits(MyWritablStream, stream.Writable);
 function MyWritablStream(opt) {
 	stream.Writable.call(this, opt);
 }
-还需要在MyWritablStream的原型上实现一个_write(data, encoding, callback)方法。
+还需要在MyWritablStream的原型上实现一个_write(data, encoding, callback)方法
 
 需多次调用write(),最后一次调用end()
 
@@ -251,14 +251,14 @@ util.inherits(MyDuplexStream, stream.Duplex);
 function MyDuplexStream(opt) {
 	stream.Duplex.call(this, opt);
 }
-// opt参数，allowHalfOpen属性为true时，即使可写入端已经结束，可读取端也保持打开状态。false时，结束可写入端时也会结束可读取端。
-还需要在MyDuplexStream的原型上同时实现_read(size)和_write(data, encoding, callback)方法。
+// opt参数，allowHalfOpen属性为true时，即使可写入端已经结束，可读取端也保持打开状态。false时，结束可写入端时也会结束可读取端
+还需要在MyDuplexStream的原型上同时实现_read(size)和_write(data, encoding, callback)方法
 
 需多次调用write(),无需手动调用read(),自动触发read()
 
 Transform(变换)流
-Transform流扩展了Duplex流，可修改Writeable流和Readable流之间的数据。
-Duplex流和Transform流之间一个主要区别是，Transform流中不需要实现_read()和_write()原型方法，这些被作为直通函数提供。但需要实现_transform(chunk, encoding, callback)和_flush(callback)方法。此_transform()方法应接受来自write()的数据，对其修改，并推出修改后的数据。
+Transform流扩展了Duplex流，可修改Writeable流和Readable流之间的数据
+Duplex流和Transform流之间一个主要区别是，Transform流中不需要实现_read()和_write()原型方法，这些被作为直通函数提供。但需要实现_transform(chunk, encoding, callback)和_flush(callback)方法。此_transform()方法应接受来自write()的数据，对其修改，并推出修改后的数据
 
 自定义Transform流
 var stream = require('stream');
@@ -267,17 +267,17 @@ util.inherits(MyTransformStream, stream.Transform);
 function MyTransformStream(opt) {
 	stream.Transform.call(this, opt);
 }
-还需要在MyTransformStream的原型上同时实现_transform(chunk, encoding, callback)和_flush(callback)方法。在_transform方法中，使用this.push()方法，触发data事件。
+还需要在MyTransformStream的原型上同时实现_transform(chunk, encoding, callback)和_flush(callback)方法。在_transform方法中，使用this.push()方法，触发data事件
 
 需多次调用write(),无需手动调用read()
 
 把Readable流用管道输送到Writable流
-readable.pipe(writable, {end: true});  // end为true时，Writable流随着Readable流的结束而结束。
+readable.pipe(writable, {end: true});  // end为true时，Writable流随着Readable流的结束而结束
 
 无需手动调用write(),无需手动调用read()
 
 Zlib模块压缩和解压缩数据
-Zlib压缩模块，使你非常方便、高效地压缩和解压缩在缓冲区中的数据。但是，压缩数据需要花费cpu周期，需要权衡利弊。
+Zlib压缩模块，使你非常方便、高效地压缩和解压缩在缓冲区中的数据。但是，压缩数据需要花费cpu周期，需要权衡利弊
 Zlib支持如下压缩方法：
 gzip/gunzip  标准gzip压缩
 deflate/inflate  基于Huffman编码的标准deflate压缩算法
@@ -295,7 +295,7 @@ var gzip = zlib.createGzip();
 readableStream.pipe(gzip).pipe(writableStream);
 
 nodejs访问文件系统
-fs模块，几乎所有功能，都有两种形式可供选择，同步和异步。
+fs模块，几乎所有功能，都有两种形式可供选择，同步和异步
 异步调用，自动处理异常。同步调用中，处理异常，必须使用try/catch块
 
 打开和关闭文件
@@ -407,8 +407,8 @@ fs.realpathSync(path, optionObj);
 截取文件内容
 fs.truncate(path, len, callback);  // len，代表字节，callback，返回true或false，常用于截断不重要的文件，如日志
 fs.truncateSync(path, len);
-fs.ftruncate(fd, len, callback); // fd，文件描述符
-fs.ftruncateSync(fd, len); // fd，文件描述符
+fs.ftruncate(fd, len, callback);  // fd，文件描述符
+fs.ftruncateSync(fd, len);  // fd，文件描述符
 
 更改文件所有权
 fs.chown(path, uid, gid, callback);
@@ -417,7 +417,7 @@ fs.fchown(fd, uid, gid, callback);
 fs.fchownSync(fd, uid, gid);
 
 更改文件权限
-fs.chmod(path, mode, callback); // mode，权限码，如，777，一般是000
+fs.chmod(path, mode, callback);  // mode，权限码，如，777，一般是000
 fs.chmodSync(path, mode);
 fs.fchmod(fd, mode, callback);
 fs.fchmodeSync(fd, mode);
@@ -428,7 +428,7 @@ fs.watch(path, [options], callback); // options包含两个属性persistent(持�
 fs.watchFile(path, [options], callback);  // options包含两个属性persistent(持续，true或false)和interval(单位ms)，callback参数，curFile，prevFile
 
 在nodejs中实现http服务
-因为http模块，相当低层次，所以更可能使用的地方是实现供应用程序使用的后端web服务。
+因为http模块，相当低层次，所以更可能使用的地方是实现供应用程序使用的后端web服务
 http://user:pass@host.com:80/resource/path/?query=string#hash
 http  协议
 user:pass  身份验证
@@ -449,7 +449,7 @@ path.basename(path, fileExt); // 根据一个绝对路径及其文件后缀名(�
 
 nodejs提供url模块，把一个url字符串换成一个url对象
 url.parse(urlStr, [parseQueryString], [slashesDenoteHost]);
-parseQueryString参数默认为false，如果为true，则将url中的查询字符串部分，转换成对象字面量。
+parseQueryString参数默认为false，如果为true，则将url中的查询字符串部分，转换成对象字面量
 slashesDenoteHost参数默认为false，如果为true，则将//host/path解析为{host: 'host', pathname: '/path'}，而不是{pathname: '//host/path'}
 url对象属性
 href // 'http://user:password@localhost:8000/index?name=bugong'
@@ -482,8 +482,8 @@ querystring.stringify(obj, [sep], [eq]);
 
 请求、响应和服务器对象
 http.ClientRequest对象
-构建http客户端时，调用http.request()使得一个ClientRequest对象被创建。ClientRequest对象实现了一个Writable流。ClientRequest对象来启动、监控和处理来自服务器端的响应。
-http.request(options, callback);  // 实现一个ClientRequest对象,callback回调函数唯一的参数是一个IncomingMessage对象，该对象是来自服务器的响应。
+构建http客户端时，调用http.request()使得一个ClientRequest对象被创建。ClientRequest对象实现了一个Writable流。ClientRequest对象来启动、监控和处理来自服务器端的响应
+http.request(options, callback);  // 实现一个ClientRequest对象,callback回调函数唯一的参数是一个IncomingMessage对象，该对象是来自服务器的响应
 
 clientReq = http.request(options, function (response) {});
 clientReq.end();
@@ -519,7 +519,7 @@ setNoDelay([noDelay]);
 setSocketKeepAlive([enable], [initialDelay]);
 
 http.ServerResponse对象
-当http服务器，接收到一个request请求时，会创建一个ServerResponse对象。这个对象作为第二个参数被传递到request请求的处理程序。使用ServerResponse对象制定并发送到客户端的响应。ServerResponse对象，实现了一个writable流。
+当http服务器，接收到一个request请求时，会创建一个ServerResponse对象。这个对象作为第二个参数被传递到request请求的处理程序。使用ServerResponse对象制定并发送到客户端的响应。ServerResponse对象，实现了一个writable流
 http.createServer(function (req, res) {  // res即http.ServerResponse对象
 });
 
@@ -541,7 +541,7 @@ write(chunk, [encoding]);
 addTrailers(header);
 
 http.IncomingMessage对象
-无论是http服务器还是http客户端，都创建IncomingMessage对象。IncomingMessage对象实现了一个readable流。
+无论是http服务器还是http客户端，都创建IncomingMessage对象。IncomingMessage对象实现了一个readable流
 
 IncomingMessage对象的事件、属性和方法
 close
@@ -574,8 +574,8 @@ server.listen(handle, [callback]);  // handle一个已经打开的文件描述�
 server.close([callback]);
 
 HTTPS服务器和客户端
-超文本传输安全协议(HTTPS)是一种在HTTP客户端和服务器之间提供安全通信的通信协议。实际上只是在传输层安全性/安全套接字层(TLS/SSL)协议上面运行的HTTP。
-HTTPS采用两种方式提供安全保护：1、使用长期的公钥和密钥对短期会话密钥进行交换，使数据加密。2、身份验证，防止中间人攻击。
+超文本传输安全协议(HTTPS)是一种在HTTP客户端和服务器之间提供安全通信的通信协议。实际上只是在传输层安全性/安全套接字层(TLS/SSL)协议上面运行的HTTP
+HTTPS采用两种方式提供安全保护：1、使用长期的公钥和密钥对短期会话密钥进行交换，使数据加密。2、身份验证，防止中间人攻击
 
 nodejs中使用https模块实现HTTPS服务器和客户端。使用https之前，需要生成一个私钥和一个公共证书。可使用平台的OpenSSL库生成。P127
 生成一个私钥
@@ -616,16 +616,16 @@ var options = {
 };
 
 nodejs实现套接字服务
-套接字允许一个进程通过一个ip地址和端口与另一个进程实现通信。nodejs的net模块，可创建套接字服务器，和连接到套接字服务器的客户端。nodejs的tls模块，可实现TLS套接字服务器和客户端。
+套接字允许一个进程通过一个ip地址和端口与另一个进程实现通信。nodejs的net模块，可创建套接字服务器，和连接到套接字服务器的客户端。nodejs的tls模块，可实现TLS套接字服务器和客户端
 
 网络套接字
-nodejs套接字，实现了Duplex流，套接字是http模块的底层结构，如果你不需要处理如GET和POST的web请求的功能，你只需要点对点的传输数据，使用套接字可以提供一个轻量级的解决方案和更多的控制。
-进程不能直接共享内存，使用套接字可实现内存共享。
+nodejs套接字，实现了Duplex流，套接字是http模块的底层结构，如果你不需要处理如GET和POST的web请求的功能，你只需要点对点的传输数据，使用套接字可以提供一个轻量级的解决方案和更多的控制
+进程不能直接共享内存，使用套接字可实现内存共享
 
 TCP(transmission control protocol，传输控制协议)服务器和Socket对象
 net.Socket对象
-Socket对象，同时在套接字服务器和客户端套接字上创建，并允许数据在它们之间来回写入和读取。Socket对象实现了Duplex流。
-在套接字客户端，当调用net.connect()或net.createConnection()时，Socket对象被创建。nodejs的net模块没有明确的客户端对象，Socket对象就是客户端。
+Socket对象，同时在套接字服务器和客户端套接字上创建，并允许数据在它们之间来回写入和读取。Socket对象实现了Duplex流
+在套接字客户端，当调用net.connect()或net.createConnection()时，Socket对象被创建。nodejs的net模块没有明确的客户端对象，Socket对象就是客户端
 客户端创建一个Socket对象的有3中方式
 var socket = net.connect(options, [connectListener]);
 var socket = net.createConnection(options, [connetionListener]);
@@ -673,8 +673,8 @@ bytesRead // 套接字接收到的数据的字节长度
 bytesWritten // 套接字发送出的数据的字节长度
 
 net.Server对象
-调用net.createServer()时，Server对象被创建。当服务器接收到一个连接时，服务器会创建一个Socket对象，并把它传递给正在监听的任何事件处理程序。
-var server = net.createServer([options], [connectionListener]);  // connectionListener的参数为Socket对象。
+调用net.createServer()时，Server对象被创建。当服务器接收到一个连接时，服务器会创建一个Socket对象，并把它传递给正在监听的任何事件处理程序
+var server = net.createServer([options], [connectionListener]);  // connectionListener的参数为Socket对象
 
 options配置项
 allowHalfOpen  // 默认为false，即连接方式为全开
@@ -696,10 +696,10 @@ unref();
 ref();
 
 Server对象的属性
-maxConnection  设置服务器拒绝连接之前的接受的最大连接数目。如果一个进程使用child_process.fork()被派生给一个子进程处理，则不应该使用这个选项。
+maxConnection  设置服务器拒绝连接之前的接受的最大连接数目。如果一个进程使用child_process.fork()被派生给一个子进程处理，则不应该使用这个选项
 
 TLS套接字服务器和客户端
-TLS采用两种方式提供安全保护：1、使用长期的公钥和密钥对短期会话密钥进行交换，使数据加密。2、身份验证，防止中间人攻击。
+TLS采用两种方式提供安全保护：1、使用长期的公钥和密钥对短期会话密钥进行交换，使数据加密。2、身份验证，防止中间人攻击
 nodejs中使用tls模块实现TLS套接字服务器和客户端，使用TLS之前，需要为客户端和服务器生成一个私钥和公共证书，借助平台的openssl。P143
 生成一个私钥
 openssl genrsa -out server.pem 2048
@@ -787,20 +787,20 @@ bind(callback); // 成功bind后触发回调
 close();
 
 在nodejs中使用多处理器扩展应用程序
-nodejs允许用户从主应用程序把工作派生为随后可以彼此并行和主应用程序一起处理的各个进程。
+nodejs允许用户从主应用程序把工作派生为随后可以彼此并行和主应用程序一起处理的各个进程
 为了方便使用多进程，nodejs提供3个模块
 1、process(进程)模块，提供了访问正在运行的进程的能力
 2、child_process(子进程)模块，使你可以创建子进程，并与它们通信
 3、cluster(集群)模块，提供了实现共享相同端口的集群服务器的能力，从而允许多个请求被同时处理
 
 process模块
-process模块是一个全局模块，无需使用require()。该模块使你能够访问正在运行的进程及底层硬件体系结构信息。
-process模块为进程的stdin,stdout,stderr提供了标准io管道的功能。
+process模块是一个全局模块，无需使用require()。该模块使你能够访问正在运行的进程及底层硬件体系结构信息
+process模块为进程的stdin,stdout,stderr提供了标准io管道的功能
 stdin是进程的标准输入管道，通常是控制台。
 process.stdin.on('data', function (data) {
 	console.log('hi:' + data);
 });
-process模块的stdout和stderr属性是可以相应处理的Writable流。
+process模块的stdout和stderr属性是可以相应处理的Writable流
 实现标准输出流：
 process.stdout.write('hello nodejs! \n');
 实现标准错误流：
@@ -816,7 +816,7 @@ process.stdin.on('readable', function () {
 process.stdin.on('end', function () { // 用户可以通过ctrl + d，触发end事件，结束控制台输入流
 });
 
-进程信号，process模块的一个特点是，它允许你注册监听器来处理操作系统发送给一个进程的信号。
+进程信号，process模块的一个特点是，它允许你注册监听器来处理操作系统发送给一个进程的信号
 process.on('SIGBREAK', function () {
 });
 操作系统可以发送给nodejs进程的事件
@@ -855,19 +855,19 @@ chdir(directoryName); // 改变应用程序目录，directoryName必须是完整
 memoryUsage();
 uptime();
 hrtime();
-gitgid();
+getgid();
 setgid(id);
-gituid();
+getuid();
 setuid(id);
 getgroups();
 setgroups(groups);
 initgroups(user, extra_group);
 
 子进程
-要使nodejs应用程序能利用服务器多个处理器的优势，就需要把工作分包给子进程。child_process模块使你可以在其他进程上产生、派生并执行工作。子进程不能直接访问彼此或父进程中的全局内存。
+要使nodejs应用程序能利用服务器多个处理器的优势，就需要把工作分包给子进程。child_process模块使你可以在其他进程上产生、派生并执行工作。子进程不能直接访问彼此或父进程中的全局内存
 
 ChildProcess对象
-child_process模块提供了一个ChildProcess的新类，它作为可以从父进程访问子进程的表示形式。这使得你可以从启动子进程的父进程控制、结束、并将消息发送到子进程。process模块也是一个ChildProcess对象。
+child_process模块提供了一个ChildProcess的新类，它作为可以从父进程访问子进程的表示形式。这使得你可以从启动子进程的父进程控制、结束、并将消息发送到子进程。process模块也是一个ChildProcess对象
 
 ChildProcess对象上的事件
 message
@@ -891,7 +891,7 @@ connected
 spawn()是最原始的创建子进程的方法，exec(),execFile(),fork()都是通过进一步封装spawn()实现的
 
 使用chile_process.spawn()在另一个nodejs实例中产生一个进程,返回一个ChildProcess对象  // spawn,大量生产
-spawn()和exec()/execFile()的主要区别是。产生的进程中的stdio可以进行配置，并且stdout和stderr都是父进程中的Readable流。这意味着exec()/execFile()必须先执行完成才能读取缓冲区输出。但是一旦一个spawn()进程的输出数据已被写入，你就可以读出它。
+spawn()和exec()/execFile()的主要区别是。产生的进程中的stdio可以进行配置，并且stdout和stderr都是父进程中的Readable流。这意味着exec()/execFile()必须先执行完成才能读取缓冲区输出。但是一旦一个spawn()进程的输出数据已被写入，你就可以读出它
 var childProcess = child_process.spawn(command, [args], [options]);  // 无callback，args为该命令参数数组，如：child_process.spawn('ls', ['-a']);
 spawn()中options可配置项
 cwd
@@ -905,7 +905,7 @@ stdio
 var childProcess = child_process.exec(command, [options], callback);  // command，可以直接将该命令的参数放置其中，callback，3个参数,error,stdout,stderr，error.code子进程的退出码，error.signal结束子进程的信号名
 
 使用child_process.execFile()在另一个进程上执行一个可执行文件，返回一个ChildProcess对象。未使用子shell，执行的文件必须是一个二进制的可执行文件
-var childProcess = child_process.execFile(file, args, options, callback);  // file，二进制可执行文件，如：'／bin/ls'，args，类似spawn()，callback，3个参数,error,stdout,stderr
+var childProcess = child_process.execFile(file, args, options, callback);  // file，二进制可执行文件，如：'/bin/ls'，args，类似spawn()，callback，3个参数,error,stdout,stderr
 
 exec()和execFile()中options可配置项
 cwd
@@ -928,7 +928,7 @@ silent // 缺省时，所派生的node进程的stdout、stderr会关联到父进
 
 进程集群(可通过child_process.fork()手动实现)
 cluster模块  // cluster 群
-cluster模块，可以让你很快实现在同一台机器上的运行的TCP或HTTP服务器集群。目前的api并不稳定。
+cluster模块，可以让你很快实现在同一台机器上的运行的TCP或HTTP服务器集群。目前的api并不稳定
 
 cluster模块事件
 fork
@@ -948,7 +948,7 @@ worker
 workers
 
 Worker对象
-当一个工作进程被派生时，一个新的Worker对象同时在主进程和工作进程中创建。
+当一个工作进程被派生时，一个新的Worker对象同时在主进程和工作进程中创建
 
 Worker对象的事件
 message
@@ -965,7 +965,7 @@ kill([signal])
 disconnect()
 
 os模块
-nodejs的os模块，可以使你获取有关操作系统的信息，如操作系统类型和版本、平台体系结构，还能获取编程信息，如可用内存、临时文件夹位置，以及行尾字符。
+nodejs的os模块，可以使你获取有关操作系统的信息，如操作系统类型和版本、平台体系结构，还能获取编程信息，如可用内存、临时文件夹位置，以及行尾字符
 os模块的方法
 type(); // 当前操作系统类型，首字母大写，如：Windows_NT(一般认为windows7是NT系统的延续)、Linux
 platform(); // 当前操作系统平台，如：win32、linux
@@ -983,7 +983,7 @@ loadavg();
 EOL
 
 util模块
-nodejs的util模块，是一个工具库，提供了如格式化字符串、将对象转换为字符串、检查对象类型、输出流的同步写入，以及对象继承的增强。
+nodejs的util模块，是一个工具库，提供了如格式化字符串、将对象转换为字符串、检查对象类型、输出流的同步写入，以及对象继承的增强
 
 检测对象类型
 util.isArray(obj);
@@ -1006,7 +1006,7 @@ customInspect  // 默认为true，设置为false时，被检查的对象的任�
 格式化字符串
 util.format(formatStr, [...]);  // foramatStr中，受支持的占位符。%s,%d,%j(json字符串),%%
 
-同步写入输出流，同步写数据到stdout和stderr，阻塞进程，直到写操作完成。
+同步写入输出流，同步写数据到stdout和stderr，阻塞进程，直到写操作完成
 util.log(string);
 util.debug(string);
 util.error([...]);
