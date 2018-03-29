@@ -85,7 +85,7 @@ use sayings::japanese::greetings as ja_greetings;
 use sayings::japanese::farewells::*;
 use sayings::english::{self, greetings as en_greetings, farewells as en_farewells};
 几种crate类型
-bin, lib, rlib, dylib, staticlib
+bin, lib, rlib, dylib, cdylib, staticlib
 
 属性  // 目前，不能创建自己的属性，rust编译器定义了它们
 属性，以某种方式改变它们附加到的项的意义
