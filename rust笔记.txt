@@ -395,6 +395,8 @@ or_else
 
 try!  // 事实上就是match Result的封装，当遇到Err(E)时会提早返回，所有的错误都转化成Box<Error>，try!不能直接放在main函数里，此时，编译器会报错，因为main函数无返回值
 
+?运算符  // try!的语法糖，当遇到Err(E)时会提早返回，let mut file = File::open("foo.txt")?;
+
 不定长类型
 ?Sized，这个?，读作“T可能是Sized的”，意味着这个限制是特殊的：它让我们的匹配更宽松
 struct Foo<T: ?Sized> {
