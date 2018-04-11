@@ -111,14 +111,13 @@ parent ngOnDestroy
 
 ng-content  // select属性，root component中不能使用
 
+forwardRef  // 让我们可以在使用构造函数注入时，使用尚未定义的依赖对象类型（定义的class未提升），@Inject(forwardRef(() => Buffer)) private buffer
 ChangeDetectorRef  // 组件的变化检测器的引用，markForCheck()（下一个周期，强制执行变化检测），detach()，reattach()，detectChanges()（ 从该组件到各个子组件执行一次变化检测）
 ElementRef  // 封装不同平台下视图层中的native元素
+ComponentRef  // 组件的引用
 TemplateRef  // 模板的引用，TemplateRef实例中引用ElementRef（comment元素的封装），createEmbeddedView(null)返回embeddedViewRef
 ViewRef  // 视图对象，表示angular视图元素
 EmbeddedViewRef  // 内嵌视图，表示模板中定义的视图元素，rootNodes属性包含了模板的所有节点，通常与TemplateRef配合使用，继承自ViewRef
 ViewContainerRef  // 表示一个视图容器，用于创建和管理内嵌视图（TemplateRef）或组件视图（ComponentRef），实例中引用ElementRef，createEmbeddedView(templateRef)简化通过模板创建视图，createComponent(...)
-ComponentRef  // 组件的引用
-
-forwardRef  // 让我们可以在使用构造函数注入时，使用尚未定义的依赖对象类型（定义的class未提升），@Inject(forwardRef(() => Buffer)) private buffer
 
 ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模块
