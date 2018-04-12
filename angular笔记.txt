@@ -121,3 +121,6 @@ EmbeddedViewRef  // 内嵌视图，表示模板中定义的视图元素，rootNo
 ViewContainerRef  // 表示一个视图容器，用于创建和管理内嵌视图（TemplateRef）或组件视图（ComponentRef），实例中引用ElementRef，createEmbeddedView(templateRef)简化通过模板创建视图，createComponent(...)
 
 ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模块
+
+打包发布命令
+ng build --prod --aot --base-href /users --deploy-url /public
