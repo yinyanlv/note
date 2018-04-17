@@ -13,6 +13,7 @@ cargo new hello_rust --bin  // --bin，将程序编译为一个可执行文件�
 cargo update
 cargo install
 cargo doc  // 根据注释，生成html文档
+cargo check
 
 控制台想获取更多的信息，配置rust环境RUST_BACKTRACE=1
 
