@@ -110,7 +110,7 @@ parent ngOnDestroy
 @HostBinding()  // 动态设置宿主元素的属性值，@HostBinding('attr.role') role = 'button'，@HostBinding('class.pressed') isPressed: boolean
 
 ng-content  // select属性，root component中不能使用
-ng-template  // ngTemplateOutlet属性，ngOutletContext属性
+ng-template  // ngTemplateOutlet属性，ngTemplateOutletContext属性
 
 forwardRef  // 让我们可以在使用构造函数注入时，使用尚未定义的依赖对象类型（定义的class未提升），@Inject(forwardRef(() => Buffer)) private buffer
 ChangeDetectorRef  // 组件的变化检测器的引用，markForCheck()（下一个周期，强制执行变化检测），detach()，reattach()，detectChanges()（ 从该组件到各个子组件执行一次变化检测）
