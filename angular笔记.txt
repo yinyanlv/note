@@ -85,12 +85,14 @@ parent ngOnDestroy
 })
 
 @Directive({
-  selector: '[test]',
+  selector: '[ngModel]:not([formControlName]):not([formControl])',
   host: {
     '(click)': 'onClick($event.target)',
     'role': 'button',
     '[class.pressed]': 'isPressed'
-  }
+  },
+  providers: [formControlBinding],
+  exportAs: 'ngModel'  // 导出指令实例，使得可以在模板中引用指令的实例，如#i="ngModel"
 })
 
 @Pipe()
@@ -121,7 +123,32 @@ ViewRef  // 视图对象，表示angular视图元素
 EmbeddedViewRef  // 内嵌视图，表示模板中定义的视图元素，rootNodes属性包含了模板的所有节点，通常与TemplateRef配合使用，继承自ViewRef
 ViewContainerRef  // 表示一个视图容器，用于创建和管理内嵌视图（TemplateRef）或组件视图（ComponentRef），实例中引用ElementRef，createEmbeddedView(templateRef)简化通过模板创建视图，createComponent(...)
 
-ngModel指令，数据双向绑定，需导入FormsModule（@angular/forms）模块
+form  // form标签上，标注属性novalidate，禁用浏览器原生验证
+模板驱动式表单  // FormsModule
+ngForm  // 可通过#f="ngForm"，将ngForm实例赋值给变量f
+ngModel  // 数据双向绑定，可通过#i="ngModel"，将ngModel实例赋值给变量i，<input [(ngModel)]="user.name"> == <input [ngModel]="user.name" (ngModelChange)="user.name = $event">
+ngModelGroup  // 绑定model对象的嵌套属性名，可通过#g="ngModelGroup"，将ngModelGroup实例赋值给变量g
+ngSubmit  // 输出属性，表单提交时触发
+required
+minlength
+maxlength 
+email 
+pattern
+...
+响应式表单  // ReactiveFormsModule
+FormControl  // 用于跟踪组件的值和验证状态
+formControl  // 在模板中使用，绑定某FormControl实例
+formControlName  // 在模板中使用，绑定FormGroup对象中对应的FormControl实例，此时input等组件可不指定name属性
+FormGroup  
+formGroup  // 在模板中使用，绑定某FormGroup实例
+formGroupName  // 在模板中使用，绑定FormGroup对象的嵌套FormGroup实例
+FormArray  // 需在FormGroup内部使用
+formArrayName  // 在模板中使用，绑定FormGroup对象中对应的FormArray实例
+FormBuilder  // group()，control()，array()等方法，方便创建FormGroup、FormControl、FormArray实例
+ngSubmit
+自定义验证器函数  // 可定义一个Directive，implements Validator，实现validate方法，参数AbstractControl，验证通过，返回null，不通过，返回一个只包含一个属性的对象如：{abc: boolean | string | Object ...} ，在模板中通过调用hasError('abc')判断是否通过，可以通过getError('abc', path?: string[])获取错误信息，path为该AbstractControl实例在FromGroup中的层级结构
+同步验证器  // provide: NG_VALIDATORS， multi: true
+异步验证器  // provide: NG_ASYNC_VALIDATORS， multi: true，监听AbstractControl实例的valueChanges，返回一个Observable对象 
 
 动画
 对于动态创建的component，调用destroy方法，:leave animation不触发。:leave，只能在host元素上触发
