@@ -153,5 +153,9 @@ ngSubmit
 动画
 对于动态创建的component，调用destroy方法，:leave animation不触发。:leave，只能在host元素上触发
 
+shadow piercing
+:host ::ng-deep {  // :host可不加，>>> and /deep/ are deprecated
+}
+
 打包发布命令
 ng build --prod --aot --base-href /users --deploy-url /public
