@@ -111,8 +111,12 @@ parent ngOnDestroy
 @HostListener()  // 为宿主元素添加事件监听， @HostListener('click', ['$event.target', ...])，@HostListener('document:click', ['$event'])
 @HostBinding()  // 动态设置宿主元素的属性值，@HostBinding('attr.role') role = 'button'，@HostBinding('class.pressed') isPressed: boolean
 
-ng-content  // select属性，root component中不能使用
+ng-content  // select属性，不能在root component中使用
 ng-template  // ngTemplateOutlet属性，ngTemplateOutletContext属性（$implicit）
+ng-container  // *ngComponentOutlet指令，用于动态创建组件，*ngComponentOutlet="componentTypeExpression; injector: myInjector; content: myContent; ngModuleFactory: myModule;"
+injector  // 可选，component需要注入其它服务时使用，this.myInjector = ReflectiveInjector.resolveAndCreate([TestService, ...], this.injector); this.injector为Injector类的实例，通过constructor依赖注入
+content  // 可选，component模板中有ng-content时使用，this.myContent = [[document.createTextNode('hello')], [document.createTextNode('world')]]; 注意是二维数组，第一维的数组索引，代表ng-content的位置，第二维为该ng-content中要存放的内容
+ngModuleFactory  // 可选，component来自其它模块时使用，this.myModule = this.compiler.compileModuleSync(OtherModule); this.compiler为Compiler类的实例，通过constructor依赖注入，OtherModule不需要事先导入到AppModule中，this.myModule的类型为NgModuleFactory<any>
 
 forwardRef  // 让我们可以在使用构造函数注入时，使用尚未定义的依赖对象类型（定义的class未提升），@Inject(forwardRef(() => Buffer)) private buffer
 ChangeDetectorRef  // 组件的变化检测器的引用，markForCheck()（下一个周期，强制执行变化检测），detach()，reattach()，detectChanges()（ 从该组件到各个子组件执行一次变化检测）
@@ -154,7 +158,7 @@ ngSubmit
 对于动态创建的component，调用destroy方法，:leave animation不触发。:leave，只能在host元素上触发
 
 shadow piercing
-:host ::ng-deep {  // :host可不加，>>> and /deep/ are deprecated
+:host ::ng-deep {  // :host可不加，即全局样式，此时要注意样式的隔离，>>> and /deep/ are deprecated
 }
 
 打包发布命令
