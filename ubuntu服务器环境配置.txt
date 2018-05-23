@@ -17,6 +17,12 @@ sudo // 暂时切换到超级用户模式（root）以执行超级用户权限�
 sudo -i  // 为了频繁的执行某些只有超级用户才能执行的权限，而不用每次输入密码，可以使用该命令。提示输入密码时该密码为当前账户的密码。没有时间限制。执行该命令后提示符变为“#”而不是“$”。想退回普通账户时可以执行“exit”或“logout” ，运行结果，PWD=/root
 sudo su  // 运行sudo命令给su命令提权（实质上就是su，而su默认是获得root权限），运行结果，PWD=/home/用户名（当前用户主目录）
 
+查看ubuntu版本号
+sudo lsb_release -a
+
+查看linux内核版本号
+uname -r or uname -a
+
 查看进程
 ps -el  // e，查看所有进程状态，ps默认只查看本终端的进程，l，展示进程相关的其它信息
 |  // 管道
@@ -68,6 +74,19 @@ sudo apt-get install git
 安装vim
 sudo apt-get install vim
 
+安装docker
+1、sudo apt-get update
+2、sudo apt-get install apt-transport-https ca-certificates  // 升级source列表并保证https和ca证书成功安装
+3、sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D  // 增加新的GPG密钥
+4、vi /etc/apt/sources.list.d/docker.list  // 新增或编辑source列表里的docker.list文件，删除已有的entries，按照系统版本增加entry（Ubuntu Xenial 16.04 (LTS)），deb https://apt.dockerproject.org/repo ubuntu-xenial main
+5、sudo apt-get purge lxc-docker  // 重新执行更新操作，并删除老的docker repo，没有安装的话，跳过
+6、sudo apt-cache policy docker-engine  // 查看是否有正确的可用版本
+7、sudo apt-get install linux-image-extra-$(uname -r)  // 从14.04版本以上开始，docker推荐安装linux-image-extra
+8、sudo apt-get update
+9、sudo apt-get install docker-engine  // 安装docker
+10、sudo service docker start  // 启动docker
+11、sudo docker run hello-world  // 测试安装是否正常
+
 安装nvm
 1、git clone https://github.com/creationix/nvm.git ~/.nvm && cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`
 2、. ~/.nvm/nvm.sh
@@ -90,3 +109,27 @@ sudo apt-get install nginx
 
 安装pm2
 npm install -g pm2
+
+windows环境ssh
+PuTTY
+PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
+
+
+--部署实例--
+依赖Docker、Nginx、Let's Sencrypt证书等
+
+安装nginx
+sudo apt-get install nginx
+/usr/sbin/nginx  // 默认配置启动
+
+安装acme.sh  // 简化申请Let's Sencrypt证书，并自动续签证书，支持http和dns两种方式签发证书
+curl  https://get.acme.sh | sh  // 安装acme.sh
+export Ali_Key="**********"  // 阿里云的Access key
+export Ali_Secret="**********"
+acme.sh --issue --dns dns_ali -d abc.com -d *.abc.com  // 使用dns的方式签发证书，目前Let's Sencrypt已支持泛域名
+acme.sh --installcert -d abc.com \  // copy证书到指定目录下
+        --key-file /etc/nginx/ssl/abc.key \
+        --fullchain-file /etc/nginx/ssl/fullchain.cer \
+        --reloadcmd "service nginx force-reload"
+acme.sh  --upgrade  --auto-upgrade  // 设置自动升级acme.sh
+acme.sh --upgrade  --auto-upgrade  0  // 关闭自动升级acme.sh
