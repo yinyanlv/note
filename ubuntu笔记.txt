@@ -50,6 +50,15 @@ sudo kill {pid}
 后台运行进程
 nohup cmd [args...] &
 
+查看运行文件所在的路径
+which node
+
+查看文件安装路径
+whereis android
+
+查看当前目录的完整路径
+pwd
+
 文件操作
 cp -r a.zip /home/test
 rm -r /home/test
@@ -66,16 +75,6 @@ tar [-cxtzjvfpPN]
 -f： 要处理的文件
 tar -zxvf 
 
-查看运行文件所在的路径
-which node
-
-查看文件安装路径
-whereis android
-
-安全软件
-iptables  // 与最新的3.5版本Linux内核集成的IP信息包过滤系统，有利于在Linux系统上更好地控制IP信息包过滤和防火墙配置
-fail2ban  // 可以监视系统日志，然后匹配日志的错误信息（正则式匹配）执行相应的屏蔽动作
-
 定时任务
 crontab
 
@@ -90,9 +89,6 @@ sudo apt-get --purge remove {packageName}  // 删除包，--purge，清除配置
 sudo apt-get install zsh
 source .zshrc  // 重新载入用户环境变量
 
-安装git
-sudo apt-get install git
-
 安装docker
 1、sudo apt-get update
 2、sudo apt-get install apt-transport-https ca-certificates  // 升级source列表并保证https和ca证书成功安装
@@ -106,39 +102,22 @@ sudo apt-get install git
 10、sudo service docker start  // 启动docker
 11、sudo docker run hello-world  // 测试安装是否正常
 
-安装nvm
-1、git clone https://github.com/creationix/nvm.git ~/.nvm && cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`
-2、. ~/.nvm/nvm.sh
-3、在~/.bashrc, ~/.profile, 或 ~/.zshrc，添加如下行：
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-
-nvm install 4.4.0
-nvm use 4.4.0
-
-安装mongodb
-sudo apt-get install mongodb
-
 安装redis
 sudo apt-get install redis-server
 自动安装redis-cli，安装完，自动运行redis，默认端口号为6379
-
-安装nginx
-sudo apt-get install nginx
-
-安装pm2
-npm install -g pm2
 
 windows环境ssh
 PuTTY
 PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
 
 --服务器配置实例--
-// 登录远程服务器
+# 登录远程服务器
 1、ssh {username}@{server_ip}  // 服务器端未增加该客户端私钥认证时，需输入用户密码
-// 增加系统用户，控制访问权限
+
+# 增加系统用户，控制访问权限
 1、adduser {username}  // 用户信息可不输入，查看所有用户cat /etc/passwd，删除用户userdel -rf {username}
-// 给增加的用户授权
+
+# 给增加的用户授权
 1、gpasswd -a {username} sudo  // add user to group sudo
 2、sudo visudo  // 会出现一个nano编辑器打开的配置文件sudoers.tmp
 3、在配置文件的# User privilege specification后增加一行，{username} ALL=(ALL:ALL) ALL
@@ -148,7 +127,8 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
     第三个ALL: as any target group
     第四个ALL: can run any command
 4、service ssh restart  // 重启ssh服务 
-// 通过ssh，实现无密码登录
+
+# 通过ssh，实现无密码登录
 1、ssh-keygen -t rsa -b 4096 -C "{email_address}"  // 在客户端执行，生成公钥私钥，密码可不输入，会在~/.ssh目录下，生成id_rsa、id_rsa.pub文件
 2、eval "$(ssh-agent -s)"  //  在客户端执行，打开客户端ssh代理
 3、ssh-add ~/.ssh/id_rsa  // 在客户端执行，将id_rsa，加入到代理中
@@ -160,6 +140,110 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
 9、chmod 600 authorized_keys  // 更改文件权限，600，只有拥有者有读写权限
 10、sudo service ssh restart  // 重启ssh服务 
 11、ssh {username}@{server_ip} // 再次在客户端尝试ssh登录，此时无需输入密码
+
+# 更改ssh默认端口，提高服务器安全等级
+1、sudo vi /etc/ssh/sshd_config  // 修改ssh配置
+  更改配置项：
+    Port 2222  // 默认22，0-1024为系统程序预占端口，不要使用，最大值65536
+    UseDNS no  // 默认no
+    PermitEmptyPasswords no  // 默认no，是否允许空密码
+    PermitRootLogin no  // 默认yes，禁止root用户登录，因为阿里云的系统默认管理员都是root，用户名已经暴露，很容易被暴力破解密码
+    PasswordAuthentication no  // 默认yes，禁止通过密码登录，防止暴力破解，只能通过ssh连接登录，安全系数更高
+    AllowUsers {username}  // 新增的配置
+2、sudo service ssh restart
+3、ssh -p 2222 {username}@{server_ip}  // 通过2222端口，连接ssh，此时22端口已不能使用ssh连接
+
+＃ 配置iptables，iptables，与最新的3.5版本linux内核集成的ip信息包过滤系统，用于在linux系统上更好地控制ip信息包过滤和防火墙配置
+1、sudo apt-get update && sudo apt-get upgrade
+2、sudo iptables -F  // 清空目前已有的所有iptables规则
+3、sudo vi /etc/iptables.up.rules  // 新建一个配置文件
+  增加配置内容如下：
+    *filter
+    ＃ 允许所有建立起来的连接
+    -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+    ＃ 允许所有的输出
+    -A OUTPUT -j ACCEPT
+    # 允许所有HTTPS协议请求的连接，443为默认https协议监听端口
+    -A INPUT -p tcp --dport 443 -j ACCEPT
+    # 允许所有HTTP协议请求的连接，80为默认http协议监听端口
+    -A INPUT -p tcp --dport 80 -j ACCEPT
+    # 允许通过ssh连接登录，2222为修改后的监听端口，默认22
+    -A INPUT -p tcp -m state --state NEW --dport 2222 -j ACCEPT 
+    # 允许外网ping服务器
+    -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+    # 记录被拒绝的请求，记录5分钟内的
+    -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied:" --log-level 7
+    # 丢弃某ip短时间内请求多次的可疑请求，限制60秒最多150次请求
+    -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --set 
+    -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --update --seconds 60 --hitcount 150 -j DROP
+    # 拒绝其他所有连接
+    -A INPUT -j REJECT
+    -A FORWARD -j REJECT
+    # 提交所有配置
+    COMMIT
+4、sudo iptables-restore < /etc/iptables.up.rules  // 导入配置的规则
+5、sudo ufw status  // 查看防火墙是否打开，inactive/active
+6、sudo ufw enable  // 打开防火墙
+7、sudo vi /etc/network/if-up.d/iptables  // 设置开机之后，自动启动，新增脚本文件
+  写入脚本如下：
+    #!/bin/sh
+    iptables-restore /etc/iptables.up.rules 
+8、sudo chmod +x /etc/network/if-up.d/iptables  // 赋予脚本执行权限    
+
+# 配置fail2ban，可以监视系统日志，然后匹配日志的错误信息（正则表达式匹配）执行相应的屏蔽动作
+1、sudo apt-get install fail2ban  // 安装fail2ban
+2、sudo vi /etc/fail2ban/jail.conf  // 打开配置文件，配置文件尾部，[ssh]部分，定义了日志存放的位置，默认/var/log/auth.log
+  更改配置项：
+    bantime ＝ 3600  // 默认600   
+    destemail = {email_address}  // 默认root@localhost
+    action = %(action_mw)s  // 默认action = %(action_)s
+3、sudo service fail2ban status  // 查看fail2ban是否运行
+4、sudo service fail2ban stop  // 停止运行
+5、sudo service fail2ban start  // 启动
+
+# 配置nginx
+1、sudo apt-get install nginx
+2、nginx -v  // 查看nginx版本
+3、sudo /etc/nginx/conf.d/{filename}.conf  // 新增配置文件
+  内容如下：
+  upstream my_app_name {
+    server 127.0.0.1:3000;
+  }
+  server {
+    listen 80;
+    server_name 117.11.11.111;  // 服务器外网ip
+    location / {
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Nginx-Proxy true;
+      proxy_pass http://my_app_name;
+      proxy_redirect off;
+    }
+  }
+4、sudo vi /etc/nginx/nginx.conf  // 编辑nginx默认配置文件，查看inclue配置项，自定义的配置文件是否被导入进来，如果未导入，需修改配置
+  修改配置项如下：
+    server_tokens off;  // 该项默认被注释，解注该项，用于去除http响应头的nginx版本信息，只保留nginx名称
+5、sudo nginx -t  // 检测自定义配置文件是否有错误
+6、sudo service nginx reload  // 重启nginx服务
+
+# 设置系统文件监控数目
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+# 安装常用的基础包
+sudo apt-get install vim openssl build-essential libssl-dev wget curl git
+
+# 安装nvm，安装方法：https://github.com/creationix/nvm
+nvm install v6.11.1
+nvm use v6.11.1
+nvm alias default v6.11.1  // 设置系统默认的node版本
+
+# 安装pm2
+npm install -g pm2
+pm2 start {name}
+pm2 list 
+pm2 show {name}  // 查看app详细信息，可查看日志存放位置
+pm2 logs  // 查看实时日志，直接在命令行里查看
 
 --项目部署实例--
 依赖Docker、Nginx、Let's Sencrypt证书等
