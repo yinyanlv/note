@@ -37,6 +37,7 @@ nohup cmd [args...] &
 文件操作
 cp -r a.zip /home/test
 rm -r /home/test
+mv a.txt b.txt  // 更改文件名
 
 压缩解压及打包命令
 tar [-cxtzjvfpPN] 
@@ -62,17 +63,19 @@ fail2ban  // 可以监视系统日志，然后匹配日志的错误信息（正�
 定时任务
 crontab
 
-ubuntu，查看所有安装包
+包管理
 sudo dpkg -l
+sudo apt-get update  // 更新/etc/apt/sources.list和/etc/apt/sources.list.d中列出的源的地址
+sudo apt-get upgrade  // 升级已安装的所有软件包，升级之后的版本就是本地地址里的版本，因此，在执行upgrade之前一定要执行update, 这样才能更新到最新的
+sudo apt-get -y install {packageName}  // 安装包， -y，可选项，安装时是否不询问yes/no
+sudo apt-get --purge remove {packageName}  // 删除包，--purge，清除配置
 
-apt-get删除包
-sudo apt-get --purge remove {packageName}  // --purge，清除配置
+安装zsh  // 加强版shell，安装后，可在该用户系统根目录下的.zshrc文件中，定义shell命令的别名，方便使用，如：alias login_server="ssh root@111.11.11.111"
+sudo apt-get install zsh
+source .zshrc  // 重新载入用户环境变量
 
 安装git
 sudo apt-get install git
-
-安装vim
-sudo apt-get install vim
 
 安装docker
 1、sudo apt-get update
@@ -114,8 +117,35 @@ windows环境ssh
 PuTTY
 PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
 
+--服务器配置实例--
+// 登录远程服务器
+1、ssh {username}@{server_ip}  // 服务器端未增加该客户端私钥认证时，需输入用户密码
+// 增加系统用户，控制访问权限
+1、adduser {username}  // 用户信息可不输入
+// 给增加的用户授权
+1、gpasswd -a {username} sudo  // add user to group sudo
+2、sudo visudo  // 会出现一个nano编辑器打开的配置文件sudoers.tmp
+3、在配置文件的# User privilege specification后增加一行，{username} ALL=(ALL:ALL) ALL
+  说明：
+    第一个ALL: on all hosts (if you distribute the same sudoers file to many computers)
+    第二个ALL: as any target user
+    第三个ALL: as any target group
+    第四个ALL: can run any command
+4、service ssh restart  // 重启ssh服务 
+// 通过ssh，实现无密码登录
+1、ssh-keygen -t rsa -b 4096 -C "{email_address}"  // 在客户端执行，生成公钥私钥，密码可不输入，会在系统.ssh目录下，生成id_rsa、id_rsa.pub文件
+2、eval "$(ssh-agent -s)"  //  在客户端执行，打开客户端ssh代理
+3、ssh-add ~/.ssh/id_rsa  // 在客户端执行，将id_rsa，加入到代理中
+4、ssh-keygen -t rsa -b 4096 -C "{email_address}"  // 在服务器端执行，如果服务器已有公钥私钥，可不执行
+5、eval "$(ssh-agent -s)"  // 在服务器端执行
+6、ssh-add ~/.ssh/id_rsa  // 在服务器端执行
+7、vi authorized_keys  // 在服务器端执行，在.ssh目录下，创建授权文件authorized_keys(文件名固定)，该授权，只对当前服务器端用户有效
+8、将客户端id_rsa.pub文件中的内容，复制到服务器端的authorized_keys文件中，保存
+9、chmod 600 authorized_keys  // 更改文件权限，600，只有拥有者有读写权限
+10、sudo service ssh restart  // 重启ssh服务 
+11、ssh {username}@{server_ip} // 再次在客户端尝试ssh登录，此时无需输入密码
 
---部署实例--
+--项目部署实例--
 依赖Docker、Nginx、Let's Sencrypt证书等
 
 安装nginx
