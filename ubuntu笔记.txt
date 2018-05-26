@@ -50,33 +50,29 @@ sudo kill {pid}
 后台运行进程
 nohup cmd [args...] &
 
-查看运行文件所在的路径
-which node
-
-查看文件安装路径
-whereis android
-
-查看当前目录的完整路径
-pwd
+which node  // 查看运行文件所在的路径
+whereis android  // 查看文件安装路径
+pwd  // 查看当前目录的完整路径
+ctrl + A  // 光标移动到行首
+ctrl + E  // 光标移动大行尾
+open .  // 打开系统文件管理器，mac
 
 文件操作
 cp -r a.zip /home/test
 rm -r /home/test
 mv a.txt b.txt  // 更改文件名
+scp -P {server_port} {local_file_path} {{username}@{server_ip}:{server_path}  // 将本地文件上传到服务器的指定目录，反过来写，可以把服务器文件，下载到本地
 
 压缩解压及打包命令
 tar [-cxtzjvfpPN] 
 -c：建立一个压缩文件的参数指令(create 的意思)
 -x：解开一个压缩文件的参数指令
 -t：查看 tarfile 里面的文件
-特别注意，在参数的下达中， c/x/t 仅能存在一个！不可同时存在！因为不可能同时压缩与解压缩。
+特别注意，在参数的下达中， c/x/t 仅能存在一个！不可同时存在！因为不可能同时压缩与解压缩
 -z：是否同时具有 gzip 的属性？亦即是否需要用 gzip 压缩？
 -v： 显示详细信息
 -f： 要处理的文件
 tar -zxvf 
-
-定时任务
-crontab
 
 包管理
 sudo dpkg -l
@@ -111,6 +107,7 @@ PuTTY
 PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
 
 --服务器配置实例--
+# 非阿里云的域名，可利用DNSPod进行域名解析，老牌厂商，性能不错
 # 登录远程服务器
 1、ssh {username}@{server_ip}  // 服务器端未增加该客户端私钥认证时，需输入用户密码
 
@@ -171,6 +168,9 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
     -A INPUT -p tcp -m state --state NEW --dport 2222 -j ACCEPT 
     # 允许外网ping服务器
     -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+    # 允许mongodb的端口3333，能够被本地访问，默认27017端口
+    -A INPUT -s 127.0.0.1 -p tcp --destination-port 3333 -m state --state NEW,ESTABLISHED -j ACCEPT
+    -A OUTPUT -d 127.0.0.1 -p tcp --source-port 3333 -m state --state ESTABLISHED -j ACCEPT
     # 记录被拒绝的请求，记录5分钟内的
     -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied:" --log-level 7
     # 丢弃某ip短时间内请求多次的可疑请求，限制60秒最多150次请求
@@ -204,14 +204,14 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
 # 配置nginx
 1、sudo apt-get install nginx
 2、nginx -v  // 查看nginx版本
-3、sudo /etc/nginx/conf.d/{filename}.conf  // 新增配置文件
+3、sudo /etc/nginx/conf.d/{filename}.conf  // 新增配置文件，该目录可创建多份配置文件，部署多个项目
   内容如下：
   upstream my_app_name {
     server 127.0.0.1:3000;
   }
   server {
     listen 80;
-    server_name 117.11.11.111;  // 服务器外网ip
+    server_name {abc.abc.com};  // 域名 or 服务器外网ip
     location / {
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
@@ -241,9 +241,46 @@ nvm alias default v6.11.1  // 设置系统默认的node版本
 # 安装pm2
 npm install -g pm2
 pm2 start {name}
+pm2 stop {name}
+pm2 delete {name}
 pm2 list 
 pm2 show {name}  // 查看app详细信息，可查看日志存放位置
+pm2 deploy ...  // 项目根目录下，创建ecosystem.config，可在本地，远程发布项目
 pm2 logs  // 查看实时日志，直接在命令行里查看
+
+＃ 安装mongodb，一般数据库部署在一台独立的服务器上 安装方法：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+1、sudo vi /etc/apt/apt.conf  // 可选项，修改apt下载源，默认为阿里云的源，安装出错时，可注释掉掉该文件下的镜像源配置
+2、sudo vi /etc/apt/sources.list.d/mongodb-org-{version}.list  // mongodb安装慢时，可将该文件下的源地址改成阿里云的mongodb源地址
+3、sudo service mongod start  // 启动mongodb，sudo service mongod restart重启mongodb
+4、cat /var/log/mongodb/mongod.log  // 查看mongodb启动日志
+5、mongo  // 测试连接mongodb
+6、sudo service mongod stop  // 关闭mongodb
+7、sudo vi /etc/mongod.conf  // 修改mongodb配置
+  修改配置项如下：
+    port: 3333 // 修改端口，提高安全等级，默认27017
+    security:
+      authorization: 'enabled'  // 此时，各种数据库操作之前，都要进行权限验证，db.auth(username, password);
+8、sudo vi /etc/iptables.up.rules  // 修改iptables，允许访问mongogdb端口，默认端口27017，详细配置见上面的iptables配置
+9、sudo iptables-restore < /etc/iptables.up.rules  // 重新导入配置的规则
+10、sudo service mongod start && mongo --port 3333  // 测试连接mongodb
+11、mongodump -h 127.0.0.1:27017 -d {db_name} -o {path}  // 在客户端执行，客户端mongodb端口27017，备份本地数据库中的数据，用来初始化服务器上的数据库
+12、tar zcvf {package_name}.tar.gz  // 在{path}目录下执行，打包该文件夹下的所有数据库文件
+13、scp -P 2222 ./{package_name}.tar.gz {{username}@{server_ip}:{server_path}  // 将本地数据库备份文件上传到服务器
+14、tar xvf {package_name}.tar.gz  // 在服务器端执行，解压缩上传上来的数据库备份文件
+15、mongorestore --host 127.0.0.1:3333 -d {db_name} {unziped_files_path}  // 将数据导入到数据库，-u，用户名，-p，密码
+16、mongoexport --host 127.0.0.1:3333 -d {db_name} -c {table_name} -q '{query_object}' -o ./{filename}.json  // 导出单表数据
+17、mongoimport --host 127.0.0.1:3333 -d {db_name} -c {table_name} ./{filename}.json  // 导入单表数据到某张表中
+18、操作mongodb的admin数据库和各个用户创建的数据库，db.createUser(...)，分别为各个数据库，配置用户角色，分配管理员权限，提高安全等级，一般会为每个数据库创建一个有读写权限的用户和一个只有读权限的用于备份数据的用户
+19、vi db_backup.sh  // 新建一个备份数据库的shell脚本，核心内容，mongodump ...
+20、sudo sh ./db_backup.sh  // 执行数据库备份
+20、用nodejs编写将备份的数据上传到云端或另一台服务器的脚本，提高数据安全等级，修改db_backup.sh，在db_backup.sh文件的最后增加调用该node服务
+21、crontab -e  // 配置系统定时任务
+  增加配置内容如下：
+    // m h dom mon dow   command
+    30 00 * * *  sh /{my_path}/db_backup.sh  // 每天00:30执行脚本
+
+# 安装mysql
+sudo apt-get install mysql-server mysql-client
 
 --项目部署实例--
 依赖Docker、Nginx、Let's Sencrypt证书等
