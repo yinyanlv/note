@@ -33,11 +33,14 @@ sudo // 暂时切换到超级用户模式（root）以执行超级用户权限�
 sudo -i  // 为了频繁的执行某些只有超级用户才能执行的权限，而不用每次输入密码，可以使用该命令。提示输入密码时该密码为当前账户的密码。没有时间限制。执行该命令后提示符变为“#”而不是“$”。想退回普通账户时可以执行“exit”或“logout” ，运行结果，PWD=/root
 sudo su  // 运行sudo命令给su命令提权（实质上就是su，而su默认是获得root权限），运行结果，PWD=/home/用户名（当前用户主目录）
 
-查看ubuntu版本号
-lsb_release -a
-
-查看linux内核版本号
-uname -r or uname -a
+lsb_release -a  // 查看ubuntu版本号
+uname -r or uname -a  // 查看linux内核版本号
+which node  // 查看运行文件所在的路径
+whereis android  // 查看文件安装路径
+pwd  // 查看当前目录的完整路径
+ctrl + A  // 光标移动到行首
+ctrl + E  // 光标移动大行尾
+open .  // 打开系统文件管理器，mac
 
 查看进程
 ps -el  // e，查看所有进程状态，ps默认只查看本终端的进程，l，展示进程相关的其它信息
@@ -49,13 +52,6 @@ sudo kill {pid}
 
 后台运行进程
 nohup cmd [args...] &
-
-which node  // 查看运行文件所在的路径
-whereis android  // 查看文件安装路径
-pwd  // 查看当前目录的完整路径
-ctrl + A  // 光标移动到行首
-ctrl + E  // 光标移动大行尾
-open .  // 打开系统文件管理器，mac
 
 文件操作
 cp -r a.zip /home/test
@@ -81,30 +77,10 @@ sudo apt-get upgrade  // 升级已安装的所有软件包，升级之后的版�
 sudo apt-get -y install {packageName}  // 安装包， -y，可选项，安装时是否不询问yes/no
 sudo apt-get --purge remove {packageName}  // 删除包，--purge，清除配置
 
-安装zsh  // 加强版shell，安装后，可在该用户系统根目录下的.zshrc文件中，定义shell命令的别名，方便使用，如：alias login_server="ssh root@111.11.11.111"
-sudo apt-get install zsh
-source .zshrc  // 重新载入用户环境变量
-
-安装docker
-1、sudo apt-get update
-2、sudo apt-get install apt-transport-https ca-certificates  // 升级source列表并保证https和ca证书成功安装
-3、sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D  // 增加新的GPG密钥
-4、vi /etc/apt/sources.list.d/docker.list  // 新增或编辑source列表里的docker.list文件，删除已有的entries，按照系统版本增加entry（Ubuntu Xenial 16.04 (LTS)），deb https://apt.dockerproject.org/repo ubuntu-xenial main
-5、sudo apt-get purge lxc-docker  // 重新执行更新操作，并删除老的docker repo，没有安装的话，跳过
-6、sudo apt-cache policy docker-engine  // 查看是否有正确的可用版本
-7、sudo apt-get install linux-image-extra-$(uname -r)  // 从14.04版本以上开始，docker推荐安装linux-image-extra
-8、sudo apt-get update
-9、sudo apt-get install docker-engine  // 安装docker
-10、sudo service docker start  // 启动docker
-11、sudo docker run hello-world  // 测试安装是否正常
-
-安装redis
-sudo apt-get install redis-server
-自动安装redis-cli，安装完，自动运行redis，默认端口号为6379
-
-windows环境ssh
+windows环境登录服务器
 PuTTY
 PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
+
 
 --服务器配置实例--
 # 非阿里云的域名，可利用DNSPod进行域名解析，老牌厂商，性能不错
@@ -171,6 +147,9 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
     # 允许mongodb的端口3333，能够被本地访问，默认27017端口
     -A INPUT -s 127.0.0.1 -p tcp --destination-port 3333 -m state --state NEW,ESTABLISHED -j ACCEPT
     -A OUTPUT -d 127.0.0.1 -p tcp --source-port 3333 -m state --state ESTABLISHED -j ACCEPT
+    ＃ 某项目需使用端口5555，所以需开放该端口，其它项目同理
+    -A INPUT -s 127.0.0.1 -p tcp --destination-port 5555 -m state --state NEW,ESTABLISHED -j ACCEPT
+    -A OUTPUT -d 127.0.0.1 -p tcp --source-port 5555 -m state --state ESTABLISHED -j ACCEPT
     # 记录被拒绝的请求，记录5分钟内的
     -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied:" --log-level 7
     # 丢弃某ip短时间内请求多次的可疑请求，限制60秒最多150次请求
@@ -211,7 +190,7 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
   }
   server {
     listen 80;
-    server_name {abc.abc.com};  // 域名 or 服务器外网ip
+    server_name {www.domain.com};  // 域名 or 服务器外网ip
     location / {
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
@@ -219,6 +198,9 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
       proxy_set_header X-Nginx-Proxy true;
       proxy_pass http://my_app_name;
       proxy_redirect off;
+    }
+    location ~* ^.+\.(jpg|jpeg|git|png|ico|js|css|) {  // 静态文件映射
+      root /home/myuser/...;  // 将路径映射到系统root目录下相应的文件夹
     }
   }
 4、sudo vi /etc/nginx/nginx.conf  // 编辑nginx默认配置文件，查看inclue配置项，自定义的配置文件是否被导入进来，如果未导入，需修改配置
@@ -240,13 +222,15 @@ nvm alias default v6.11.1  // 设置系统默认的node版本
 
 # 安装pm2
 npm install -g pm2
+pm2 -v
 pm2 start {name}
 pm2 stop {name}
 pm2 delete {name}
 pm2 list 
 pm2 show {name}  // 查看app详细信息，可查看日志存放位置
-pm2 deploy ...  // 项目根目录下，创建ecosystem.config，可在本地，远程发布项目
 pm2 logs  // 查看实时日志，直接在命令行里查看
+pm2 deploy ecosystem.json {service_name} setup  // 项目根目录下，创建ecosystem.json，配置deploy字段，可在本地初始化远程项目，注意，服务器端存放项目的目录需要有相关权限，chmod 777 {project_path}，可读、可写、可执行
+pm2 deploy ecosystem.json {service_name}  // 配置deploy字段，可在本地初始化并发布远程项目
 
 ＃ 安装mongodb，一般数据库部署在一台独立的服务器上 安装方法：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
 1、sudo vi /etc/apt/apt.conf  // 可选项，修改apt下载源，默认为阿里云的源，安装出错时，可注释掉掉该文件下的镜像源配置
@@ -279,24 +263,75 @@ pm2 logs  // 查看实时日志，直接在命令行里查看
     // m h dom mon dow   command
     30 00 * * *  sh /{my_path}/db_backup.sh  // 每天00:30执行脚本
 
+# 安装zsh  // 加强版shell，安装后，可在该用户系统根目录下的.zshrc文件中，定义shell命令的别名，方便使用，如：alias login_server="ssh root@111.11.11.111"
+1、sudo apt-get install zsh
+2、source .zshrc  // 重新载入用户环境变量
+
 # 安装mysql
 sudo apt-get install mysql-server mysql-client
 
---项目部署实例--
-依赖Docker、Nginx、Let's Sencrypt证书等
+# 安装redis
+sudo apt-get install redis-server
+自动安装redis-cli，安装完，自动运行redis，默认端口号为6379    
 
-安装nginx
-sudo apt-get install nginx
-/usr/sbin/nginx  // 默认配置启动
+# 配置https，需先生成https证书，可在阿里云、腾讯云等申请免费证书，然后下载证书
+  nginx配置如下：
+    upstream my_app_name {
+      server 127.0.0.1:3000;
+    }
+    server 80 {  // 如果请求为http协议，将其转发到https
+      listen 80;
+      server_name {www.domain.com};  // 域名 or 服务器外网ip
+      # rewrite ^(.*) https://$host$1 permanent;
+      return 301 https://{www.domian.com}$request_uri;
+    }
+    server {
+      listen 443;
+      server_name {www.domain.com};  // 绑定证书的域名
+      ssl on;
+      ssl_certificate /home/abc/1_www.domain.com_bundle.crt;  // 证书本地地址
+      sll_certificate_key /home/abc/2_www.domain.com.key;  // 证书key本地地址
+      ssl_session_timeout 5m;
+      ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+      ssl_ciphers HIGH:!aNULL:!MD5:!EXPORT56:!EXP;  // 加密套件
+      ssl_prefer_server_ciphers on;
+      if ($ssl_protocol = "") {
+        rewrite ^(.*) https://$host$1 permanent;
+      }
+      location / {
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Nginx-Proxy true;
+        proxy_pass http://my_app_name;
+        proxy_redirect off;
+      }
+      location ~* ^.+\.(jpg|jpeg|git|png|ico|js|css|) {  // 静态文件映射
+        root /home/myuser/...;  // 将路径映射到系统root目录下相应的文件夹
+      }
+    }
 
-安装acme.sh  // 简化申请Let's Sencrypt证书，并自动续签证书，支持http和dns两种方式签发证书
-curl  https://get.acme.sh | sh  // 安装acme.sh
-export Ali_Key="**********"  // 阿里云的Access key
-export Ali_Secret="**********"
-acme.sh --issue --dns dns_ali -d abc.com -d *.abc.com  // 使用dns的方式签发证书，目前Let's Sencrypt已支持泛域名
-acme.sh --installcert -d abc.com \  // copy证书到指定目录下
+# 安装acme.sh  // 另一种配置https解决方案，简化申请Let's Sencrypt证书，并自动续签证书，支持http和dns两种方式签发证书
+1、curl  https://get.acme.sh | sh  // 安装acme.sh
+2、export Ali_Key="**********"  // 阿里云的Access key
+3、export Ali_Secret="**********"
+4、acme.sh --issue --dns dns_ali -d abc.com -d *.abc.com  // 使用dns的方式签发证书，目前Let's Sencrypt已支持泛域名
+5、acme.sh --installcert -d abc.com \  // copy证书到指定目录下
         --key-file /etc/nginx/ssl/abc.key \
         --fullchain-file /etc/nginx/ssl/fullchain.cer \
         --reloadcmd "service nginx force-reload"
-acme.sh  --upgrade  --auto-upgrade  // 设置自动升级acme.sh
-acme.sh --upgrade  --auto-upgrade  0  // 关闭自动升级acme.sh
+6、acme.sh  --upgrade  --auto-upgrade  // 设置自动升级acme.sh
+7、acme.sh --upgrade  --auto-upgrade  0  // 关闭自动升级acme.sh
+
+# 安装docker
+1、sudo apt-get update
+2、sudo apt-get install apt-transport-https ca-certificates  // 升级source列表并保证https和ca证书成功安装
+3、sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D  // 增加新的GPG密钥
+4、vi /etc/apt/sources.list.d/docker.list  // 新增或编辑source列表里的docker.list文件，删除已有的entries，按照系统版本增加entry（Ubuntu Xenial 16.04 (LTS)），deb https://apt.dockerproject.org/repo ubuntu-xenial main
+5、sudo apt-get purge lxc-docker  // 重新执行更新操作，并删除老的docker repo，没有安装的话，跳过
+6、sudo apt-cache policy docker-engine  // 查看是否有正确的可用版本
+7、sudo apt-get install linux-image-extra-$(uname -r)  // 从14.04版本以上开始，docker推荐安装linux-image-extra
+8、sudo apt-get update
+9、sudo apt-get install docker-engine  // 安装docker
+10、sudo service docker start  // 启动docker
+11、sudo docker run hello-world  // 测试安装是否正常
