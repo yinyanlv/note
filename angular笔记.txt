@@ -81,8 +81,12 @@ parent ngOnDestroy
   pipes: [LowercasePipe],
   directives: [Tooltip],
   animations: [fadeAnimation],
-  changeDetection: ChangeDetectionStrategy.OnPush,  // 变化检测策略，Default、OnPush(当输入属性值通过外部传入且发生改变时，才执行变化检测，从而更新视图，不执行变化检测，不能更新视图，变化检测用于更新视图，与ngDoCheck等钩子函数无关，ngDoCheck总是触发，父组件的变化检测机制不影响子组件的变化检测，父子组件各自独立
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
+变化检测策略，Default、OnPush，开发模式下运行angular，angular会执行checkNoChanges这个方法，去检验之前运行的Change Detection是否导致了别的改动，因此，有些方法会执行两次
+OnPush  // 在使用OnPush策略后，只有两种情况下（如下），会执行该组件的变化检测，从而更新视图，不执行变化检测，不能更新视图。变化检测用于更新视图，与ngDoCheck等钩子函数无关，ngDoCheck总是触发，父组件的变化检测策略不影响子组件的变化检测策略，父子组件各自独立
+1、当组件的input值发生变化时，会触发该组件及其子组件的变化检测
+2、该组件内部的事件（如：点击按钮）也会触发该组件及其子组件的变化检测，组件外部的事件，不会触发该组件及其子组件的变化检测
 
 @Directive({
   selector: '[ngModel]:not([formControlName]):not([formControl])',
@@ -95,7 +99,7 @@ parent ngOnDestroy
   exportAs: 'ngModel'  // 导出指令实例，使得可以在模板中引用指令的实例，如#i="ngModel"
 })
 
-@Pipe()
+@Pipe()  // 配置项，pure，默认为true。Pure Pipe：如果传入Pipe的参数没有变，会直接返回之前一次的结果，InPure Pipe：每一次Change Detection都会重新运行Pipe内部的逻辑并返回结果
 @Injectable()  // 标志着一个类（依赖者而非被依赖者）可以被一个注入器实例化。通常来讲，在试图实例化一个没有被标识为@Injectable()的类时候，注入器将会报告错误
 @Inject(APP_CONFIG)  // let APP_CONFIG = new OpaqueToken('app.config');
 @RouteConfig()  // 定义路由
@@ -119,7 +123,7 @@ content  // 可选，component模板中有ng-content时使用，this.myContent =
 ngModuleFactory  // 可选，component来自其它模块时使用，this.myModule = this.compiler.compileModuleSync(OtherModule); this.compiler为Compiler类的实例，通过constructor依赖注入，OtherModule不需要事先导入到AppModule中，this.myModule的类型为NgModuleFactory<any>
 
 forwardRef  // 让我们可以在使用构造函数注入时，使用尚未定义的依赖对象类型（定义的class未提升），@Inject(forwardRef(() => Buffer)) private buffer
-ChangeDetectorRef  // 组件的变化检测器的引用，markForCheck()（下一个周期，强制执行变化检测），detach()，reattach()，detectChanges()（ 从该组件到各个子组件执行一次变化检测）
+ChangeDetectorRef  // 组件的变化检测器的引用，markForCheck()（下一个周期，强制执行变化检测，注意：会对整个应用进行变化检测），detach()，reattach()，detectChanges()（ 只对该组件及其各个子组件执行变化检测）
 ElementRef  // 封装不同平台下视图层中的native元素
 ComponentRef  // 组件的引用
 TemplateRef  // 模板的引用，TemplateRef实例中引用ElementRef（comment元素的封装），createEmbeddedView(null)返回embeddedViewRef
@@ -156,6 +160,8 @@ ngSubmit
 
 动画
 对于动态创建的component，调用destroy方法，:leave animation不触发。:leave，只能在host元素上触发
+
+在ngFor循环中使用trackBy优化列表性能，*ngFor="let hero of heroes; trackBy: myTrackByFn;"，trackBy方法的第一个参数是当前元素在数组中的index，第二个是当前元素本身（hero）。方法的返回值作为当前元素的唯一标识，用于索引
 
 shadow piercing
 :host ::ng-deep {  // :host可不加，即全局样式，此时要注意样式的隔离，>>> and /deep/ are deprecated
