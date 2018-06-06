@@ -77,6 +77,7 @@ mod  // 定义模块，mod xxx {}，定义非文件模块，mod xxx; 引用文�
 use  // 将名称导入到本地作用域中，use phrases::english::{greetings, farewells};
 pub  // 定义公有项，如果一个项是公有的，它能在任何父模块、任何子模块中使用，如果一个项是私有的，它只能在其直接父模块、任何子模块中使用，同一模块（不包括子模块）中的函数，无论私有、公有，可相互调用
 pub use  // 重导出，可以在包装箱内用它重导出函数到另一个模块中
+pub(crate)  // 限制该导出只在该crate本身中可见，对其它crate不可见，相当于私有
 self  // 引用当前模块
 super  // 引用父级模块，可连续多次使用，super::super::super::a::test();
 as
