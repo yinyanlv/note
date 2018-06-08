@@ -97,13 +97,15 @@ bin, lib, rlib, dylib, cdylib, staticlib
 #[inline(always)]
 属性也可以有键值
 #[cfg(target_os = "macos")]
-自定义属性
+使用自定义属性
 [lib]
 proc-macro = true  // procedure macro
 示例如下：
+#![feature(custom_attribute, proc_macro)]
+...
 #[derive(HelloWorld)]
 #[HelloWorldName = "the best Pancakes"]
-
+...
 #[proc_macro_derive(HelloWorld, attributes(HelloWorldName))]
 pub fn hello_world(input: TokenStream) -> TokenStream 
 
