@@ -42,6 +42,12 @@ ctrl + A  // 光标移动到行首
 ctrl + E  // 光标移动大行尾
 open .  // 打开系统文件管理器，mac
 
+查看系统内存使用情况
+free -h
+
+查看系统资源占用（内存,cpu和进程）
+top
+
 查看进程
 ps -el  // e，查看所有进程状态，ps默认只查看本终端的进程，l，展示进程相关的其它信息
 |  // 管道
@@ -180,6 +186,9 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
 4、sudo service fail2ban stop  // 停止运行
 5、sudo service fail2ban start  // 启动
 
+# 安装常用的基础包
+sudo apt-get install vim openssl build-essential libssl-dev wget curl git
+
 # 配置nginx
 1、sudo apt-get install nginx
 2、nginx -v  // 查看nginx版本
@@ -211,9 +220,6 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
 
 # 设置系统文件监控数目
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-
-# 安装常用的基础包
-sudo apt-get install vim openssl build-essential libssl-dev wget curl git
 
 # 安装nvm，安装方法：https://github.com/creationix/nvm
 nvm install v6.11.1
@@ -268,7 +274,8 @@ pm2 deploy ecosystem.json {service_name}  // 配置deploy字段，可在本地�
 2、source .zshrc  // 重新载入用户环境变量
 
 # 安装mysql
-sudo apt-get install mysql-server mysql-client
+sudo apt-get install mysql-server 
+sudo apt-get install mysql-client
 
 # 安装redis
 sudo apt-get install redis-server
