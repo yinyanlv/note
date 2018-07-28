@@ -101,7 +101,12 @@ delete from table_name where [condition];  // 删除表中所有数据，delete 
 {start transaction | begin}; commit; rollback;
 原子性(Atomicity)
 一致性(Consistency)
-隔离性(Isolation)
+隔离性(Isolation)  // 一个事务对数据库中数据的修改，在未提交前对其它事务的可见性。
+  隔离级别：
+    1、未提交读(read-uncommitted)，脏读，即使事务未提交，修改也对其它事务可见，一般不会用到
+    2、已提交读(read-committed)，oracle, sql server等默认
+    3、可重复读(repeatable-read)，mysql默认，innodb默认，同一事务中多次执行同样的读取操作得到的数据是一致的，即使其它事务已对数据作出修改并提交
+    4、可串行化(serializable)，最高的隔离级别，会在读取的每一行数据上都加锁，一般只用于没有并发且对数据一致性严格要求的情况
 持久性(Durability)
 
 视图
@@ -273,8 +278,34 @@ default-character-set＝utf8
 default-storage-engine=INNODB  // 默认存储引擎
 
 常用命令和函数
-set names gbk;  // 设置shell客户端文字编码
 delimiter //;  // 自定义命令结束符
-version();  // 数据库版本
-user();  // 当前用户
-database();  // 当前数据库
+select version();  // 数据库版本
+select user();  // 当前用户
+select database();  // 当前数据库
+show variables like '%isola%'  // 查看数据库隔离级别
+set session tx_isolation = 'read-committed';  // 设置事务隔离级别为已提交读
+set names gbk;  // 设置shell客户端文字编码
+
+---
+
+性能管理和架构设计
+
+性能指标
+QPS  // 每秒处理的查询量
+TPS
+并发量  // 不同于连接数，一般远小于连接数
+cpu使用率
+磁盘io  // 最好不要在主库上进行数据备份
+
+影响性能的主要因素
+效率低下的sql  // 百分之80的性能问题是由效率低下的sql引起的
+高并发使得数据库连接数占满  // 可通过更改数据库配置项max_connections改善，默认100
+超高cpu使用率使得cpu资源耗尽从而引起宕机
+磁盘io性能下降  // 使用更好的磁盘设备，如fashion io，做好磁盘维护
+网卡流量占满  // 1000Mb等于1000/8MB，1、减少从服务器数量，2、进行分级缓存，3、避免使用select *查询，4、分离业务网络和服务器网络
+大表  // 单表超过千万行或表数据文件超过10G，导致慢查询、主从延迟(锁表)。1、分库分表(垂直切分，水平切分)，难度大，注意避免影响线上业务，2、大表历史数据归档，可以把归档表放到不同的服务器上
+大事务  // 运行时间比较长，操作的数据比较多的事务，锁太多造成大量阻塞和锁超时，回滚慢，执行慢容易造成主从延迟。1、避免一次处理太多的数据，可分批处理，2、移除事务中不必要的select
+
+架构
+主从复制(读写分离)
+
