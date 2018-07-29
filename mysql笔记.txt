@@ -8,8 +8,6 @@
 
 关键字和函数名，规定大写
 可用反引号`包裹标识符(库名、表名、字段名、索引、别名...)，以避免与关键字重名
-定长，速度快，但浪费空间
-不定长，速度慢，但节省空间
 
 锁
 共享锁  // 读锁，不阻塞
@@ -17,14 +15,14 @@
 
 分区表不是分库分表
 
-整数: tinyint, smallint, mediumint, int, bigint  // 1字节，2字节，3字节，4字节，8字节，默认存在符号位，可通过unsigned属性修改，int(m)，m可大于4，想以0填补前面缺少的位数，可通过zerofill属性修改
+整数: tinyint, smallint, mediumint, int, bigint  // 1字节，2字节，3字节，4字节，8字节，默认存在符号位，可通过unsigned属性修改。int(m)，在mysql中并不能改变占用空间大小，对值的范围没有任何影响，实际上是一个错误的用法，但很多人在用。想以0填补前面缺少的位数，可通过zerofill属性修改
 浮点数: float(m, d), double(m, d)  // 4字节，8字节，支持unsigned，zerofill
-定点数: decimal(m, d)  // 浮点型在数据库中存放的是近似值，而定点类型在数据库中存放的是精确值
+定点数: decimal(m, d)  // 每4字节存储9个数字，小数点占用一个字节，浮点型在数据库中存放的是近似值，而定点类型在数据库中存放的是精确值，一般用于金额
 
-时间日期: date, time, datetime, timestamp, year  // 3字节，3字节，8字节，4字节，1字节
+时间日期: date, time, datetime, timestamp, year  // 3字节，3字节，8字节，4字节，1字节，datetime和时区无关，时间范围大，timestamp，和时区相关，时间范围小，>= 5.7版本，datetime(m)，timestamp(m)存储微秒数据。不要用字符串存储日期类型的数据，存储空间占用大，不利于查询过滤，不可以使用内置的日期处理函数
 
 字符串类型
-字符串: char(m), varchar(m)  // 0-255字节，0-65535字节
+字符串: char(m), varchar(m)  // 0-255字符，0-65535字符，char，定长，速度快，但浪费空间，适合短或经常更新的字符串，varchar，不定长，速度慢，但节省空间，适合长或不经常更新的字符串。m，定义宽度，是以字符为单位的，而不是字节，很多人用错了
 文本: tinytext, text, mediumtext, longtext  // 0-255字节，0-65535字节，0-16777215字节，0-4294967295字节，不需要定义长度，不可给default值
 enum('v1', 'v2', ...)  // 单选字符串，enum的选项都会对应一个数字，依次是1，2，3，4，5...，最多有65535个选项
 set('v1', 'v2', ...)  // 多选字符串，set的每个选项值也对应一个数字，依次是1，2，4，8，16...，最多有64个选项，null值的索引是null，空字符串错误值的索引值是0
@@ -48,7 +46,7 @@ create database database_name [options];
 show tables;
 
 列的属性和约束
-primary key | unique key | foreign key | key
+primary key | unique key | foreign key | key  // primary key，unique key会自动添加索引
 auto_increment
 null | not null
 default value
@@ -57,13 +55,14 @@ comment
 
 创建表
 CREATE TABLE `test` (
-    `id` int(32) UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    `id` int(32) UNSIGNED PRIMARY KEY AUTO_INCREMENT NOT NULL,  -- 主键可以有多个，复合主键
     `username` VARCHAR(20) NOT NULL,
     `date` DATETIME NOT NULL,
     `overtime` FLOAT(4,2) DEFAULT 0.0,
     `create_time` DATETIME NOT NULL,
     `update_time` DATETIME NOT NULL,
     KEY `username` (`username`),  -- 第一个`username`，索引名
+    INDEX (`date`, `overtime`)
     UNIQUE KEY `username` (`username`),
     CONSTRAINT `work_record_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`)  // {on update | on delete}， {cascade | set null | restrict}
     -- cascade: 主表数据被更新(主键值更新)，从表也被更新(外键值更新)。主表记录被删除，从表相关记录也被删除
@@ -296,21 +295,72 @@ select database();  // 当前数据库
 show variables like '%isola%'  // 查看数据库隔离级别
 set session tx_isolation = 'read-committed';  // 设置事务隔离级别为已提交读
 set names gbk;  // 设置shell客户端文字编码
+explain select * from table_name;  // 显示执行计划
 
 ---
 
 性能管理和架构设计
 
-性能指标
-QPS  // 每秒处理的查询量
-TPS
-并发量  // 不同于连接数，一般远小于连接数
-cpu使用率
-磁盘io  // 最好不要在主库上进行数据备份
-
 影响性能的主要因素
 数据库结构设计
+  平衡范式化和反范式化，减少数据冗余和维护异常，反范式化更便于索引优化
+  当一个字段可以选用多种数据类型时，优先级，数字类型 > 日期类型，二进制类型 > 字符串类型
+  对于相同级别的数据类型，优先选择占用空间小的数据类型
+  主键应该尽可能小，因为每个非主键索引都会携带主键信息
+  主键最好顺序增长，从而避免随机io
+  innodb的主键和业务主键可以不同
+索引
+  索引类型
+    btree  // innodb默认，适合范围查找，键值按顺序存储，利于排序
+    hash  // 适合查询条件精确匹配，无法用于排序，使用hash索引的列的值不要重复度太高，如性别
+  索引的负面作用
+    增加写操作成本
+    过多的索引会影响查询性能
+  策略
+    过滤条件中索引列上不能使用表达式或函数
+    对长字符串列使用前缀索引  // 索引对建立索引的列的大小有限制，innodb 767字节，myisam 1000字节，create index on table_name (field_name(m))
+    联合索引，索引列的顺序
+      经常被使用到的列优先
+      选择性(区分度)高的列优先
+      宽度小的列优先
+    覆盖索引，该索引包含查询的所有字段  // 优化缓存，减小磁盘io，不能使用双%的like查询
+  扩展数据库查询  
+  优化
+    删除重复或冗余的索引  // 第三方工具，pt-duplicate-key-checker -h 127.0.0.1
+    删除从不被使用的索引
 效率低下的sql  // 百分之80的性能问题是由效率低下的sql引起的
+  获取效率低下的sql
+    用户反馈
+    通过慢查日志获取问题sql
+    实时获取问题sql    
+  慢查日志
+    配置
+      slow_query_log  // {on | off}，默认不开启
+      slow_query_log_file  // 慢查日至文件名和存储路径
+      long_query_time  // 基准时间，超过该时间就记录的慢查日志中，单位s，可以精确到微秒，默认10s，建议0.001s
+      log_queries_not_use_indexes  // 是否记录未使用索引的sql
+    分析工具
+      mysqldumpslow  // mysql自带
+      pt-query-digest  // 第三方，功能更强大，提供的统计信息更全
+  实时获取问题sql
+    通过information_schema数据库下的PROCESSLIST表获得，通过脚本周期性执行查询
+  确定查询各个阶段消耗的时间
+    使用profile  // mysql自带，但5.5后已不建议使用，set profiling = 1; {query语句}; show profiles; show profile for query {profile_id};
+    performance_schema  // 一个存储引擎，默认关闭，>=5.5版本自带，官方推荐
+  优化
+    写操作比较频繁时，不要使用查询缓存，因为一般很难匹配  // query_cache_type = {ON | OFF | DEMAND}，设置查询缓存是否可用，query_cache_size = 0
+    将not in或<>子查询改成join
+    使用汇总表优化查询
+大表  // 单表超过千万行或表数据文件超过10G，导致慢查询、主从延迟(锁表)
+  分库分表(垂直切分，水平切分)，难度大，注意避免影响线上业务
+  大表历史数据归档，可以把归档表放到不同的服务器上
+  表结构更改可使用如下几个方案
+    先在从库修改表结构，然后主从切换，然后再修改切换后的从库
+    在主库建立新的表，然后同步数据到新表，更改新表名称，减少锁表时间
+    使用第三方工具pt-online-schema-change
+大事务  // 运行时间比较长，操作的数据比较多的事务，锁太多造成大量阻塞和锁超时，回滚慢，执行慢容易造成主从延迟
+  避免一次处理太多的数据，可分批处理
+  移除事务中不必要的select   
 数据库存储引擎  // 存储引擎针对的是表而不是库，不同的表可以使用不同的存储引擎，但是，最好不要混合使用存储引擎，因为，事务、热备份等功能支持不一致，要特别注意
   MyISAM  // <= mysql 5.5.8的版本默认的存储引擎
     表级锁，并发一般，适用于读操作，支持修复损坏的表(repair table ...)，支持全文索引，支持表数据压缩(myisampack命令)
@@ -331,6 +381,7 @@ cpu使用率
     以zlib压缩表数据，占用空间小，磁盘io少，性能不错
     只支持insert、select
     只允许在自增id列上加索引
+    行级锁
     不支持事务
     适用场景：日志和数据采集类应用
   Memory
@@ -387,7 +438,7 @@ cpu使用率
     sync_binlog  // 如何向磁盘刷新binlong
     tmp_table_size  // 内存临时表大小
     max_heap_table_size  // 内存临时表大小
-    max_connections  // 最大连接数，默认100，建议2000
+    max_connections  // 最大连接数，默认100，建议2000 
 服务器操作系统
   CentOS参数优化
     内核相关参数(/etc/sysctl.conf)
@@ -427,7 +478,7 @@ cpu使用率
       EXT3，EXT4挂载参数(/etc/fstab)
         data = {writeback | ordered | journal}  // 代表不同的日志策略，InnoDB选writeback
         noatime  // 禁止记录文件的访问时间
-        nodiratime  // 禁止记录读取目录的时间    
+        nodiratime  // 禁止记录读取目录的时间            
 服务器硬件
 高并发使得数据库连接数占满  // 可通过更改数据库配置项max_connections改善，默认100
 超高cpu使用率使得cpu资源耗尽从而引起宕机 
@@ -441,7 +492,7 @@ cpu使用率
   根据主板配置，内存主频越高越好
   内存越大越好，足够的内存，可以将随机io变成顺序io，但内存到达某一定大小后，对性能影响相对有限
   写操作会先内存中执行，多次写操作后，再将数据同步到磁盘，以提升性能
-磁盘io性能下降  // 使用更好的磁盘设备，如fusion io，做好磁盘维护
+磁盘io性能下降  // 使用更好的磁盘设备，如fusion io，做好磁盘维护，最好不要在主库上进行数据备份
   传统机器硬盘，价格低，存储空间大，读写慢
   使用RAID技术提升传统机器硬盘性能，RAID是磁盘冗余队列的简称，可以把多个容量较小的磁盘组成一个容量更大的磁盘，并提供数据冗余以保证数据完整性
   固态存储，也称为闪存，SSD，PCI-E SDD(fusion io，占用很多内存，比SSD更贵)，更好的随机读写性能，更好的支持并发，但更容易损坏。对于主从结构，如果只有一块SSD，SSD更应该用在从服务器上，因为单线程随机读，更能发挥SSD性能，延迟少，无写操作，使得SSD不容易损坏
@@ -451,15 +502,29 @@ cpu使用率
   进行分级缓存
   避免使用select *查询
   分离业务网络和服务器网络
-大表  // 单表超过千万行或表数据文件超过10G，导致慢查询、主从延迟(锁表)
-  分库分表(垂直切分，水平切分)，难度大，注意避免影响线上业务
-  大表历史数据归档，可以把归档表放到不同的服务器上
-大事务  // 运行时间比较长，操作的数据比较多的事务，锁太多造成大量阻塞和锁超时，回滚慢，执行慢容易造成主从延迟
-  避免一次处理太多的数据，可分批处理
-  移除事务中不必要的select
 
 基准测试  // 测试软件性能，直接、简单、易于比较，用于评估服务器处理能力。不同于压力测试，压力测试，针对真实的业务进行测试，以获得真实系统所能承受的压力
+  性能指标
+    QPS  // 每秒处理的查询数
+    TPS  // 每秒处理的事务数
+    响应时间  // 完成一个测试任务花费的整体时间
+    并发量  // 同时处理的查询请求数，不同于连接数，一般小于连接数
+    cpu使用率
+    io
+    网络流量
+  测试工具
+    mysqlslap  // >= 5.1版本自带，只能用来测试mysql
+    sysbench  // 一个压力测试工具，第三方安装，用它来测试cpu、mem、disk、thread、mysql、postgre、oracle
+      对cpu性能进行测试 
+      sysbench --test=cpu --cpu-max-prime=10000  
+      测试文件io性能
+      sysbench --test=fileio --file-total-size=1G prepare  // 生成测试文件
+      sysbench --test=fileio --num-threads=8 --init-rng=on --file-total-size=1G --file-test-mode=rndrw --report-interval=1 run
 
 架构
 主从复制(读写分离)
+
+分库分表
+
+数据库监控
 
