@@ -15,6 +15,8 @@
 共享锁  // 读锁，不阻塞
 独占锁  // 写锁，阻塞
 
+分区表不是分库分表
+
 整数: tinyint, smallint, mediumint, int, bigint  // 1字节，2字节，3字节，4字节，8字节，默认存在符号位，可通过unsigned属性修改，int(m)，m可大于4，想以0填补前面缺少的位数，可通过zerofill属性修改
 浮点数: float(m, d), double(m, d)  // 4字节，8字节，支持unsigned，zerofill
 定点数: decimal(m, d)  // 浮点型在数据库中存放的是近似值，而定点类型在数据库中存放的是精确值
@@ -50,7 +52,7 @@ primary key | unique key | foreign key | key
 auto_increment
 null | not null
 default value
-reference  // 外键约束
+reference  // 外键约束，尽量不要使用，影响性能、更改、维护，但建立索引很必要
 comment
 
 创建表
@@ -307,7 +309,85 @@ cpu使用率
 磁盘io  // 最好不要在主库上进行数据备份
 
 影响性能的主要因素
-服务器硬件
+数据库结构设计
+效率低下的sql  // 百分之80的性能问题是由效率低下的sql引起的
+数据库存储引擎  // 存储引擎针对的是表而不是库，不同的表可以使用不同的存储引擎，但是，最好不要混合使用存储引擎，因为，事务、热备份等功能支持不一致，要特别注意
+  MyISAM  // <= mysql 5.5.8的版本默认的存储引擎
+    表级锁，并发一般，适用于读操作，支持修复损坏的表(repair table ...)，支持全文索引，支持表数据压缩(myisampack命令)
+    < 5.0版本，默认表大小最大4G。可通过建表时设置MAX_Rows，AVG_ROW_LENGTH更改
+    > 5.0版本，默认表大小最大256TB
+    适用场景：非事务型应用，只读类应用，空间类应用(支持空间函数。如存储gps)
+  InnoDB
+    innodb_file_per_table  // on | off，设置表数据存储空间，独立表空间(方便使用optimize table压缩表空间)还是系统表空间，>== 5.6版本，默认on
+    事务型存储引擎，行级锁，高并发，支持在线热备份(不是mysqldump)
+    redo log，undo log
+    show engine innodb status;  // 查看innodb工作记录
+    适用场景：基本都适用
+  CSV
+    数据以文本方式(CSV格式)存储在文件中，可直接查看、编辑
+    不支持索引
+    适用场景：作为数据交换的中间表，如：excel -> csv文件 -> mysql数据目录
+  Archive
+    以zlib压缩表数据，占用空间小，磁盘io少，性能不错
+    只支持insert、select
+    只允许在自增id列上加索引
+    不支持事务
+    适用场景：日志和数据采集类应用
+  Memory
+    所有数据保存在内存中，一旦mysql重启，数据会丢失
+    表级锁
+    io性能比MyISAM高很多
+    支持hash索引(等值查询快，默认)、btree索引(范围查询快)
+    不支持text、blob
+    max_heap_table_size  // 设置最大表大小，默认16M
+    适用场景：查找或映射表，数据分析中间表，缓存周期性聚合数据的结果表
+  Federated  // 默认不支持，需手动开启
+    提供了访问远程mysql服务器上表的功能，本地不存储数据，只存储表结构和远程数据库连接信息
+    性能不太好
+    适用场景：偶尔的统计分析及手工查询
+数据库配置参数
+  获取配置信息方式
+    命令行参数  // 如：mysqld_safe --data-dir=/data/a/
+    配置文件  // 查看配件文件加载路径和顺序，msyqld --help --verbose | grep -A 1 'Default options'
+  设置全局参数  // 有些全局参数的设置，只对之后的连接的有效
+    set global 参数名 = 参数值;
+    set @@global.参数名 := 参数值;
+  设置会话参数 
+    set [session] 参数名 = 参数值;
+    set @@session.参数名 := 参数值;
+  内存相关的参数
+    为每个连接分配内存
+      sort_buffer_size  // 排序缓冲区尺寸
+      join_buffer_size  // 联结缓冲区尺寸，一个查询可能有多个join
+      read_buffer_size  // 设缓冲区尺寸  
+      read_rnd_buffer_size  // 索引缓冲区尺寸
+    为缓存池分配内存
+      Innodb_buffer_pool_size  // innodb缓存池大小，计算公式：总内存 - (每个连接需要的内存 * 连接数) - 系统保留内存
+      key_buffer_size  // 主要用于MyISAM，设置索引缓存池大小
+  io相关的参数
+    InnoDB io配置
+      Innodb_log_file_size  // 单个事务日志大小
+      Innodb_log_files_in_group  // 事务日志文件的数目  
+      Innodb_log_buffer_size  // 事务日志缓冲区大小
+      Innodb_flush_log_at_trx_commit  // 刷新日志到磁盘的频率，{0 | 1(默认，安全性高，性能差) | 2}，建议使用2
+      Innodb_flush_method  // 刷新方式，建议O_DIRECT
+      Innodb_file_per_table  // 表空间的建立，建议1
+      Innodb_doublewrite  // innodb是否使用双写缓存，建议1
+    MyISAM io配置
+      delay_key_write  // {OFF | ON | ALL}，是否每次写操作都刷新缓冲区的脏块到磁盘中
+  安全相关的配置
+    expire_logs_days  // 自动清理binlog的天数
+    max_allowed_packet  // 定义mysql所能接收的最大包的大小
+    skip_name_resolve  // 禁用dns查找
+    sysdate_is_now  // 确保sysdate()返回确定性日期
+    read_only  // 禁用非super权限用户写操作，一般在从库中使用
+    skip_slave_start  // 禁用slave自动恢复，一般在从库中使用
+    sql_mode  // mysql使用的sql模式，{only_full_group_by | ...}
+  其它常用配置      
+    sync_binlog  // 如何向磁盘刷新binlong
+    tmp_table_size  // 内存临时表大小
+    max_heap_table_size  // 内存临时表大小
+    max_connections  // 最大连接数，默认100，建议2000
 服务器操作系统
   CentOS参数优化
     内核相关参数(/etc/sysctl.conf)
@@ -347,44 +427,8 @@ cpu使用率
       EXT3，EXT4挂载参数(/etc/fstab)
         data = {writeback | ordered | journal}  // 代表不同的日志策略，InnoDB选writeback
         noatime  // 禁止记录文件的访问时间
-        nodiratime  // 禁止记录读取目录的时间
-数据库存储引擎  // 存储引擎针对的是表而不是库，不同的表可以使用不同的存储引擎，但是，最好不要混合使用存储引擎，因为，事务、热备份等功能支持不一致，要特别注意
-  MyISAM  // <= mysql 5.5.8的版本默认的存储引擎
-    表级锁，并发一般，适用于读操作，支持修复损坏的表(repair table ...)，支持全文索引，支持表数据压缩(myisampack命令)
-    < 5.0版本，默认表大小最大4G。可通过建表时设置MAX_Rows，AVG_ROW_LENGTH更改
-    > 5.0版本，默认表大小最大256TB
-    适用场景：非事务型应用，只读类应用，空间类应用(支持空间函数。如存储gps)
-  InnoDB
-    innodb_file_per_table  // on | off，设置表数据存储空间，独立表空间(方便使用optimize table压缩表空间)还是系统表空间，>== 5.6版本，默认on
-    事务型存储引擎，行级锁，高并发，支持在线热备份(不是mysqldump)
-    redo log，undo log
-    show engine innodb status;  // 查看innodb工作记录
-    适用场景：基本都适用
-  CSV
-    数据以文本方式(CSV格式)存储在文件中，可直接查看、编辑
-    不支持索引
-    适用场景：作为数据交换的中间表，如：excel -> csv文件 -> mysql数据目录
-  Archive
-    以zlib压缩表数据，占用空间小，磁盘io少，性能不错
-    只支持insert、select
-    只允许在自增id列上加索引
-    不支持事务
-    适用场景：日志和数据采集类应用
-  Memory
-    所有数据保存在内存中，一旦mysql重启，数据会丢失
-    表级锁
-    io性能比MyISAM高很多
-    支持hash索引(等值查询快，默认)、btree索引(范围查询快)
-    不支持text、blob
-    max_heap_table_size  // 设置最大表大小，默认16M
-    适用场景：查找或映射表，数据分析中间表，缓存周期性聚合数据的结果表
-  Federated  // 默认不支持，需手动开启
-    提供了访问远程mysql服务器上表的功能，本地不存储数据，只存储表结构和远程数据库连接信息
-    性能不太好
-    适用场景：偶尔的统计分析及手工查询
-数据库配置参数
-数据库结构设计
-效率低下的sql  // 百分之80的性能问题是由效率低下的sql引起的
+        nodiratime  // 禁止记录读取目录的时间    
+服务器硬件
 高并发使得数据库连接数占满  // 可通过更改数据库配置项max_connections改善，默认100
 超高cpu使用率使得cpu资源耗尽从而引起宕机 
   cpu密集型应用选用主频更高的cpu，高并发应用选用更多内核的cpu
@@ -413,6 +457,8 @@ cpu使用率
 大事务  // 运行时间比较长，操作的数据比较多的事务，锁太多造成大量阻塞和锁超时，回滚慢，执行慢容易造成主从延迟
   避免一次处理太多的数据，可分批处理
   移除事务中不必要的select
+
+基准测试  // 测试软件性能，直接、简单、易于比较，用于评估服务器处理能力。不同于压力测试，压力测试，针对真实的业务进行测试，以获得真实系统所能承受的压力
 
 架构
 主从复制(读写分离)
