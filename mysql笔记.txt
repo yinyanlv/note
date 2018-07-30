@@ -521,10 +521,33 @@ explain select * from table_name;  // 显示执行计划
       sysbench --test=fileio --file-total-size=1G prepare  // 生成测试文件
       sysbench --test=fileio --num-threads=8 --init-rng=on --file-total-size=1G --file-test-mode=rndrw --report-interval=1 run
 
-架构
+高可用架构
 主从复制(读写分离)
 
 分库分表
+  几种方式
+    把一个节点中的多个数据库，每个数据库分到不同节点中  
+    把一个库中的某张表分离到不同的数据库中  // 难度很大，一般不要使用，先尝试其他的优化方案
+  分区键的选择
+    尽量避免跨分片查询
+    尽量使各个分片中数据量平均
+  分配数据策略
+    按分区键的hash值取模
+    按分区键的范围
+    利用分区键和分片的映射表来分配  
+  对于无需分区的表
+    每个分片中存储一份相同的数据  // 数据冗余，但性能好
+    使用额外的节点统一存储
+  如何在节点上部署分片
+    在多个节点上，每个分片使用单一数据库，并且数据库名相同
+    在一个节点上部署多个数据库，每个数据库包含一个分片
+    将多个分片存储到一个数据库，并在表名上加入分片号后缀
+  如何生成全局唯一id
+    使用auto_increment_increment和auto_increment_offset参数
+    使用全局节点生成唯一id
+    在redis等缓存服务器中创建全局唯一id
+  分片工具
+    oneProxyp  // 一个中间件，代理层，由它决定向哪个节点写入
 
 数据库监控
 
