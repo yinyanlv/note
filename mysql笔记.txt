@@ -94,7 +94,7 @@ limit 1
 offset 0
 其它
 distinct
-union
+union [all]
 join  // 只有数据存在时才能连接。即连接结果不能出现空行
 left join  // 如果数据不存在，左表记录会出现，而右表以null填充
 right join  // 如果数据不存在，右表记录会出现，而左表以null填充
@@ -311,7 +311,7 @@ explain select * from table_name;  // 显示执行计划
   innodb的主键和业务主键可以不同
 索引
   索引类型
-    btree  // innodb默认，适合范围查找，键值按顺序存储，利于排序
+    btree  // innodb默认，适合范围查找，键值按顺序存储，利于排序，b，balance
     hash  // 适合查询条件精确匹配，无法用于排序，使用hash索引的列的值不要重复度太高，如性别
   索引的负面作用
     增加写操作成本
