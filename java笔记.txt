@@ -237,9 +237,9 @@ public class A extends B implements interface1, interface2, ... {
 }
 可以通过匿名内部类实现接口
 
-反射  // java.lang.reflect.{Class, field, Method, Constructor, Array, ...};  
+反射  // java.lang.reflect.{Class, Field, Method, Constructor, Array, ...};  
 在运行时分析类的能力
-在运行时查看对象  // 要访问对象中的值，可能需要调用对应field, Method, Constructor对象的setAccessible(true);来取得权限
+在运行时查看对象  // 要访问对象中的值，可能需要调用对应Field, Method, Constructor对象的setAccessible(true);来取得权限
 实现通用的数组操作代码  // Array.newInstance(componentType, length);componentType为数组元素类型，可以通过反射得到
 利用Method对象，动态调用方法  // method对象.invoke(Object obj, Object arg1, ...);第一个参数是隐式对象，其余对象提供了显式参数，对于静态方法第一个参数为null
 Class类  // 实际上是泛型类，如：A.class的类型是Class<A>
