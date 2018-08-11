@@ -45,8 +45,8 @@ child b ngAfterViewChecked
 parent ngAfterViewChecked    
 
 组件更新流程
-parent ngOnChanges  // 当通过外部传入到输入属性的值发生改变时触发，注意，在组件内通过程序直接改变输入属性值时不触发，ngOnChanges是否执行与变化检测无关
-parent ngDoCheck
+parent ngOnChanges  // 只有当组件的输入属性的值从外部发生变化时触发
+parent ngDoCheck  // 组件外部的事件也会触发doCheck，因此，doCheck执行的非常频繁，注意优化其中的代码
 child a ngOnChanges
 child a ngDoCheck
 child b ngOnChanges
@@ -85,8 +85,12 @@ parent ngOnDestroy
 })
 变化检测策略，Default、OnPush，开发模式下运行angular，angular会执行checkNoChanges这个方法，去检验之前运行的Change Detection是否导致了别的改动，因此，有些方法会执行两次
 OnPush  // 在使用OnPush策略后，只有两种情况下（如下），会执行该组件的变化检测，从而更新视图，不执行变化检测，不能更新视图。变化检测用于更新视图，与ngDoCheck等钩子函数无关，ngDoCheck总是触发，父组件的变化检测策略不影响子组件的变化检测策略，父子组件各自独立
-1、当组件的input值发生变化时，会触发该组件及其子组件的变化检测
-2、该组件内部的事件（如：点击按钮）也会触发该组件及其子组件的变化检测，组件外部的事件，不会触发该组件及其子组件的变化检测
+1、当组件的input值从外部发生变化时，会触发该组件及其子组件的变化检测
+2、该组件内部的事件（如：点击按钮）也会触发该组件及其子组件的变化检测，组件外部的事件（如：setTimeout），不会触发该组件及其子组件的变化检测
+Default
+1、当组件的input值从外部发生变化时，会触发该组件及其子组件的变化检测
+2、该组件内部的事件（如：点击按钮）也会触发该组件及其子组件的变化检测
+3、组件外部的事件（如：setTimeout），也会触发该组件及其子组件的变化检测
 
 @Directive({
   selector: '[ngModel]:not([formControlName]):not([formControl])',
