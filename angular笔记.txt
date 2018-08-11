@@ -54,7 +54,7 @@ child b ngDoCheck
 child a ngAfterContentChecked  // 同doCheck
 child b ngAfterContentChecked
 parent ngAfterContentChecked
-child a ngAfterViewChecked  //  同doCheck
+child a ngAfterViewChecked  // 同doCheck
 child b ngAfterViewChecked
 parent ngAfterViewChecked 
 
