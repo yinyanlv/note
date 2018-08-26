@@ -20,7 +20,7 @@ CLASSPATH（新增） jdk，lib文件夹目录
 myEclipse，集成了一些优秀的插件
 
 java数据类型
-                       --- 整数类型 (byte, short, int(4), long)
+                       --- 整数类型 (byte, short, int(4), long)，java中没有无符号数
                        |
             --- 数值型 -
             |          |
@@ -392,13 +392,68 @@ pool.execute(Runnable r);
 java.util.Timer  // 底层用线程实现
 java.swing.Timer  // 底层用线程实现
 
-输入输出流
-字节流  // InputStream, OutputStream
-字符流  // Reader, Writer
-节点流  // 向一个特定的地方读写，文件流FileInputStream，内存流ByteArrayInputStream
-处理流  // 中间流，又称为过滤流，BufferedReader
+流  // 把不同类型的输入、输出都抽象为流。jdk 1.4加入java.nio，jdk 1.7加入java.nio2
+输入流输出流  // 按流的方向分类
+字节流字符流  // 按流的内容分类，字节流一个一个字节读取，字符流一个一个字符读取，每一个字符在字符流中占据的字节数，由编码方式决定
+节点流处理流  // 按流的功能分类，节点流，向一个特定的地方(节点)读写，处理流，对一个已存在的流进行连接和封装，又称为过滤流
 
-java.util.regex.*;  // 正则表达式包
+       字节流         字符流
+输入流  InputStream   Reader
+输出流  OutputStream  Writer
+
+节点类型  字节流                                        字符流
+文件     FileInputStream, FileOutputStream            FileReader, FileWriter           
+内存数组  ByteArrayInputStream, ByteArrayOutputStream  CharArrayReader, CharArrayWriter     
+字符串                                                 StringReader, StringWriter
+管道     PipedInputStream, PipedOutputStream          PipedReader, PipedWriter
+
+处理类型         字节流                                      字符流
+缓冲            BufferedInputStream, BufferedOutputStream  BufferedReader, BufferedWriter
+过滤            FilterInputStream, FilterOutputStream      FilterReader, FilterWriter
+字节流转字符流                                               InputStreamReader, OutputStreamWriter
+对象序列化       ObjectInputStream, ObjectOutputStream
+基本数据类型转化  DataInputStream, DataOutputStream
+行号处理         LineNumberInputStream                      LineNumberReader
+可回退流         PushbackInputStream                        PushbackReader
+可显示流         PrintStream                                PrintWriter
+
+File  // 文件类， 在java中将目录(文件夹)也当作文件处理
+getName()
+getPath()
+getAbsolutePath()
+getParent()
+renameTo("newFileName")
+exists()
+canWrite()
+canRead()
+isFile()
+isDirectory()
+isAbsolute()
+lastModified()
+length()
+delete()
+mkdir()
+list()
+
+RandomAccessFile  // 可实现对文件的随机读取
+构造方法
+RandomAccessFile(String name, String mode)
+RandomAccessFile(File file, String mode)
+定位方法
+seek(long pos)
+读写方法
+readBoolean(), readChar(), readInt(), readLong(), readFloat(), readDouble(), readLine(), readUTF()...
+writeBoolean(), writeChar(), writeInt(), writeLong(), writeFloat(), writeDouble(), writeLine(), writeUTF()...
+
+正则表达式  // java.util.regex包
+Pattern类
+Pattern.compile(regexString)
+Pattern.matches(pattern, text)  // 返回boolean
+Matcher类  // 通过pattern.matcher(text)得到
+find() 
+appendReplacement(stringBuffer, "new $0")  // $0表示整个匹配项，$1, $2...表示各个分组
+appendTail(stringBuffer)
+group()  // group()或group(0)表示整个匹配项，group(1), group(2)...表示各个分组
 
 jpa  // 持久化规范
 jdbc  // 提供规范，具体驱动由数据库厂商提供
