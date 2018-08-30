@@ -1,0 +1,38 @@
+java -jar ...  // 执行jar包
+
+ApplicationContext  // ioc容器类
+
+配置文件properties
+配置文件占位符
+  a.b＝1
+  c=${a.b:默认值}  // ${}，配置文件占位符，占位符中也可以放置随机数，如${random.int}
+
+profile  // spring针对不同的环境提供不同的配置，application-{profile}.properties，yml支持多文档块，---分隔文档块
+  激活方式：
+    命令行，--spring-profiles-active=dev
+    配置文件，spring-profiles-active=dev  
+    jvm参数，-Dspring-profiles-active=dev
+
+配置文件加载位置  // 默认配置文件application.properties或application.yml，带profile的配置文件的优先级高于默认配置文件
+  优先级由高到低  // 所有配置文件都会生效，各配置文件互补
+    项目根目录:./config/
+    项目根目录:./
+    classpath:/config/
+    classpath:/
+  spring.config.location  // 通过命令行更改默认配置文件路径，此时，该配置文件优先级最高
+
+@Component
+@Controller
+@RestController  // 底层@Controller, @ResponseBody
+@Service
+@Entity
+@Configuration  // 配置类，代替以前的spring配置文件
+@Bean  // 可在@Configuration配置类中使用，用于添加组件，默认组件id为方法名
+
+@Import(...)  // 导入组件到容器
+
+@ConfigurationProperties(prefix = "abc")  // 支持JSR303
+@Value("${abc}")  // ${}，环境变量或properties配置文件中的属性值，#{}，spel表达式值
+
+@PropertySource(value = "classpath:abc.properties")  // 加载指定的properties配置文件
+@ImportResource(locations = {"classpath:abc.xml"})  // 导入spring配置文件，使得配置文件中的内容生效，如导入bean配置文件
