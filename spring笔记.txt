@@ -2,6 +2,27 @@ java -jar ...  // 执行jar包
 
 ApplicationContext  // ioc容器类
 
+@SpringBootApplication  // 底层，@SpringBootConfiguration，@EnableAutoConfiguration...
+@SpringBootTest
+@RunWith(SpringRunner.class)  // 设置测试驱动为spring的测试驱动，而非junit
+
+@Component
+@Controller
+@RestController  // 底层@Controller, @ResponseBody
+@Service
+@Entity
+@Configuration  // 配置类，代替以前的spring配置文件
+@Bean  // 可在@Configuration配置类中使用，用于添加组件，默认组件id为方法名
+
+@Import(...)  // 导入组件到容器
+@Conditional(...)  // 控制配置类是否生效
+
+@ConfigurationProperties(prefix = "abc")  // 支持JSR303
+@Value("${abc}")  // ${}，环境变量或properties配置文件中的属性值，#{}，spel表达式值
+
+@PropertySource(value = "classpath:abc.properties")  // 加载指定的properties配置文件
+@ImportResource(locations = {"classpath:abc.xml"})  // 导入spring配置文件，使得配置文件中的内容生效，如导入bean配置文件
+
 配置文件properties
 配置文件占位符
   a.b＝1
@@ -21,18 +42,17 @@ profile  // spring针对不同的环境提供不同的配置，application-{prof
     classpath:/
   spring.config.location  // 通过命令行更改默认配置文件路径，此时，该配置文件优先级最高
 
-@Component
-@Controller
-@RestController  // 底层@Controller, @ResponseBody
-@Service
-@Entity
-@Configuration  // 配置类，代替以前的spring配置文件
-@Bean  // 可在@Configuration配置类中使用，用于添加组件，默认组件id为方法名
+自动配置
+  扫描所有jar包类路径下的META-INF/spring.factories文件，自动配置该文件中的xxx.EnableAutoConfiguration属性所指定的所有配置类
+  xxxAutoConfiguration  // 自动配置类的类名格式
+    涉及的注解
+      @EnabelConfigurationProperties(xxxProperties.class)
+      @ConditionalOnWebApplication  // 底层，@Conditional，判断配置类是否生效，只有配置类的判断条件成立，才会向容器中添加组件
+      ...
+  xxxProperties  // 自动配置类属性类的类名格式，指定自动配置类可在properties配置文件中定义的属性，通过@ConfigurationProperties实现与properties配置文件的绑定
+  自动配置报告  // 用于查看哪些自动配置类生效
+    debug=true  // 在默认配置文件application.properties中添加该配置
 
-@Import(...)  // 导入组件到容器
-
-@ConfigurationProperties(prefix = "abc")  // 支持JSR303
-@Value("${abc}")  // ${}，环境变量或properties配置文件中的属性值，#{}，spel表达式值
-
-@PropertySource(value = "classpath:abc.properties")  // 加载指定的properties配置文件
-@ImportResource(locations = {"classpath:abc.xml"})  // 导入spring配置文件，使得配置文件中的内容生效，如导入bean配置文件
+日志  // spring默认使用jcl，spring boot默认使用slf4j和logback
+  抽象层  // jcl(jakarta commons logging), slf4j, jboss-logging
+  具体实现  // jul(java.util.logging), log4j, logback, log4j2 
