@@ -168,8 +168,10 @@ ngSubmit
 在ngFor循环中使用trackBy优化列表性能，*ngFor="let hero of heroes; trackBy: myTrackByFn;"，trackBy方法的第一个参数是当前元素在数组中的index，第二个是当前元素本身（hero）。方法的返回值作为当前元素的唯一标识，用于索引
 
 shadow piercing
-:host ::ng-deep {  // :host可不加，即全局样式，此时要注意样式的隔离，>>> and /deep/ are deprecated
-}
+:host  // 相当于[hostName]
+:host(selector)  // 相当于selector[hostName]
+:host-context(selector)  // 相当于selector [hostName] + selector[hostName]
+:host ::ng-deep  // :host可不加，即全局样式，此时要注意样式的隔离，从angular4.3版本开始，>>>和/deep/被废弃
 
 打包发布命令
 ng build --prod --aot --base-href /users --deploy-url /public
