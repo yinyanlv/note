@@ -17,13 +17,13 @@ ApplicationContext  // ioc容器类
 @Import(...)  // 导入组件到容器
 @Conditional(...)  // 控制配置类是否生效
 
-@ConfigurationProperties(prefix = "abc")  // 支持JSR303
+@ConfigurationProperties(prefix = "abc")  // 支持JSR303。spring-boot-configuration-processor（一个用于配置文件属性提示的插件）
 @Value("${abc}")  // ${}，环境变量或properties配置文件中的属性值，#{}，spel表达式值
 
 @PropertySource(value = "classpath:abc.properties")  // 加载指定的properties配置文件
 @ImportResource(locations = {"classpath:abc.xml"})  // 导入spring配置文件，使得配置文件中的内容生效，如导入bean配置文件
 
-配置文件properties
+配置文件properties  
 配置文件占位符
   a.b＝1
   c=${a.b:默认值}  // ${}，配置文件占位符，占位符中也可以放置随机数，如${random.int}
