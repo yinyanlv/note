@@ -14,6 +14,18 @@ ApplicationContext  // ioc容器类
 @Configuration  // 配置类，代替以前的spring配置文件
 @Bean  // 可在@Configuration配置类中使用，用于添加组件，默认组件id为方法名
 
+@RequestMapping(..)
+@GetMapping(...)
+@PostMapping(...)
+@PutMapping(...)
+@DeleteMapping(...)
+@RequestBody
+@RequestParam(...)
+@PathVariable(...)
+"redirect:/abc"  // 重定向，/代表当前项目
+"forward:/abc"  // 转发
+请求域  // 保存用于页面渲染的数据，Model, Map, ModelMap
+
 @Import(...)  // 导入组件到容器
 @Conditional(...)  // 控制配置类是否生效
 
@@ -87,6 +99,8 @@ profile  // spring针对不同的环境提供不同的配置，application-{prof
 
 模板引擎  // spring boot使用内置的tomcat服务器，默认不支持jsp    
   thymeleaf(spring boot 推荐), velocity, freemarker, jsp
+  thymeleaf配置
+    spring.thymeleaf.cache=false  // 禁用缓存
 
 spring mvc自动配置  
   配置模式
@@ -108,3 +122,8 @@ spring mvc自动配置
     spring.message.basename=i18n.abc  // 自定义国际化文件路径，.代表文件夹
   自定义国际化
     LocaleResolver  // 实现该接口    
+
+拦截器
+  HandlerInterceptor  // 实现该接口，然后在WebMvcConfigurerAdapter中注册该拦截器
+  登录验证
+    req.getRequestDispatcher("/login.html").forward(req, res);  // 验证不通过时，转发请求，RequestDispatcher，转发器
