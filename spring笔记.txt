@@ -30,9 +30,9 @@ ApplicationContext  // ioc容器类
 
 profile  // spring针对不同的环境提供不同的配置，application-{profile}.properties，yml支持多文档块，---分隔文档块
   激活方式：
-    命令行，--spring-profiles-active=dev
-    配置文件，spring-profiles-active=dev  
-    jvm参数，-Dspring-profiles-active=dev
+    命令行，--spring.profiles.active=dev
+    配置文件，spring.profiles.active=dev  
+    jvm参数，-Dspring.profiles.active=dev
 
 配置文件加载位置  // 默认配置文件application.properties或application.yml，带profile的配置文件的优先级高于默认配置文件
   优先级由高到低  // 所有配置文件都会生效，各配置文件互补
@@ -56,3 +56,55 @@ profile  // spring针对不同的环境提供不同的配置，application-{prof
 日志  // spring默认使用jcl，spring boot默认使用slf4j和logback
   抽象层  // jcl(jakarta commons logging), slf4j, jboss-logging
   具体实现  // jul(java.util.logging), log4j, logback, log4j2 
+  统一日志框架  // 排除jar包中冲突的日志依赖，pom文件中，配置该jar包的exclusion标签
+  日志级别
+    trace
+    debug
+    info  // spring boot默认日志级别
+    warn
+    error
+  配置
+    logging.level.com.bugong=trace  // 即root级别
+    logging.path=xxx  // path和file都未设置时，只在控制台输出
+    logging.file=xxx
+    logging.pattern.console=xxx  // 设置控制台日志格式
+    logging.pattern.file=xxx  // 设置日志文件日志格式
+  日志框架配置文件
+    logback.xml or logback-spring.xml  // 推荐logback-spring.xml，可以指定某段配置只在某个环境下生效，通过springProfile标签配置
+    log4j2.xml or log4j2-spring.xml
+    logging.properties
+
+静态资源映射
+  webjars  // 以jar包的方式引入静态资源，打包后存放路径，classpath:/META-INF/resources/webjars/，访问路径，/webjars/**
+  默认静态资源存放目录  // 访问路径，/**
+    classpath:/META-INF/resources
+    classpath:/resources/
+    classpath:/static/
+    classpath:/public/
+    /  // 当前项目根目录
+  配置
+    spring.resources.static-loactions=classpath:/abc/,...  
+
+模板引擎  // spring boot使用内置的tomcat服务器，默认不支持jsp    
+  thymeleaf(spring boot 推荐), velocity, freemarker, jsp
+
+spring mvc自动配置  
+  配置模式
+    模式一，更改spring mvc默认配置，该模式下，先扫描用户自定义的@Bean或@Component等配置，对于容器中只能有一个的组件，如果用户自定义了配置，则放弃默认的自动配置，对于容器中允许多个的组件，则合并添加所有组件
+    模式二，扩展spring mvc，@Configuration WebMvcConfigurerAdapter，不能使用@EnableWebMvc(用于全面接管spring mvc)，该模式下，保留了默认的自动配置，也扩展了组件的功能。扩展配置类，xxxConfiguer，如：WebMvcConfigurerAdapter实现了WebMvcConfigurer
+  自动配置涉及到的组件类  
+    ContentNegotiatingViewResolver  // ViewResolver，视图解析器，得到视图对象，决定渲染、转发还是重定向
+    BeanNameViewResolver
+    Convert  // 转换器，用于类型转换
+    GenericenericConverter
+    Formatter  // 格式化器，如日期格式
+    HttpMessageConverter  // 消息转换器，用于转换http请求和响应，如：json data <=> User
+    MessageCodeResolver  // 定义错误代码生成规则
+    ConfigurableWebBindingInitializer  // 初始化WebDataBinder(web数据绑定器)，将http请求发送的数据绑定到java bean中
+    ...
+
+国际化  // spring boot已默认实现根据浏览器请求头accept-language的国际化
+  配置
+    spring.message.basename=i18n.abc  // 自定义国际化文件路径，.代表文件夹
+  自定义国际化
+    LocaleResolver  // 实现该接口    
