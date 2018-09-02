@@ -127,3 +127,30 @@ spring mvc自动配置
   HandlerInterceptor  // 实现该接口，然后在WebMvcConfigurerAdapter中注册该拦截器
   登录验证
     req.getRequestDispatcher("/login.html").forward(req, res);  // 验证不通过时，转发请求，RequestDispatcher，转发器
+
+错误处理机制
+  默认错误机制
+    浏览器  // 返回错误页面
+    其它客户端  // 返回错误json数据
+  配置
+    error.path=/error  // 自定义所有错误页面的根目录。默认错误页面，/error/{状态码}.html，如：/error/404.html，/error/4xx.html
+  异常时自定义响应的json数据
+    @ControllerAdvice @ExceptionHandler(AbcException.class)  
+      
+嵌入式servlet容器  // tomcat, jetty(适合长连接应用), undertow(不支持jsp，适合高并发)
+  自定义配置
+    方式一，配置文件
+    方式二，EmbeddedServletContainerCustomizer  // 实现该接口，xxxCustomizer，自定义配置类
+  切换servlet容器  // 更改pom.xml
+
+注册servlet三大组件  // 因为spring boot以jar包的方式使用嵌入式的servlet容器，因此不能通过以前的/webapp/WEB-INF/web.xml配置，但可通过代码注册配置
+  servlet
+    ServletRegistrationBean
+  filter
+    FilterRegistrationBean
+  listener  // 如监听ServletContext初始化和销毁，即web应用的启动和停止
+    ServletListenerRegistrationBean
+
+使用外部servlet容器  // 应用以war包的方式打包部署 
+  pom.xml文件tomcat配置项，scope属性配置为provided
+  定义一个继承SpringBootServletInitializer的类，重写configure方法，导入主入口类
