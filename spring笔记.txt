@@ -154,3 +154,8 @@ spring mvc自动配置
 使用外部servlet容器  // 应用以war包的方式打包部署 
   pom.xml文件tomcat配置项，scope属性配置为provided
   定义一个继承SpringBootServletInitializer的类，重写configure方法，导入主入口类
+
+数据访问
+  jdbc  // 自动配置数据源
+  mybatis  // @MapperScan(...), @Mapper
+  jpa  
