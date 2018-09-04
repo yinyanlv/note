@@ -124,7 +124,7 @@ spring mvc自动配置
     LocaleResolver  // 实现该接口    
 
 拦截器
-  HandlerInterceptor  // 实现该接口，然后在WebMvcConfigurerAdapter中注册该拦截器
+  HandlerInterceptor  // 实现该接口，然后在WebMvcConfigurerAdapter中注册该拦截器，拦截器只能对controller请求进行拦截，对其它一些比如访问静态资源的请求没办法进行拦截
   登录验证
     req.getRequestDispatcher("/login.html").forward(req, res);  // 验证不通过时，转发请求，RequestDispatcher，转发器
 
@@ -146,7 +146,7 @@ spring mvc自动配置
 注册servlet三大组件  // 因为spring boot以jar包的方式使用嵌入式的servlet容器，因此不能通过以前的/webapp/WEB-INF/web.xml配置，但可通过代码注册配置
   servlet
     ServletRegistrationBean
-  filter
+  filter  // 过滤器，可以对所有请求进行拦截，包括静态资源，缺点就是一个过滤器实例，只能在servlet容器初始化的时候调用一次
     FilterRegistrationBean
   listener  // 如监听ServletContext初始化和销毁，即web应用的启动和停止
     ServletListenerRegistrationBean
@@ -158,4 +158,4 @@ spring mvc自动配置
 数据访问
   jdbc  // 自动配置数据源
   mybatis  // @MapperScan(...), @Mapper
-  jpa  
+  jpa  // 底层默认hibernate  
