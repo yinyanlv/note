@@ -2,6 +2,9 @@ jvm (java virtual machine)
 jre (java runtime environment)
 jdk (java development kit)
 
+jcp  // java community process
+jsr  // java specification requests，java规范提案
+
 *.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
 
 JNI(java native interface)  // 允许java与其它语言写的代码交互
