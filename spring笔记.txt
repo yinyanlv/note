@@ -171,9 +171,11 @@ spring mvc自动配置
       Entry
       Expiry
   spring缓存抽象  // 并非基于JSR107，作出了适当的修改和简化，接口方面保留了CacheManage和Cache
-    @Cacheable  // 没有缓存时新增
-    @CacheEvict  // 删除
-    @CachePut  // 更新
+    @CacheConfig(...)  // 配置cache
+    @Cacheable(...)  // 没有缓存时新增
+    @CachePut(...)  // 更新
+    @CacheEvict(...)  // 删除
+    @Caching(...)  // 组合@Cacheable, @CachePut, @CacheEvict
 
 消息
   规范
