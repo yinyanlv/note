@@ -170,7 +170,10 @@ spring mvc自动配置
       Cache
       Entry
       Expiry
-  spring缓存抽象  // 并非基于JSR107，作出了适当的修改和简化 
+  spring缓存抽象  // 并非基于JSR107，作出了适当的修改和简化，接口方面保留了CacheManage和Cache
+    @Cacheable  // 没有缓存时新增
+    @CacheEvict  // 删除
+    @CachePut  // 更新
 
 消息
   规范
@@ -194,3 +197,13 @@ spring mvc自动配置
   发送邮件任务  // 场景启动器，spring-boot-starter-mail
     JavaMailSenderImpl  // 发送邮件类
     MimeMessageHelper  // 复杂邮件创建类，可创建html，可添加附件
+
+开发热部署
+  开发环境下可禁用spring boot模板引擎的cache  
+  spring loaded  // spring官方提供的热部署程序，实现修改类文件热部署，运行时，添加参数-javaagent:c:/springloaded-1.2.5RELEASE.jar -noverify
+  jrebel
+  spring-boot-devtools  // 推荐，pom.xml中添加依赖，intelij ide设置自动编译为开启状态  
+
+监控
+  spring-boot-starter-actuator  // 可自定义端点配置，如访问路径  
+  HealthIndicator  // 接口，用于自定义健康状态指示器
