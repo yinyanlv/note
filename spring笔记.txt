@@ -35,6 +35,9 @@ ApplicationContext  // ioc容器类
 @PropertySource(value = "classpath:abc.properties")  // 加载指定的properties配置文件
 @ImportResource(locations = {"classpath:abc.xml"})  // 导入spring配置文件，使得配置文件中的内容生效，如导入bean配置文件
 
+@Primary  // 指定为默认
+@Qualifier(...)  // 匹配制定id的bean
+
 配置文件properties  
 配置文件占位符
   a.b＝1
@@ -187,7 +190,17 @@ spring mvc自动配置
   运用场景
     异步处理  // 如：发送邮件，发送短信
     应用解耦  // 微服务
-    流量削峰  // 如：秒杀系统  
+    流量削峰  // 如：秒杀系统
+  RabbitMQ
+    @EnableRabbit  // 使基于注解的配置生效，如@RabbitListener 
+    @RabbitListener(...)  // 监听消息队列
+
+检索
+  ElasticSearch
+    方式
+      jest  // 基于http
+      spring data elasticsearch    
+        @Document(...)  // 配置索引名、类型名等
 
 任务
   异步任务
