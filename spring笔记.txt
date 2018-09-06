@@ -213,6 +213,31 @@ spring mvc自动配置
     JavaMailSenderImpl  // 发送邮件类
     MimeMessageHelper  // 复杂邮件创建类，可创建html，可添加附件
 
+安全
+  认证  // authentication
+  授权  // authorization
+  框架
+    spring security
+      @EnableWebSecurity
+      WebSecurityConfigurerAdapter  // 继承该类
+    shrio    
+
+分布式
+  dubbo + zookeeper  // dubbo，rpc框架，zookeeper，注册中心，第三方安装
+    @Service  // 发布服务
+    @Reference  // 通过全类名寻找服务
+  spring cloud  // 基于轻量级的http
+    五大常用组件
+      netflix eureka  // 服务发现，注册中心
+      netflix ribbon  // 客户端负载均衡
+      netflix hystrix  // 断路器，多次调用失败时，熔断，快速响应失败
+      netflix zuul  // 服务网关
+      spring cloud config  // 分布式配置
+    @EnableEurekaServer  // 启用注册中心功能
+    @EnableDiscoveryClient  // 开启发现服务功能
+    @LoadBalanced  // 负载均衡
+    RestTemplate  // 用于发送http请求
+
 开发热部署
   开发环境下可禁用spring boot模板引擎的cache  
   spring loaded  // spring官方提供的热部署程序，实现修改类文件热部署，运行时，添加参数-javaagent:c:/springloaded-1.2.5RELEASE.jar -noverify
