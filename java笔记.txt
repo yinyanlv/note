@@ -7,7 +7,7 @@ jsr  // java specification requests，java规范提案
 
 *.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
 
-JNI(java native interface)  // 允许java与其它语言写的代码交互
+jni(java native interface)  // 允许java与其它语言写的代码交互
 
                             --- java ee 企业应用 (jsp, ejb, service)
                             |
@@ -20,7 +20,7 @@ JAVA_HOME（新增） jdk文件夹目录
 PATH jdk，bin文件夹目录
 CLASSPATH（新增） jdk，lib文件夹目录
 
-myEclipse，集成了一些优秀的插件
+通过javadoc命令，可将注释生成api帮助文档，javadoc -d out test.java
 
 java数据类型
                        --- 整数类型 (byte, short, int(4), long)，java中没有无符号数
@@ -47,8 +47,6 @@ int b = (int)a;
 常量，程序运行过程中不可改变
 final String ABC = "hello java!";  // 变量名，全部大写
 
-通过javadoc命令，可将注释生成api帮助文档，javadoc -d out test.java
-
 运算符
 算术运算符,  +, -, *, /, %, ++, --
 赋值运算符, =, +=, -=, *=, /=, %=
@@ -62,7 +60,7 @@ if () {  // 判断值必须是boolean类型
 } else {
 }
 
-switch () {  // 判断值必须是数值、字符、字符串（java 7）或枚举类型（不必在每个标签中指明枚举名）
+switch () {  // 判断值必须是数值、字符、字符串（java 7）或枚举类型
 	case 'a':  // 可以是表达式，但不可是带变量的表达式
 		...
 	break;
@@ -83,15 +81,14 @@ continue;
 
 break;
 
+foreach:
+for (int i : arr) {
+}
+
 数组
 int[] list = {1, 2, 3}; or int list2[] = {1, 2, 3};  // 注意，字面量用{}
 int[] a = new int[5];
 int[] b = {1, 2, 3, 4, 5}; 等价于 int[] c = new int[]{1, 2, 3, 4, 5};  // 此时不能指定元素个数
-
-for
-foreach:
-for (int i : arr) {
-}
 
 二维数组
 int[][] a = {{1, 2, 3}, {1, 2, 3}};
@@ -104,7 +101,7 @@ Arrays.toString(arr);
 
 方法
 public class Test {
-	public int print(String a, int b) {  // 方法名驼峰
+	public int print(String a, int b) {
 		return b;
 	}
 }
@@ -188,11 +185,11 @@ class A extends B {
 
 final关键字
 final public ...
-final可修饰类,属性,方法和变量
-修饰类时,该类不可被继承
-修饰属性时,该属性不能自动被隐式初始化,且只能赋值一次
-修饰方法时,该方法不可被重写
-修饰变量时,该变量为常量,只能赋值一次
+final可修饰类，属性，方法和变量
+修饰类时，该类不可被继承
+修饰属性时，该属性不能自动被隐式初始化，且只能赋值一次
+修饰方法时，该方法不可被重写
+修饰变量时，该变量为常量，只能赋值一次
 
 super关键字
 代表父类的实例对象
