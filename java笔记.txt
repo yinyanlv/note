@@ -16,9 +16,9 @@ jni(java native interface)  // 允许java与其它语言写的代码交互
                             --- java me 移动设备，游戏，通信
 
 windows配置环境变量
-JAVA_HOME（新增） jdk文件夹目录
-PATH jdk，bin文件夹目录
-CLASSPATH（新增） jdk，lib文件夹目录
+JAVA_HOME  // jdk文件夹目录
+PATH  // jdk，bin文件夹目录
+CLASSPATH  // jdk，lib文件夹目录
 
 通过javadoc命令，可将注释生成api帮助文档，javadoc -d out test.java
 
@@ -48,7 +48,7 @@ int b = (int)a;
 final String ABC = "hello java!";  // 变量名，全部大写
 
 运算符
-算术运算符,  +, -, *, /, %, ++, --
+算术运算符, +, -, *, /, %, ++, --
 赋值运算符, =, +=, -=, *=, /=, %=
 比较运算符, >, <, >=, <=, ==, !=
 逻辑运算符, &&, ||, !, ^
@@ -61,7 +61,7 @@ if () {  // 判断值必须是boolean类型
 }
 
 switch () {  // 判断值必须是数值、字符、字符串（java 7）或枚举类型
-	case 'a':  // 可以是表达式，但不可是带变量的表达式
+	case 'a':  // 可以是表达式，但不可以是带变量的表达式
 		...
 	break;
 	...
@@ -109,9 +109,7 @@ Test test = new Test();
 int a = test.print();
 
 重载
-一个类中包含了两个或两个以上同名但参数不一致的方法，调用时，可根据传入的参数，调用对应的方法。
-
-类和对象
+一个类中包含了两个或两个以上同名但参数不一致的方法，调用时，可根据传入的参数，调用对应的方法
 
 成员变量，类的属性，声明时可不初始化该变量而使用默认值
 局部变量，类方法中的变量，声明时必须初始化该变量，局部变量不可重复声明
@@ -157,7 +155,7 @@ private修饰变量 -> 创建getter和setter方法 -> 在getter和setter中实�
 
 内部类  // static修饰的内部类，实际上是外部类，此时下面所说的都不成立，内部类 对象名 = new 外部类类名.内部类();
 定义在类内部的类(可定义在方法中)，是外部类的成员，同外部类属性和方法一个级别
-必须使用外部类对象来创建内部类对象，而不能直接去 new 一个内部类对象，即：内部类 对象名 = 外部类对象.new 内部类();
+必须使用外部类对象来创建内部类对象，而不能直接去new一个内部类对象，即：内部类 对象名 = 外部类对象.new 内部类();
 内部类的.class文件文件名格式为：外部类名$内部类名.class
 内部类可访问外部类，外部类不可访问内部类
 要访问外部类的同名变量，可通过：类名.this.{name}访问
@@ -165,7 +163,7 @@ private修饰变量 -> 创建getter和setter方法 -> 在getter和setter中实�
 局部类  // 定义在方法中内部类，一次性使用，可简化为匿名类
 
 匿名类  // 特殊的内部类，一次性使用，局部类简化而来，定义类的同时生成该类的一个实例
-return new A() {  // 匿名类,A为该匿名类，父类或接口的名字
+return new A() {  // 匿名类，A为该匿名类，父类或接口的名字
   public toString() {  // 匿名类的方法
   }
 }
@@ -181,7 +179,7 @@ class A extends B {
 }
 
 重写
-子类的要重写的方法,参数和返回值必须和父类一致,不需要使用特殊的修饰符
+子类的要重写的方法，参数和返回值必须和父类一致，不需要使用特殊的修饰符
 
 final关键字
 final public ...
@@ -203,36 +201,38 @@ enum类型  // jdk1.5，与类同级别，内部也可定义属性、方法、�
 enum A {B, C, D}
 
 多态
-对象的多种形态,两个类要有继承关系
-引用的多态,父类的引用既可以指向本类对象也可以指向子类对象,反过来不成立
+对象的多种形态，两个类要有继承关系
+引用的多态，父类的引用既可以指向本类对象也可以指向子类对象，反过来不成立
 Animal a = new Animal();
 Animal a = new Dog();
-方法的多态,父类引用本类对象时调用的方法为父类方法,父类引用子类对象时,调用的方法为子类继承或重写的方法,注意,该方法父类必须含有,否则报错
+方法的多态，父类引用本类对象时调用的方法为父类方法，父类引用子类对象时，调用的方法为子类继承或重写的方法，注意，该方法父类必须含有，否则报错
 
 引用类型转换
 Dog a = new Dog();
-Animal b = a;  // 自动类型转换,向上类型转换,无风险
-Dog c = b;  // 向下类型转换,存在安全性风险,编译器不会通过
+Animal b = a;  // 自动类型转换，向上类型转换，无风险
+Dog c = b;  // 向下类型转换，存在安全性风险，编译器不会通过
 instanceof运算符
 解决引用类型转换的安全性问题
 if (b instanceof Dog) {
-  Dog d = (Dog)b;  // 强制向下类型转换,且无风险
+  Dog d = (Dog)b;  // 强制向下类型转换，且无风险
 }
 
-抽象类
+抽象类  // like a，抽象类是对一种事物的抽象，即对类抽象
+只能被public或protected修饰，内部可以包含普通的成员变量和成员方法，抽象类可以有静态代码块和静态方法
 abstract关键字
-作用:不关注子类的实现,但约束子类有哪些特征
-public abstract class A {  // 抽象类不能直接创建,定义抽象方法的类必须是抽象类
+作用：不关注子类的实现，但约束子类有哪些特征
+public abstract class A {  // 抽象类不能直接创建，定义抽象方法的类必须是抽象类
   public abstract void call();
 }
 
-接口
-接口,定义类的规范,接口的内容为常量和抽象方法
-interface关键字,一般是public,不可以被private或protected修饰,因为其需要被继承
-接口可以继承多个父接口,和类不同
+接口  // is a，接口是对行为的抽象
+接口，定义类的规范，是比抽象类更高层次的抽象
+只能被public修饰，内部的所有方法都必须是抽象方法，不能有具体的实现，接口中定义的成员变量，会被隐式地指定为public static final，成员方法会被隐式地指定为public abstract，接口中不能含有静态代码块以及静态方法
+interface关键字
+接口可以继承多个父接口，和类不同
 abstract interface {name} extends interface1, interface2, ... {
 }
-implements关键字,实现接口
+implements关键字，实现接口
 public class A extends B implements interface1, interface2, ... {
 }
 可以通过匿名内部类实现接口
@@ -259,7 +259,7 @@ DebugTime.class
 @SupressWarnings  // 让编译器不产生警告
 自定义注解
 @Target(ElementType.METHOD)  // 该注解用于方法上
-@Retention(RetentionPolicy.RUNTIME)  // 该注解可以通过反射读取，CLASS(默认)，RUNTIME，SOURCE
+@Retention(RetentionPolicy.RUNTIME)  // 该注解可以通过反射读取，CLASS(默认，作为字节码修改，插桩，代理的依据，如：aspectj)，RUNTIME，SOURCE
 @Documented  // 该注解会生成到javadoc中
 public @interface A { 
   int abc() default 1;  // 方法名相当于属性名，default关键字，定义默认值，属性值可以是数值、字符、布尔值或数组
@@ -291,7 +291,7 @@ try {
 } finally {
 
 }
-如果try-catch代码块中,存在return
+如果try-catch代码块中，存在return
 try -> catch -> finally（总是会执行，即使try、catch用了return） -> finally.return -> catch.return -> try.return，没有相应的阶段忽略该阶段，任何阶段的return被执行，则整个语句块结束
 异常链
 throws关键字
@@ -301,21 +301,21 @@ public void test() throws AException {  // 有可能抛出
 }
 
 字符串
-java中的字符串一旦创建,就不可改变,如果要创建一个可改变的字符串,需要使用StringBuffer和StringBuilder类
-通过字面量声明的相同字符串,其内存地址一致,其它方式生成的相同字符串,内存地址不一致
-String a = 'abc';
-String b = 'abc';
+java中的字符串一旦创建，就不可改变，如果要创建一个可改变的字符串，需要使用StringBuffer和StringBuilder类
+通过字面量声明的相同字符串，其内存地址一致，其它方式生成的相同字符串，内存地址不一致
+String a = "abc";
+String b = "abc";
 a == b;  // true
-String c = new String('abc');
-String d = new String('abc');
+String c = new String("abc");
+String d = new String("abc");
 c == d;  // false
 
 StringBuffer是线程安全的，而StringBuilder没有实现线程安全功能，所以性能略高
-StringBuilder a = new StringBuilder('abc');
+StringBuilder a = new StringBuilder("abc");
 
 包装类
-基本类型不具备对象的特性,可以通过包装类,使基本类型拥有对象的特性
-jdk1.5,引入了自动装箱拆箱机制
+基本类型不具备对象的特性，可以通过包装类，使基本类型拥有对象的特性
+jdk1.5，引入了自动装箱拆箱机制
 byte Byte
 short Short
 int Integer
@@ -326,8 +326,8 @@ char Character
 boolean Boolean
 
 集合
-存储任意数量具有共同属性的对象,在类的内部,对数据进行组织
-集合长度可自动增长,数组的长度是固定的
+存储任意数量具有共同属性的对象，在类的内部，对数据进行组织
+集合长度可自动增长，数组的长度是固定的
 
            --- List(接口) --- ArrayList, Vector(有一个子类Stack), LinkedList
            |
@@ -335,7 +335,7 @@ Collection --- Queue(接口) --- LinkedList(链表), PriorityQueue, ArrayDeque
            |
            --- Set(接口，不允许重复元素) --- HashSet, TreeSet(底层用TreeMap实现)
 
-Map --- HashMap(哈希表,存储值类型为Entry类<key, value>)
+Map --- HashMap(哈希表，存储值类型为Entry类<key, value>)
     |
     --- TreeMap
     |
@@ -356,7 +356,7 @@ s.filter().map().sum();
 parallelStream()  // 并行流，底层运行多个线程
 
 泛型  // 只能用于引用类型
-规定了某集合只能存储特定类型的对象,会在编译时,检查类型
+规定了某集合只能存储特定类型的对象，会在编译时，检查类型
 public List<ABC> a;  // ABC为泛型约束的类型
 <>  // 针对类型时，写在类名后面，针对方法时，定义泛型方法时，写在方法返回值类型的前面，调用泛型方法时，写在方法名前面
 类型限定
@@ -441,7 +441,7 @@ RandomAccessFile(String name, String mode)
 RandomAccessFile(File file, String mode)
 定位方法
 seek(long pos)
-读写方法
+读写方法读写方法
 readBoolean(), readChar(), readInt(), readLong(), readFloat(), readDouble(), readLine(), readUTF()...
 writeBoolean(), writeChar(), writeInt(), writeLong(), writeFloat(), writeDouble(), writeLine(), writeUTF()...
 
@@ -459,9 +459,9 @@ jpa  // 持久化规范
 jdbc  // 提供规范，具体驱动由数据库厂商提供
 DML  // 返回值，影响的数据行数 or 0 
 DQL  // 返回值，ResultSet，ResultSet.next()返回true or false
-DDL
-DCL
-基本流程：贾琏欲执事
+DDL  // 创建删除库、表等操作
+DCL  // 权限控制
+基本流程：贾琏欲执事  // 贾，加载驱动，事，释放资源
 DAO  // 结合抽取出的jdbcUtil，精简、共用代码
 Statement和PreparedStatement
 事务  // 每一条DML语句，默认自动提交事务
@@ -469,4 +469,3 @@ sql批处理  // mysql开启批处理，连接url增加后缀，?rewriteBatchedS
 获取自动生成的主键
 连接池  // DataSource，一般由服务器提供者提供，DBCP(spring推荐，apache维护)，DRUID(性能最好，阿里维护)，C3P0(性能最差(但测试环境性能较高)，已停止维护，hibernate推荐)
 jdbcTemplate
-BeanHandler和BeanListHandler
