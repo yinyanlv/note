@@ -87,17 +87,17 @@ condition
 1、=, >, <, >=, <=, !=, <>
 2、is [not], [not] null, [not] in, [not] like...  // 使用like时，_: 任意单个字符，%: 任意多个字符，单引号需要进行转义\'
 3、or, and
-group by 
+group by  // 必须在查询结果中包含一个聚集函数
 having
 order by field_name desc  // 默认asc
-limit 1
+limit 1  // limit 0, 1 <=> limit 1 offset 0
 offset 0
 其它
-distinct
+distinct  // select distinct id, name from user，主要用于去重，效率比group by高，group by的设计目的是用于聚合统计
 union [all]
-join  // 只有数据存在时才能连接。即连接结果不能出现空行
-left join  // 如果数据不存在，左表记录会出现，而右表以null填充
-right join  // 如果数据不存在，右表记录会出现，而左表以null填充
+join  // 当连接字段的值在两表中都存在时才连接，即连接结果不出现半行为空
+left join  // 当连接字段的值在右表中不存在，左表记录仍会出现，而右表字段全部以null填充
+right join  // 当连接字段的值在左表中不存在，右表记录仍会出现，而左表字段全部以null填充
 
 更新表中的数据
 update table_name set field_1=value_1, field_2=value_2, ... where [condition];
@@ -109,7 +109,7 @@ delete from table_name where [condition];  // 删除表中所有数据，delete 
 {start transaction | begin}; commit; rollback;
 原子性(Atomicity)
 一致性(Consistency)
-隔离性(Isolation)  // 一个事务对数据库中数据的修改，在未提交前对其它事务的可见性。
+隔离性(Isolation)  // 一个事务对数据库中数据的修改，在未提交前对其它事务的可见性
   隔离级别：
     1、未提交读(read-uncommitted)，脏读，即使事务未提交，修改也对其它事务可见，一般不会用到
     2、已提交读(read-committed)，oracle, sql server等默认
