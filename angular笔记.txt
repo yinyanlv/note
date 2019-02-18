@@ -104,7 +104,7 @@ Default
 })
 
 @Pipe()  // 配置项，pure，默认为true。Pure Pipe：如果传入Pipe的参数没有变，会直接返回之前一次的结果，InPure Pipe：每一次Change Detection都会重新运行Pipe内部的逻辑并返回结果
-@Injectable()  // 标志着一个类（依赖者而非被依赖者）可以被一个注入器实例化。通常来讲，在试图实例化一个没有被标识为@Injectable()的类时候，注入器将会报告错误
+@Injectable()  // 标志着一个类可以被一个注入器实例化。通常来讲，在试图实例化一个没有被标识为@Injectable()的类时候，注入器将会报告错误
 @Inject(APP_CONFIG)  // let APP_CONFIG = new OpaqueToken('app.config');
 @RouteConfig()  // 定义路由
 @Optional()  // 依赖注入时，依赖可选非必须
@@ -138,8 +138,8 @@ ViewContainerRef  // 表示一个视图容器，用于创建和管理内嵌视�
 form  // form标签上，标注属性novalidate，禁用浏览器原生验证
 模板驱动式表单  // FormsModule
 ngForm  // 可通过#f="ngForm"，将ngForm实例赋值给变量f
+ngModelGroup  // 对表单输入内容进行分组，绑定嵌套的字段，可通过#g="ngModelGroup"，将ngModelGroup实例赋值给变量g
 ngModel  // 数据双向绑定，可通过#i="ngModel"，将ngModel实例赋值给变量i，<input [(ngModel)]="user.name"> == <input [ngModel]="user.name" (ngModelChange)="user.name = $event">
-ngModelGroup  // 绑定model对象的嵌套属性名，可通过#g="ngModelGroup"，将ngModelGroup实例赋值给变量g
 ngSubmit  // 输出属性，表单提交时触发
 required
 minlength
