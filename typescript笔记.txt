@@ -8,7 +8,7 @@ string  // 支持模版字符串，嵌入表达式，${age + 1}
 any  // 任意值，let list: any[] = [1, true, "free"]; or let a: any = 1;
 Object  // Object类型与any类似，但只允许你给它赋任意值，但是却不能够在它上面调用任意的方法，即便它真的有这些方法
 void  // 与any类型相反，它表示没有任何类型，void类型的变量没有什么大用，因为你只能为它赋予undefined和null
-undefined  // --strictNullChecks标记，null和undefined只能赋值给void和它们各自，默认情况下null和undefined是所有类型的子类型
+undefined  // --strictNullChecks标记，null和undefined只能赋值给void和它们各自，默认情况下null和undefined是所有类型的子类型（不包括never）
 null
 never  // 表示永远无法到达终点的类型，如异常，never类型是任何类型的子类型，也可以赋值给任何类型，然而，没有类型是never的子类型或可以赋值给never类型（除了never本身之外）
 
@@ -37,9 +37,9 @@ const  // let的升级，阻止对变量进行再一次赋值
 interface SquareConfig {
   color?: string;  // 可选属性
   readonly x: number;  // 只读属性
-  [propName: string]: any;  // 表示的是SquareConfig可以有任意数量的属性，并且只要它们不是color，那么就无所谓它们的类型是什么
   (source: string, subString: string): boolean;  // 函数类型，boolean，函数返回值类型
-  [index: number]: string;  // 可索引的类型
+  [index: number]: string;  // 可索引的类型，数组
+  [propName: string]: any;  // 可索引的类型，对象 
 }
 
 interface ClockInterface {  // 类类型
