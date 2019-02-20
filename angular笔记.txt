@@ -74,7 +74,7 @@ parent ngOnDestroy
 
 @Component({
   moduleId: module.id,  // 为与模块相关的url（如templateUrl）提供基地址
-  selector: 'hero-list', 
+  selector: 'hero-list',  // 对于selector名称冲突的组件，可以再封装一层，定义一个新的selector，从而避免重名 
   templateUrl: 'hero-list.component.html',  // 另一种用法template
   styleUrls: ['./style.scss'],  // 另一种用法style
   providers: [HeroService],  // 在组件providers中定义的服务，只在该组件及其各级子组件中可用
@@ -175,6 +175,13 @@ shadow piercing
 
 打包发布命令
 ng build --prod --aot --base-href /users --deploy-url /public
+
+创建mono-repo  // mono(单)，mono-repo，multi-repo
+ng new my-workspace --create-application=false --defaults  
+  --create-application  // tells the Angular CLI not to generate an initial application
+  --defaults   // tells the Angular CLI not to prompt you about routing and CSS preprocessor
+ng generate application my-app1  // will create projects folder
+ng generate application my-app2  
 
 ---
 
