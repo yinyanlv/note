@@ -44,6 +44,8 @@ maintainers // 维护者数组，每个元素包含name, email(可选), web(可�
 contributors // 贡献者数组，每个元素包含name, email(可选), web(可选)字段，包作者放第一位
 repositories // 仓库托管地址数组，每个元素包含type(仓库类型，如：git), url(仓库地址), path(可选，相对于仓库的路径)
 dependencies
+devDependencies
+peerDependencies  // npm3+不再自动安装peerDependencies，需根据警告，手动修改package.json安装，peer(同辈、同等的)，常用于开发插件时解决同版本依赖的问题，插件作者把插件设计成只能给特定版本的宿主包用，当插件需要某些依赖的支持，但是你又没必要去安装，因为插件的宿主会去安装这些依赖，你就可以用peerDependencies去声明一下需要依赖的插件和版本，如果出问题npm就会有警告来提醒使用者去解决版本冲突问题
 bugs // 数组，提交bug的地址，可以是网址或邮件地址，如：{url: '...', email: '...'}
 licenses // 许可证数组，每个元素包含type(许可证类型)和url(链接到许可证文本的地址)字段
 bin  // 随项目安装的二进制文件
