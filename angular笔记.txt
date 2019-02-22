@@ -104,7 +104,7 @@ Default
 })
 
 @Pipe()  // 配置项，pure，默认为true。Pure Pipe：如果传入Pipe的参数没有变，会直接返回之前一次的结果，InPure Pipe：每一次Change Detection都会重新运行Pipe内部的逻辑并返回结果
-@Injectable()  // 标志着一个类可以被一个注入器实例化。通常来讲，在试图实例化一个没有被标识为@Injectable()的类时候，注入器将会报告错误
+@Injectable()  // 标志着一个类可以被一个注入器实例化。通常来讲，在试图实例化一个没有被标识为@Injectable()的类时候，注入器将会报告错误。providedIn配置项，{ModuleClass} | 'root' | null，设置注入器级别
 @Inject(APP_CONFIG)  // let APP_CONFIG = new OpaqueToken('app.config');
 @RouteConfig()  // 定义路由
 @Optional()  // 依赖注入时，依赖可选非必须
