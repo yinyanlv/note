@@ -61,18 +61,21 @@ parent ngAfterViewChecked
 组件销毁流程       
 child a ngOnDestroy
 child b ngOnDestroy
-parent ngOnDestroy            
+parent ngOnDestroy    
+
+注入器，多个服务、类的容器，实际上就是一个工厂函数，实例化各种服务，每一个组件都有一个自己的注入器
+provider，实际上就是服务的一层包装，用来标识服务
 
 装饰器
 @NgModule({
   declarations: [AppComponent],  // 声明本模块拥有的视图类，angular有3种视图类，组件、指令、管道（如：currentHero?.birthdate | date:'longDate'）
   exports: [AppComponent],  // declarations的子集，定义可在其它模块中使用的组件
   imports: [BrowserModule],  // 本模块组件模板中需要由其它模块导出的类
-  providers: [Logger]  // 在模块providers中定义的服务，会被注册到根注入器，在应用中的任何部分都可被访问到，注意，懒加载模块中通过providers定义的服务，并未注册到根注入器，因此，这些服务只能在子模块中使用，另一种用法：useClass，useExisting（定义别名），useValue，useFactory
+  providers: [Logger]  // 在模块providers中定义的服务，会被注册到根注入器，在应用中的任何部分都可被访问到，注意，懒加载模块中通过providers定义的服务，并未注册到根注入器，因此，这些服务只能在子模块中使用，另一种用法：useClass（常用于mock接口、无缝升级等），useExisting（使用另一个已存在的provider，类似定义provider别名，常用于兼容旧组件），useValue，useFactory（常用于需要基于当时的信息动态生成一个依赖值。deps配置项，定义所需依赖）
   bootstrap: [AppComponent]  // 标识出应用的主视图（被称为根组件），它是所有其它视图的宿主，只有根模块才能设置bootstrap属性
 })
 
-@Component({
+@Component({  // 每个组件实例都会自动被添加到其本身对应的注入器的内部容器中，因此可以通过依赖注入查找到知道具体类名的父组件
   moduleId: module.id,  // 为与模块相关的url（如templateUrl）提供基地址
   selector: 'hero-list',  // 对于selector名称冲突的组件，可以再封装一层，定义一个新的selector，从而避免重名 
   templateUrl: 'hero-list.component.html',  // 另一种用法template
@@ -104,8 +107,8 @@ Default
 })
 
 @Pipe()  // 配置项，pure，默认为true。Pure Pipe：如果传入Pipe的参数没有变，会直接返回之前一次的结果，InPure Pipe：每一次Change Detection都会重新运行Pipe内部的逻辑并返回结果
-@Injectable()  // 标志着一个类可以被一个注入器实例化。通常来讲，在试图实例化一个没有被标识为@Injectable()的类时候，注入器将会报告错误。providedIn配置项，{ModuleClass} | 'root' | null，设置注入器级别
-@Inject(APP_CONFIG)  // let APP_CONFIG = new OpaqueToken('app.config');
+@Injectable()  // 表示一个类可以由注入器进行创建，即该类的构造器参数可以通过注入器注入依赖。@Component、@Directive、@Pipe都是@Injectable的子类，因此组件无需再装饰@Injectable()。providedIn配置项，{ModuleClass} | 'root' | null，设置注入器级别
+@Inject(APP_CONFIG)  // let APP_CONFIG = new InjectionToken('app.config')，'app.config'，token的描述
 @RouteConfig()  // 定义路由
 @Optional()  // 依赖注入时，依赖可选非必须
 @SkipSelf()  // 依赖注入时，跳过依赖自身，防止循环依赖
@@ -126,7 +129,7 @@ ng-container  // *ngComponentOutlet指令，用于动态创建组件，*ngCompon
   content  // 可选，component模板中有ng-content时使用，this.myContent = [[document.createTextNode('hello')], [document.createTextNode('world')]]; 注意是二维数组，第一维的数组索引，代表ng-content的位置，第二维为该ng-content中要存放的内容
   ngModuleFactory  // 可选，component来自其它模块时使用，this.myModule = this.compiler.compileModuleSync(OtherModule); this.compiler为Compiler类的实例，通过constructor依赖注入，OtherModule不需要事先导入到AppModule中，this.myModule的类型为NgModuleFactory<any>
 
-forwardRef  // 让我们可以在使用构造函数注入时，使用尚未定义的依赖对象类型（定义的class未提升），@Inject(forwardRef(() => Buffer)) private buffer
+forwardRef  // 让我们可以在使用构造函数注入时，使用尚未定义的依赖对象类型（定义的class未提升），@Inject(forwardRef(() => Buffer)) private buffer，还可以用来去除循环引用，TypeScript中只能引用已经定义了的对象，因此当class A引用class B，而class B又引用class A时，会出错，forwarRef()函数会返回一个非直接引用
 ChangeDetectorRef  // 组件的变化检测器的引用，markForCheck()（下一个周期，强制执行变化检测，注意：会对整个应用进行变化检测），detach()，reattach()，detectChanges()（只对该组件及其各个子组件执行变化检测）
 ElementRef  // 封装不同平台下视图层中的native元素
 ComponentRef  // 组件的引用
