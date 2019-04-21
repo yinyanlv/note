@@ -96,7 +96,7 @@ range(start, end, step)  // 返回在特定区间的自然数序列，返回的�
 (number for number in range(1, 6))  // 生成器推导式，圆括号之间的是生成器推导式(元组没有推导式)，它返回的是一个生成器对象，一个生成器只能运行一次，但是生成器仅在运行中产生值，不会被存下来，所以不能重新使用或者备份一个生成器
 
 in
-not in
+not
 with
 is
 
@@ -138,13 +138,13 @@ class B(A):  // A，父类
 super()  // 可通过它，调用父类的方法
 
 属性  // 通常用于getter，setter
-name = property(get_name, set_name)
+abc = property(get_abc, set_abc)  // 写在类中，get_abc，set_abc必须先定义，否则找不到方法
 或
 @property  // 修饰符
-def name(self):
+def abc(self):
   print('inside the getter')
-@name.setter
-def name(self, input_name):
+@abc.setter  // 不定义setter方法就是一个只读属性
+def abc(self, input_name):
   print('inside the setter')
 
 私有特性
