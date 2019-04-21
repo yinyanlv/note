@@ -188,3 +188,13 @@ duck = Duck(bill, tail)
 命名元组  // 命名元组并不是python自动支持的类型，命名元组是不可变的，与使用对象相比，使用命名元组在时间和空间上效率更高
 from collections import namedtuple
 命名元组是元组的子类，你既可以通过名称（使用.name）来访问其中的值，也可以通过位置进行访问（使用[offset]）
+
+虚拟环境  // 隔离安装包
+python -m venv your_env_name  // 如果使用的是较早版本的python或者系统没有正确的设置，不能使用模块venv，可安装virtualenv，pip install --user virtualenv，创建虚拟环境，virtualenv your_env_name
+source your_env_name/bin/activate  // 激活虚拟环境
+deactivate  // 停止使用虚拟环境
+
+项目依赖包
+pip freeze > requirements.txt
+pip install -r requirements.txt
+
