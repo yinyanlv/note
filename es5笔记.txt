@@ -1,26 +1,45 @@
 闭包可以跨多层作用域捕获变量
+方法也可以用作构造函数
 函数调用模式本质上是调用全局对象的方法，即fn()本质上是global.fn()
 函数调用模式，this默认指向global对象，使用'use strict';时，this指向undefined
 new操作符可以把this绑定到当前生成的对象
-如果通过bind方法绑定this指向，无法通过call，apply，bind方法改变this指向
+如果通过bind方法绑定this指向，无法通过call，apply，bind方法改变this指向，但new操作符可以把this重新绑定到当前新生成的对象
 call，apply，bind方法的第一个参数如果null，undefined，不传，this将会指向global对象（非严格模式下）
 call，apply，bind方法的第一个参数如果是原始值，该原始值将被自动转换为对应的包装对象，如fn.call(1)，this将指向Number，并且这个Number的[[PrimitiveValue]]值为1，可以通过this.valueOf()取值
 
+Function.prototype.myCall = function(ctx, ...args) {
+	ctx = ctx ? Object(ctx) : global;
+	const fn = Symbol('fn');
+	ctx[fn] = this;
+	ctx[fn](...args);
+	Reflect.deleteProperty(ctx, fn);  // 等同于delete ctx[fn]
+	return result;
+}
+
+Function.prototype.myApply = function(ctx, args) {  // 可以检查一下args是不是数组
+	ctx = ctx ? Object(ctx) : global;
+	const fn = Symbol('fn');
+	ctx[fn] = this;
+	ctx[fn](...args);
+	Reflect.deleteProperty(ctx, fn);  // 等同于delete ctx[fn]
+	return result;
+}
+
 Function.prototype.myBind = function (ctx, ...args1) {
-	let _this = this;
-	let temp = function() {};  // 定义一个空的函数
-	let boundFunc = function (...args2) {
-		return _this.call(this instanceof temp ? this : ctx, ...args1, ...args2)
+	let self = this;
+	let temp = function() {}; 
+	let boundFn = function (...args2) {  
+		return self.call(this instanceof temp ? this : ctx, ...args1, ...args2);  // bind后的函数还有可能会被new操作符使用，用来创建对象，此时this得绑定到新对象上，所以不能把ctx传入
 	};
-	temp.prototype = this.prototype;  // 继承绑定函数原型的值
-	boundFunc.prototype = new temp();  // 使用new操作符创建实例并赋值
-	return boundFunc;
+	temp.prototype = this.prototype;  // 如果直接boundFn.prototype = this.prototype，当修改boundFn.prototype时，会直接影响this.prototype，所以，得做一层隔离
+	boundFn.prototype = new temp();  // 使用new操作符创建新对象作为boundFn的原型
+	return boundFn;
 }
 
 function myNew(Constructor, ...args) { 
 	let newObj = {};
 	newObj.__proto__ = Constructor.prototype;
-	Constructor.call(newObj, ...args);  
+	Constructor.call(newObj, ...args);  // 绑定this，做相关的初始化 
 	return newObj;
 }
 
