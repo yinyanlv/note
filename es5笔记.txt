@@ -1,48 +1,39 @@
+闭包可以跨多层作用域捕获变量
+函数调用模式本质上是调用全局对象的方法，即fn()本质上是global.fn()
+函数调用模式，this默认指向global对象，使用'use strict';时，this指向undefined
+new操作符可以把this绑定到当前生成的对象
+如果通过bind方法绑定this指向，无法通过call，apply，bind方法改变this指向
+call，apply，bind方法的第一个参数如果null，undefined，不传，this将会指向global对象（非严格模式下）
+call，apply，bind方法的第一个参数如果是原始值，该原始值将被自动转换为对应的包装对象，如fn.call(1)，this将指向Number，并且这个Number的[[PrimitiveValue]]值为1，可以通过this.valueOf()取值
+
+Function.prototype.myBind = function (ctx, ...args1) {
+	let _this = this;
+	let temp = function() {};  // 定义一个空的函数
+	let boundFunc = function (...args2) {
+		return _this.call(this instanceof temp ? this : ctx, ...args1, ...args2)
+	};
+	temp.prototype = this.prototype;  // 继承绑定函数原型的值
+	boundFunc.prototype = new temp();  // 使用new操作符创建实例并赋值
+	return boundFunc;
+}
+
+function myNew(Constructor, ...args) { 
+	let newObj = {};
+	newObj.__proto__ = Constructor.prototype;
+	Constructor.call(newObj, ...args);  
+	return newObj;
+}
+
 Array
-
-forEach
-arr.forEach(function(value, index, array) {
-
-}, [thisObject]);
-forEach不会遍历纯粹“占着官位吃空饷”的元素的。
-
-map  映射，callback需要有return，如果没有return，则每一项都返回undefined
-arr.map(callback, [thisObject]);
-
-filter  过滤，类似map，callback函数需要返回布尔值true或false。如果为true则表示通过
-arr.filter(callback, [thisObject]);
-
-some  指是否“某些项”合乎条件。callback函数需要返回布尔值true或false。
-array.some(callback,[ thisObject]);
-
-every  指是否所有项都合乎条件。callback函数需要返回布尔值true或false。
-array.every(callback,[ thisObject]);
-
-indexOf  返回整数索引值，如果没有匹配（严格匹配），返回-1。fromIndex默认为0
-array.indexOf(searchElement, [fromIndex]);
-
-lastIndexOf  返回整数索引值，如果没有匹配（严格匹配），返回-1。fromIndex默认为arr.length - 1
-array.lastIndexOf(searchElement[, fromIndex]);
-
-reduce  中文“减少，简约”，实际意义更像“迭代”、“递归(recursion)”，每一次迭代的返回值作为下一项的previous。
-array.reduce(callback, [initialValue]);
-callback函数接受4个参数：之前值、当前值、索引值以及数组本身。initialValue参数可选，表示初始值。若指定，则当作最初使用的previous值；如果缺省，则使用数组的第一个元素作为previous初始值，同时current往后排一位，相比有initialValue值少一次迭代。
-var sum = [1, 2, 3, 4].reduce(function (previous, current, index, array) {
-  return previous + current;
-});
-console.log(sum);  // 10
-// 初始设置
-previous = initialValue = 1, current = 2
-// 第一次迭代
-previous = (1 + 2) =  3, current = 3
-// 第二次迭代
-previous = (3 + 3) =  6, current = 4
-// 第三次迭代
-previous = (6 + 4) =  10, current = undefined (退出)
-
-reduceRight  reduceRight是从数组的末尾开始实现。
-array.reduceRight(callback[, initialValue]);
-
+forEach  // 不会遍历纯粹“占着官位吃空饷”的元素
+map 
+filter 
+some
+every  
+indexOf  
+lastIndexOf
+reduce  // 如果initialValue缺省，则使用数组的第一个元素作为previousValue，同时currentValue往后排一位，相比有initialValue的少一次迭代。每一轮迭代的返回值作为下一轮的previousValue
+reduceRight 
 
 Object
 Object.create(prototype[,descriptors]);  // 创建一个对象，并把prototype赋值为第一个参数，同时可以设置多个descriptors
