@@ -137,7 +137,7 @@ ComponentRef  // 组件的引用
 TemplateRef  // 模板的引用，TemplateRef实例中引用ElementRef（comment元素的封装），createEmbeddedView(null)返回embeddedViewRef
 ViewRef  // 视图对象，表示angular视图元素
 EmbeddedViewRef  // 内嵌视图，表示模板中定义的视图元素，rootNodes属性包含了模板的所有节点，通常与TemplateRef配合使用，继承自ViewRef
-ViewContainerRef  // 表示一个视图容器，用于创建和管理内嵌视图（TemplateRef）或组件视图（ComponentRef），实例中引用ElementRef，createEmbeddedView(templateRef)简化通过模板创建视图，createComponent(...)
+ViewContainerRef  // 表示一个视图容器（当作兄弟节点，而非父节点），用于创建和管理内嵌视图（TemplateRef）或组件视图（ComponentRef），实例中引用ElementRef，createEmbeddedView(templateRef)简化通过模板创建视图，createComponent(...)
 
 form  // form标签上，标注属性novalidate，禁用浏览器原生验证
 模板驱动式表单  // FormsModule
