@@ -71,7 +71,8 @@ provider，实际上就是服务的一层包装，用来标识服务
   declarations: [AppComponent],  // 声明本模块拥有的视图类，angular有3种视图类，组件、指令、管道（如：currentHero?.birthdate | date:'longDate'）
   exports: [AppComponent],  // declarations的子集，定义可在其它模块中使用的组件
   imports: [BrowserModule],  // 本模块组件模板中需要由其它模块导出的类
-  providers: [Logger]  // 在模块providers中定义的服务，会被注册到根注入器，在应用中的任何部分都可被访问到，注意，懒加载模块中通过providers定义的服务，并未注册到根注入器，因此，这些服务只能在子模块中使用，另一种用法：useClass（常用于mock接口、无缝升级等），useExisting（使用另一个已存在的provider，类似定义provider别名，常用于兼容旧组件），useValue，useFactory（常用于需要基于当时的信息动态生成一个依赖值。deps配置项，定义所需依赖）
+  providers: [Logger],  // 在模块providers中定义的服务，会被注册到根注入器，在应用中的任何部分都可被访问到，注意，懒加载模块中通过providers定义的服务，并未注册到根注入器，因此，这些服务只能在子模块中使用，另一种用法：useClass（常用于mock接口、无缝升级等），useExisting（使用另一个已存在的provider，类似定义provider别名，常用于兼容旧组件），useValue，useFactory（常用于需要基于当时的信息动态生成一个依赖值。deps配置项，定义所需依赖）
+  entryComponents: [AppComponent],  // 动态组件，定义在模块声明时需要立刻被编译的组件，angular将会为这些组件创建ComponentFactory，并且将存储这些ComponentFactory到ComponentFactoryResolver中
   bootstrap: [AppComponent]  // 标识出应用的主视图（被称为根组件），它是所有其它视图的宿主，只有根模块才能设置bootstrap属性
 })
 
