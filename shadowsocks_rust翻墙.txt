@@ -50,3 +50,7 @@ nohup ssserver -c config.json &
 
 8、配置并启动你本地的shadowsocks客户端
 本地shadowsocks客户端和shadowsocks-rust无关，只要把本地客户端的服务器地址、端口、密码修改为我们刚配置好的shadowsocks-rust服务器即可。
+各平台shadowsocks客户端：
+windows：https://github.com/shadowsocks/shadowsocks-windows
+android：https://github.com/shadowsocks/shadowsocks-android
+ios：https://github.com/RobertYan/ShadowsocksX
