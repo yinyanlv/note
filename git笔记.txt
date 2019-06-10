@@ -54,6 +54,7 @@ git branch -d dev  // 删除dev分支
 git branch -D feature  // 强行丢弃一个没有被合并过的分支
 git checkout -b dev  // 创建并切换分支，相当于git branch dev，git checkout dev
 git checkout -b dev origin/dev  // 从远程库克隆时，默认只能看到master分支，要想看到其它分支，可使用该命令
+git checkout --track origin/yourbranch  // 切换到远程分支
 git branch --set-upstream dev origin/dev  // 指定本地分支和远程分支的连接
 
 git merge dev  // 合并指定分支到当前分支，Fast forward模式（快进模式），在这种模式下，删除分支后，会丢掉分支信息
