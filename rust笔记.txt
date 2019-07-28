@@ -493,3 +493,7 @@ RefCell  // 在不确定一个对象是否实现了Copy时，直接选RefCell，
 是普通旧式类型，它不移动所有权，因此rust编译器不能保证不出像释放后使用这种bug
 缺少任何形式的生命周期，不像&，因此编译器不能判断出悬垂指针（dangling pointer）
 除了不允许直接通过*const T改变外，没有别名或可变性的保障
+
+交叉编译
+musl
+CROSS_COMPILE=x86_64-linux-musl- cargo build --release --target=x86_64-unknown-linux-musl
