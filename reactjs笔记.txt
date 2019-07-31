@@ -49,6 +49,24 @@ this.forceUpdate()  // 可以通过shouldComponentUpdate停止更新过程，从
 propTypes  // PropTypes目前由独立的npm包prop-types提供。只在开发时有作用，即使报错，也不会影响组件的正常执行。线上部署时，可以通过babel-react-optimize包，将代码中的propTypes相关的代码去掉
 defaultProps
 
+fiber架构下，如果开启async rendering，在render函数之前的所有函数，都有可能被执行多次
+
+react v16.0
+getDerivedStateFromError  // 静态方法，参数error对象
+componentDidCatch  // 非静态方法，参数error，info，一般用于记录错误日志，真正控制组件渲染的逻辑还是在render方法中
+
+react v16.3  // deprecate了componentWillReceiveProps、componentWillMount、componentWillUpdate
+getDerivedStateFromProps  // 静态方法，参数nextProps, prevState，用于取代componentWillReceiveProps
+组件首次装载时，getDerivedStateFromProps会被调用
+每当父组件引发当前组件的渲染时，getDerivedStateFromProps会被调用
+组件自身setState或forceUpdate时，getDerivedStateFromProps不会被调用，react v16.4更改了这一点
+
+getSnapshotBeforeUpdate  // 非静态方法，参数prevProps，prevState，只在更新过程中被调用，装载过程中不被调用
+该函数会在render之后执行，而执行之时DOM元素还没有被更新，给了一个机会去获取DOM信息，返回一个snapshot，这个snapshot会作为componentDidUpdate的第三个参数传入
+
+react v16.4
+getDerivedStateFromProps，无论是mounting还是updating，也无论是因为什么引起的updating，全部都会被调用
+
 flux
 action  // 生成并发送action，dispatcher.dispatch(...)
 dispatcher   // dispatcher.waitFor([...]);
