@@ -12,7 +12,7 @@ Function.prototype.myCall = function(ctx, ...args) {
 	ctx = ctx ? Object(ctx) : global;
 	const fn = Symbol('fn');
 	ctx[fn] = this;
-	ctx[fn](...args);
+	const result = ctx[fn](...args);
 	Reflect.deleteProperty(ctx, fn);  // 等同于delete ctx[fn]
 	return result;
 }
@@ -21,7 +21,7 @@ Function.prototype.myApply = function(ctx, args) {  // 可以检查一下args是
 	ctx = ctx ? Object(ctx) : global;
 	const fn = Symbol('fn');
 	ctx[fn] = this;
-	ctx[fn](...args);
+	const result = ctx[fn](...args);
 	Reflect.deleteProperty(ctx, fn);  // 等同于delete ctx[fn]
 	return result;
 }
