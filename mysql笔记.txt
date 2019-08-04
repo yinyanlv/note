@@ -61,8 +61,8 @@ CREATE TABLE `test` (
     `overtime` FLOAT(4,2) DEFAULT 0.0,
     `create_time` DATETIME NOT NULL,
     `update_time` DATETIME NOT NULL,
-    KEY `username` (`username`),  -- 第一个`username`，索引名
     INDEX (`date`, `overtime`)
+    KEY `username` (`username`),  -- 第一个`username`，键名
     UNIQUE KEY `username` (`username`),
     CONSTRAINT `work_record_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`)  // {on update | on delete}， {cascade | set null | restrict}
     -- cascade: 主表数据被更新(主键值更新)，从表也被更新(外键值更新)。主表记录被删除，从表相关记录也被删除
