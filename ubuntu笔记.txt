@@ -113,7 +113,7 @@ PuTTYgen  // 可选，通过***.pem生成***.ppk私钥
 # 通过ssh，实现无密码登录
 1、ssh-keygen -t rsa -b 4096 -C "{email_address}"  // 在客户端执行，生成公钥私钥，密码可不输入，会在~/.ssh目录下，生成id_rsa、id_rsa.pub文件
 2、eval "$(ssh-agent -s)"  //  在客户端执行，打开客户端ssh代理
-3、ssh-add ~/.ssh/id_rsa  // 在客户端执行，将id_rsa，加入到代理中
+3、ssh-add ~/.ssh/id_rsa  // 在客户端执行，将id_rsa，加入到代理中，-K，持久化，保证重启系统时，该设置仍然生效
 4、ssh-keygen -t rsa -b 4096 -C "{email_address}"  // 在服务器端执行，如果服务器已有公钥私钥，可不执行
 5、eval "$(ssh-agent -s)"  // 在服务器端执行
 6、ssh-add ~/.ssh/id_rsa  // 在服务器端执行
