@@ -1,10 +1,13 @@
 编译过程
-预编译  // .h，.c
-编译
-汇编
-链接  // 得到可执行文件
+预处理  // 得到.i文件，将所有#include的头文件以及宏定义替换成其真正的内容，预处理之后得到的仍然是文本文件，但文件体积会大很多
+编译  // 得到.s文件，将经过预处理之后的程序转换成特定汇编代码
+汇编  // 得到.o文件，将汇编代码转换成机器码
+链接  // 将多个目标文件以及所需的库文件(.so等)链接生成最终的可执行文件
 
 gcc  // GNU Compiler Collection
+gcc -E hello.c > hello.i  // 输出预处理文件
+gcc -S hello.c > hello.s  // 输出汇编文件
+gcc hello.c -o hello.out -L/usr/lib -lm  // -l，添加链接库，m是数学库libm.a的基本名称，-L，为gcc增加一个搜索链接库的目录
 gcc -c hello.c  // 输出目标文件（.o/.obj），hello.o，编译器编译源代码但不执行链接
 gcc -o hello.c hello  // 输出可执行文件hello，如果没有-o和后面的参数，gcc编译器默认输出a.out
 
