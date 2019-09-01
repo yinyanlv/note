@@ -148,6 +148,14 @@ entity.a 等价于 (&entity)->a  // 括号不可以省略
 从用户角度，分为普通文件和设备文件（指与主机相连的各种外部设备，如显示器、键盘等，在操作系统中，把外部设备看作一个文件来管理。如显示器定义为标准输出文件，键盘定义为标准输入文件）
 从文件的编码方式上，分为文本文件和二进制文件
 
+标准输入输出函数
+scanf
+printf
+getchar
+putchar
+gets
+puts
+
 文件指针  // FILE *file;FILE类型是一个结构体，定义在stdio.h中
 文件位置指针  // 文件中有一个位置指针，用于指向当前文件的读写位置
 标准设备文件是由操作系统控制的，由系统自动打开或关闭，c语言提供了3个标准设备文件的文件指针，stdin、stdout、stderr，定义在stdio.h中
@@ -156,4 +164,41 @@ entity.a 等价于 (&entity)->a  // 括号不可以省略
 FILE *fopen(const char *path, const char *mode);  // 文件不存在时，返回NULL
 
 文件关闭
-fclose(fp);  // 关闭成功返回NULL，关闭失败返回非NULL值
+int fclose(FILE *fp);  // 关闭成功返回NULL，关闭失败返回非NULL值
+
+文件顺序读写
+字符读写函数  // 适用于读写较小的文件
+int fgetc(FILE *fp);  // 从文件中读取一个字符，正常时返回读取字符的ascii码值，异常时返回EOF（-1）
+int fputc(int ch, FILE *fp);  // 写一个字符到文件中，正常时返回读取字符的ascii码值，异常时返回EOF（-1）
+字符串读写函数  // 适用于读写较小的文件
+char *fgets(char *str, n, FILE *fp);  // 从文件中读取n-1个字符，存储到str所指向的内存中，最后加上结束'\0'，正常时返回字符串str的内存首地址，异常时返回NULL
+int fputs(char *str, FILE *fp);  // 将字符串str写入到文件中，正常时返回写入文件的字符个数，即字符串长度，异常时返回NULL
+格式化读写函数  // 适用于读写较小的文件
+int fscanf(FILE *fp, char *format, char* arg_list);  // 成功时，返回成功读入参数的个数，失败时返回EOF（-1）
+int fprintf(FILE *fp, char *format, char* arg_list);  // 成功时，返回写入文件的字符个数，失败时返回一个负值
+数据块读写函数 
+int fread(void *buffer, unsigned size, unsigned count, FILE *fp);  // 按二进制形式，将size*count个字节读到buffer中，成功时，返回数据块的数量，出错时，返回0
+int fwrite(void *buffer, unsigned size, unsigned count, FILE *fp);  // 按二进制形式，将size*count个字节写入，从buffer中读出然后写入到文件中，成功时，返回数据块的数量，出错时，返回0
+
+文件随机读写  // 移动文件位置指针后，可以用任意一种读写函数进行读写
+符号常量
+SEEK_SET 0  // 文件首
+SEEK_CUR 1  // 当前位置
+SEEK_END 2  // 文件末尾 
+文件定位  // 按要求移动文件位置指针
+void rewind(FILE *fp);  // 将文件位置指针宠重新指向文件的首部
+int fseek(FILE *fp, long offset, int base);  // 将文件位置指针移到基于base的相对位置offset（以字节为单位）处，正常时返回当前文件位置指针的位置，异常时返回-1，一般用于二进制文件，在文本文件中由于要进行转换，往往计算的位置会出现错误
+long ftell(FILE *fp);  // 获取文件位置指针的当前读写位置，正常时返回位移量（以字节为单位），异常时返回-1
+
+文件检测函数
+检测文件是否结束
+int feof(FILE *fp);  // 如果文件结束返回1，否则返回0
+检测读写文件时是否出错
+int ferror(FILE *fp);  // 如果读写时没有出现错误，返回0，否则返回非0
+重置文件结束标志和文件出错标志
+void clearerr(FILE *fp);  // 将文件结束标志和出错标志重置为0
+
+其它文件操作函数
+create  // 创建文件，io.h
+remove  // 删除文件，stdio.h
+searchpath  // 查找文件，dir.h
