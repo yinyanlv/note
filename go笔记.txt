@@ -1,0 +1,23 @@
+当一个程序启动的时候，只有一个goroutine来调用main函数，称它为主goroutine，新的goroutine通过go语句进行创建
+
+将一个数据value写入channel，这会导致阻塞，直到有其他goroutine从这个channel中读取数据
+从channel中读取数据，如果channel之前没有写入数据，也会导致阻塞，直到channel中被写入数据为止
+goroutine的通道默认是是阻塞的，可以通过加一个缓冲区来缓解阻塞  // ch := make(chan string, 5)
+
+非缓冲通道上如果发生了流入无流出，或者流出无流入，就会引起死锁
+goroutine死锁处理方式
+1、使goroutine非缓冲通道的流入和流出成对出现
+2、创建缓冲通道
+
+select语句
+go语言中select的功能与epoll(nginx)/poll/select的功能类似，都是坚挺IO操作，当IO操作发生的时候，触发相应的动作。
+如果有多个case都可以运行，select会随机公平地选出一个执行，其他不会执行
+case后面必须是channel操作，否则报错
+select中的default子句总是可运行的，所以没有default的select才会阻塞（死锁）
+空select，也会引起阻塞（死锁）  // 加default
+没有可运行的case，那么将会发生阻塞
+
+select语句应用场景
+timeout机制  // 超时判断
+判断channel是否阻塞  // 或者说channel是否已经满了
+退出机制  // 退出循环一定要用break+具体的标记，或者goto也可以，否则其实不是真的退出

@@ -81,6 +81,9 @@ set() | {1, 2, 3}  // 只有{}时，会创建空字典
 
 None
 
+条件运算符
+is_true = True if a == 1 else False
+
 条件语句
 if elif else
 
