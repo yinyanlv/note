@@ -60,7 +60,7 @@ obj.(T)  // 判断obj对象是否实现了某接口
 接口嵌套  // 继承
 
 类型断言
-Comma-ok断言  //  if _, ok := obj.(int); ok {}
+comma-ok断言  //  if _, ok := obj.(int); ok {}，comma（逗号）
 switch判断  // switch  value := obj.(type) { case int: }，type为关键字
 
 当一个程序启动的时候，只有一个goroutine来调用main函数，称它为主goroutine，新的goroutine通过go语句进行创建
