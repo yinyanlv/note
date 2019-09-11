@@ -72,7 +72,7 @@ goroutine死锁处理方式
 2、创建缓冲通道
 
 select语句
-go语言中select的功能与epoll(nginx)/poll/select的功能类似，都是坚挺IO操作，当IO操作发生的时候，触发相应的动作。
+go语言中select的功能与epoll(nginx)/poll/select的功能类似，都是坚挺IO操作，当IO操作发生的时候，触发相应的动作
 如果有多个case都可以运行，select会随机公平地选出一个执行，其他不会执行
 case后面必须是channel操作，否则报错
 select中的default子句总是可运行的，所以没有default的select才会阻塞（死锁）
