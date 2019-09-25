@@ -201,9 +201,15 @@ python -m venv your_env_name  // 如果使用的是较早版本的python或者�
 source your_env_name/bin/activate  // 激活虚拟环境
 deactivate  // 停止使用虚拟环境
 
-python -m 
-python abc/run.py  // 直接运行脚本，当前脚本所在的路径会加入到sys.path列表中，但是sys.modules字典中的__main__的路径不是绝对路径，只是脚本名称
-python -m abc.run  // 不能加.py后缀，.表示目录层级。该模式，相当于import，当做模块方式运行，当前脚本所在的路径不会加入到sys.path列表中，但是sys.modules字典中的__main__的路径是绝对路径，同时，还引入了runpy和pkgutil两个模块
+__name__  // __name__ == '__main__'
+__package__
+__file__
+__init__.py
+__main__.py
+setup.py
+
+python abc/run.py  // 直接运行脚本
+python -m abc.run  // 不能加.py后缀，.表示目录层级。该模式，相当于import，当做模块方式运行
 sys.path  // 一个列表，保存着模块的搜索路径
 sys.modules  // 一个字典，所有加载到内存中的模块都存放在该字典中
 runpy模块  // 定位并执行该模块。主要用途在于实现命令行-m执行python模块的效果
