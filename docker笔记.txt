@@ -1,0 +1,102 @@
+从17.03版本之后分为CE（Community Edition: 社区版）和EE（Enterprise Edition: 企业版）
+
+退出容器，exit或ctrl + d
+
+Docker镜像  // image，Docker镜像是用于创建Docker容器的模板
+Docker容器  // container，容器是独立运行的一个或一组应用
+Docker客户端  // client，Docker客户端通过命令行或者其他工具使用Docker API与Docker的守护进程通信
+Docker主机  // host，一个物理或者虚拟的机器用于执行Docker守护进程和容器
+Docker仓库  // registry，Docker仓库用来保存镜像
+Docker Machine  // Docker Machine是一个简化Docker安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker
+
+docker info  // docker自身相关信息
+docker version  // docker版本
+docker stats
+
+镜像仓库
+docker search
+  NAME  // 镜像仓库源的名称
+  DESCRIPTION  // 镜像的描述
+  OFFICIAL  // 是否docker官方发布
+docker pull
+docker login
+docker push
+
+本地镜像管理
+docker images  // 列出本地主机上的镜像
+  REPOSITORY  // 表示镜像的仓库源
+  TAG  // 镜像的标签，同一仓库源可以有多个TAG，代表这个仓库源的不同版本，如ubuntu:15.10、ubuntu:14.04，15.10、14.04、latest为tag
+  IMAGE ID  // 镜像ID
+  CREATED  // 镜像创建时间
+  SIZE  // 镜像大小
+docker tag {container_id} {username}/{repository_name}:{tag_name} // 为镜像添加标签，如：docker tag 860c279d2fec test/centos:dev
+docker build ...
+docker commit ...
+docker history ...
+docker rmi
+docker save
+docker load
+docker import
+
+创建镜像  // 当从docker镜像仓库中下载的镜像不能满足需求时，可以通过以下两种方式对镜像进行更改
+1、从已经创建的容器中更新镜像，并且提交这个镜像
+2、使用Dockerfile指令来创建一个新的镜像
+
+更新镜像
+docker commit ...  // 更新镜像之前，需要使用之前的镜像来创建一个容器，作出相关的修改，然后退出容器，然后，提交修改，如：docker commit -m="has update" -a="test" e218edb10161 test/ubuntu:v2
+  -m  // 提交的描述信息
+  -a  // 指定镜像作者
+  e218edb10161  // 容器id
+  test/ubuntu:v2  // 指定要创建的目标镜像名
+
+新建镜像
+docker build ...  // 从零开始来创建一个新的镜像，需要创建一个Dockerfile文件，如：docker build -t test/centos:6.7 .
+  -t  // 指定要创建的目标镜像名
+  .  // Dockerfile文件所在目录，也可以指定Dockerfile的绝对路径
+Dockerfile文件
+每一个指令都会在镜像上创建一个新的层，每一个指令的前缀都必须是大写的
+FROM  // 指定使用哪个镜像源
+RUN  // 告诉docker在镜像内执行命令，只在docker build时执行
+EXPOSE // 打开端口
+CMD  // 执行命令，CMD在docker run时运行，而非docker build
+
+容器生命周期管理
+docker run {image_name} cmd...
+  -i  // 允许你对容器内的标准输入（STDIN）进行交互 
+  -t  // 在新容器内指定一个伪终端或终端
+  -d  // 让容器在后台运行
+  -P  // 大写，将容器内部使用的网络端口映射到主机的某高端口（随机）上
+  -p  // 小写，指定要映射的ip和端口，{host_port}:{container_port}/udp、{ip}:{host_port:container_port}/udp、 {ip}::{container_port}/udp
+  --name  // 指定容器名称
+docker start {container_id | container_name}  // 启动容器 
+docker stop {container_id | container_name}  // 停止容器
+docker restart {container_id | container_name} 
+docker kill {container_id | container_name}
+dokcer rm {container_id | container_name}  // 删除不需要的容器，删除容器时，容器必须是停止状态，否则会报错
+docker pause {container_id | container_name}
+docker unpause {container_id | container_name}
+docker create
+docker exec
+
+容器操作
+docker ps  // 查看正在运行的容器 
+  -l  // 查询最后一次创建的容器
+docker logs {container_id | container_name}  // 查看容器内的标准输出  
+  -f  // 让docker logs像使用tail -f一样来输出容器内部的标准输出，tail -n 20 {filename}，查看文件最后20行
+docker port {container_id | container_name} {container_port}  // 查看指定容器的某个确定端口映射到宿主机的端口号
+docker top {container_id | container_name}  // 查看容器内部运行的进程
+docker inspect {container_id | container_name}  // 查看docker的底层信息，它会返回一个json文件记录着docker容器的配置和状态信息
+docker attach
+docker events
+docker wait
+docker export
+
+容器root fs命令
+docker cp
+docker diff
+
+镜像加速
+/etc/docker/daemon.json（Linux）或者%programdata%\docker\config\daemon.json（Windows）来配置Daemon
+{
+  "registry-mirrors": ["http://hub-mirror.c.163.com"]
+}

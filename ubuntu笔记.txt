@@ -40,6 +40,7 @@ whereis android  // 查看文件安装路径
 pwd  // 查看当前目录的完整路径
 ctrl + A  // 光标移动到行首
 ctrl + E  // 光标移动大行尾
+tail -n 20 {filename}  // 查看文件最后20行
 open .  // 打开系统文件管理器，mac
 
 查看系统内存使用情况
