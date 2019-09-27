@@ -2,12 +2,12 @@
 
 退出容器，exit或ctrl + d
 
-Docker镜像  // image，Docker镜像是用于创建Docker容器的模板
-Docker容器  // container，容器是独立运行的一个或一组应用
-Docker客户端  // client，Docker客户端通过命令行或者其他工具使用Docker API与Docker的守护进程通信
-Docker主机  // host，一个物理或者虚拟的机器用于执行Docker守护进程和容器
-Docker仓库  // registry，Docker仓库用来保存镜像
-Docker Machine  // Docker Machine是一个简化Docker安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker
+docker镜像  // image，docker镜像是用于创建docker容器的模板
+docker容器  // container，容器是独立运行的一个或一组应用
+docker客户端  // client，docker客户端通过命令行或者其他工具使用docker API与docker的守护进程通信
+docker主机  // host，一个物理或者虚拟的机器用于执行docker守护进程和容器
+docker仓库  // registry，docker仓库用来保存镜像
+docker Machine  // docker Machine是一个简化docker安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装docker
 
 docker info  // docker自身相关信息
 docker version  // docker版本
@@ -68,10 +68,12 @@ docker run {image_name} cmd...
   -P  // 大写，将容器内部使用的网络端口映射到主机的某高端口（随机）上
   -p  // 小写，指定要映射的ip和端口，{host_port}:{container_port}/udp、{ip}:{host_port:container_port}/udp、 {ip}::{container_port}/udp
   --name  // 指定容器名称
+  -v  // 将主机的相关目录挂载（软链接？）到容器的相关目录，如：-v ~/nginx/www:/usr/share/nginx/html
 docker start {container_id | container_name}  // 启动容器 
 docker stop {container_id | container_name}  // 停止容器
 docker restart {container_id | container_name} 
-docker kill {container_id | container_name}
+docker kill ... {container_id | container_name}  // 如：docker kill -s HUP container-name
+  -s  // 指定发送的信号，如：-s HUP
 dokcer rm {container_id | container_name}  // 删除不需要的容器，删除容器时，容器必须是停止状态，否则会报错
 docker pause {container_id | container_name}
 docker unpause {container_id | container_name}
@@ -92,7 +94,7 @@ docker wait
 docker export
 
 容器root fs命令
-docker cp
+docker cp ...  // docker cp 6dd4380ba708:/etc/nginx/nginx.conf ~/nginx/conf，拷贝容器内nginx默认配置文件到本地当前目录下的conf目录
 docker diff
 
 镜像加速
