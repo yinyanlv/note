@@ -56,9 +56,16 @@ docker build ...  // 从零开始来创建一个新的镜像，需要创建一�
 Dockerfile文件
 每一个指令都会在镜像上创建一个新的层，每一个指令的前缀都必须是大写的
 FROM  // 指定使用哪个镜像源
-RUN  // 告诉docker在镜像内执行命令，只在docker build时执行
+MAINTAINER  // 维护者信息
+RUN  // 设置docker在镜像内执行命令，只在docker build时执行
+ENV  // 设置环境变量
+WORKDIR  // 设置容器内部当前工作目录
+VOLUME  // 设置卷，挂载主机目录
+COPY  // 把本地的文件拷贝到容器镜像中，COPY和ADD命令不能拷贝上下文之外的本地文件
+ADD  // COPY的超集，支持自动解压缩
 EXPOSE // 打开端口
-CMD  // 执行命令，CMD在docker run时运行，而非docker build
+CMD  // 设置容器启动时启动命令的参数，CMD在docker run时运行，而非docker build。在一个Dockerfile中只有最后一个cmd指令有效，因此一个Dockerfile中只写一个cmd指令，cmd指令会被docker run时指定的命令行参数覆盖，此时Dockerfile中的cmd指令将无效
+ENTRYPOINT  // 设置容器启动时的启动命令，优先级比CMD高，与CMD非常类似，最大的区别在于使用的方式，ENTRYPOINT指定的命令通常与docker run启动容器进行搭配，将docker run指令后面跟的内容当做参数作为ENTRYPOINT指令指定的运行命令的参数
 
 容器生命周期管理
 docker run {image_name} cmd...
