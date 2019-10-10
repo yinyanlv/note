@@ -43,6 +43,28 @@ ctrl + E  // 光标移动大行尾
 tail -n 20 {filename}  // 查看文件最后20行
 open .  // 打开系统文件管理器，mac
 
+chmod +x {filename}  // 授予所有用户该文件的执行权限，相当于chmod a+x {filename}
+chmod u+x {filename}  // 只授予该文件的所属用户该文件的执行权限
+chmod u-x {filename}  // 取消该文件的所属用户该文件的执行权限
+chmod u=x {filename}}  // 表示赋予给定权限，并取消其他所有权限（如果有的话，如原来u是rwx，设置u=r，u就剩r）
+chmod 666 {filename}  // 无任何权限（0），开所有权限（7 = 4 + 2 + 1）
+u  // user，用户
+g  // group，用户组
+o  // others，其它，即非同组用户
+a  // all，所有
+
+r  // read，读权限，权限值4
+w  // write，写权限，权限值2
+x  // execute，执行权限，权限值1
+-  // 表示对应权限未开启
+
+d  // directory，表示目录文件
+-  // 在标号0位置，表示普通的文件
+
+文件权限码  // 共10个位置，位置0（文件类型，即目录文件d或普通文件-），位置1-3（所属用户权限），位置4-6（所属用户组权限），位置7-9（非同组用户权限）
+drwxr-xr--
+-rw-rw-r--
+
 查看系统内存使用情况
 free -h
 
