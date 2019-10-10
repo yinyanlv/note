@@ -65,6 +65,16 @@ d  // directory，表示目录文件
 drwxr-xr--
 -rw-rw-r--
 
+tar -czvf test.tar.gz a.c  // 压缩a.c文件为test.tar.gz
+tar -xzvf test.tar.gz  // 解压缩test.tar.gz
+tar -tzvf test.tar.gz  // 列出压缩文件所包含的文件
+-c  // 创建压缩文件，或--create
+-x  // 解压缩，或--extract，或--get
+-t  // 列出压缩文件的内容，或--list
+-z  // 通过gzip指令处理压缩文件，或--gzip，或--ungzip
+-v  // 显示指令执行过程，或--verbose，verbose（冗长）
+-f  // 指定压缩文件名，后面必须跟压缩文件名，或--file
+
 查看系统内存使用情况
 free -h
 
