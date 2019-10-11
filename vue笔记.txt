@@ -1,0 +1,31 @@
+vm  // vue实例
+
+vm.$set(target, key, value)  // 新增属性
+vm.$delete(target, key)  // 删除属性
+vm.$watch(expOrFn, callback, [options])  // 用于观察一个表达式或computed函数在vue实例上的变化，表达式只接受以点分隔的路径，如：a.b.c 
+  options配置：
+    deep  // 监听对象内部变化
+    immediate  // 立即以表达式的当前值触发回调函数
+
+vm.$on(event, callback)
+vm.$off([event, callback])
+vm.$once(event, callback) 
+vm.$emit(event, [...args])
+
+vm.$forceUpdate()
+vm.$destory()
+vm.$nextTick(callback)  // 在下一次dom更新循环结束之后执行回调，获得更新后的dom，与全局的Vue.nextTick一样，不同的是回调函数的this自动绑定到调用它的实例上
+  vm.$nextTick和dom更新回调都同样属于微任务，如果想在vm.$nextTick中获取更新后的dom，则一定要先更改数据，然后再使用vm.$nextTick注册回调。如果是先使用vm.$nextTick注册回调，再修改数据，则在微任务队列中先执行vm.$nextTick注册的回调，然后执行更新dom的回调，所有回调中得不到最新的dom  
+vm.$mount([elementOrSelector])  // 把vue实例挂载到dom元素上
+
+Vue.extend(options)  // 创建一个子类，参数是一个包含组件选项的对象
+Vue.nextTick([callback, context])  // 在下一次dom更新循环结束之后执行回调，获得更新后的dom，vue 2.1.0后可以以promise的方式使用
+Vue.set(target, key, value)
+Vue.delete(target, key)
+Vue.direcive(id, [definition])  // 注册或获取全局指令
+Vue.filter(id, [definition])  // 注册或获取全局过滤器
+Vue.component(id, [definition])  // 注册或获取全局组件
+Vue.use(plugin)  // 安装插件，如果插件是一个对象，必须提供install方法
+Vue.mixin(mixin)  // 全局注册一个混入，影响注册之后创建的每一个vue实例
+Vue.compile(template)  // 编译模版字符串并返回包含渲染函数render的对象，只有在完整版的vue中才有效（因为只有完整版包含编译器）
+Vue.version  // vue版本
