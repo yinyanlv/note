@@ -35,8 +35,8 @@ componentWillMount
 render  // 必须有返回值，可以为null, false...，render只是返回jsx对象，并没有真正的渲染dom
 componentDidMount  // 服务器端渲染时，不触发
 更新过程
-componentWillReceiveProps  // 父组件的render函数被调用时触发，参数nextPorps，通过在函数内部调用this.setState(...)来触发组件更新
-shouldComponentUpdate  // 必须有返回值，用于控制是否需要渲染，默认返回true（更新时总是渲染），参数nextProps, nextState
+componentWillReceiveProps  // 只在更新过程中才被调用，而且只在因为父组件引发的更新过程中才被调用
+shouldComponentUpdate  // 只在更新过程中才被调用，必须有返回值，用于控制是否需要渲染，默认返回true（更新时总是渲染），参数nextProps, nextState
 componentWillUpdate
 render
 componentDidUpdate
