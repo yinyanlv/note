@@ -132,7 +132,8 @@ React Perf  // 查看react组建渲染的性能问题，配合react-addons-perf�
 npm包
 react-immutable-state-invariant  // 中间件，开发时添加，用于提示警告，是否在reducer中违背纯函数的原则，直接修改参数state
 react-addons-perf  // window.Perf = Perf;
-react-addons-css-transition-group  // ReactCssTransitionGroup，动画库，借助css3实现动画，用于组件装载和卸载时的动画，css类名规则：-enter, -enter-active, -leave, -leave-active, -appear, -appear-active
+react-addons-css-transition-group  // 已废弃，ReactCssTransitionGroup，动画库，借助css3实现动画，用于组件装载和卸载时的动画，css类名规则：-enter, -enter-active, -leave, -leave-active, -appear, -appear-active
+react-transition-group  // 动画库，timeout，设置entering、exiting状态持续时间，即使entering、exiting动画未结束，强制进入entered、exited状态
 react-motion  // 动画库，它不直接参与动画绘制，只是把动画参数不停的传递给子组件（函数式子组件），然后由子组件完成绘制，defaultStyles（初始值），styles（目标值），stiffness（刚度），damping（阻尼）
 react-router-redux  // 同步url和store
 react-router  // Router, Route, IndexRoute, Link, getComponent = (location, callback) => {require.ensure([], (require) => {...})}
