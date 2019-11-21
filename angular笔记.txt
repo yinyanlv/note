@@ -139,6 +139,30 @@ ViewRef  // 视图对象，表示angular视图元素
 EmbeddedViewRef  // 内嵌视图，表示模板中定义的视图元素，rootNodes属性包含了模板的所有节点，通常与TemplateRef配合使用，继承自ViewRef
 ViewContainerRef  // 表示一个视图容器（当作兄弟节点，而非父节点），用于创建和管理内嵌视图（TemplateRef）或组件视图（ComponentRef），实例中引用ElementRef，createEmbeddedView(templateRef)简化通过模板创建视图，createComponent(...)
 
+动态组件  // https://zhuanlan.zhihu.com/p/60062423
+动态创建并把内容添加到视图的过程大概如下：
+1、创建组件类，定义组件需要的属性，并用装饰器装饰类
+2、创建模块类，把上面的组件加到模块声明里，用装饰器装饰模块类
+3、编译器编译模块和所有组件，获得组件工厂函数
+所有的组件工厂函数都是编译器使用@Component装饰器提供的元数据生成的。编译器收集必要的信息并把这些信息封装在组件工厂函数中
+通过工厂函数可以很容易的创建一个组件的实例，然后使用ViewContainerRef插入到dom
+angular组件必须属于一个模块，组件自己无法独立存在，如果使用另一个模块的组件，在当前模块必须先import另一个模块，如果一个模块想暴露一些组件供其它模块使用，则必须在这个模块里先导出
+angular组件只能属于一个唯一的模块，如果在另一个模块里再次声明这个组件，那么就会收到一个编译错误
+angular编译程序的时候，会取得所有的组件，包括模块的entryComponents属性里的和组件模板里的，然后为这些组件生成工厂
+所有的模块都提供了一个service来给它的组件来访问某组件（该组件需在该模块中声明或者该组件已经被导入）的工厂函数，这个service就是ComponentFactoryResolver
+通过Compiler实例，可以手动编译模版字符串，不需要预先定义模块和组件，从而可以更极客、灵活的创建动态组件
+如果组件是手动创建的，那么父组件销毁的时候不要忘了在ngOnDestroy中手动销毁所有手动创建的组件
+所有动态加载的组件，和静态的组件一样angular会提供变更检测，也就是说ngDoCheck钩子函数会被调用，但是ngOnChanges钩子不会触发，即使动态组件提供了@Input并且父组件的相应属性发生了变化，这是因为这是因为编译期间编译器会生成执行输入检查的函数，这个函数是组件工厂的一部分，并且它只能根据模板的信息生成，又因为我们在静态模板中没有使用动态组件，因此这个函数在编译期间没有生成
+
+动态模块加载和编译  // https://zhuanlan.zhihu.com/p/60062423
+运行时加载模块有两种方法：
+1、用angular的SystemJsNgModuleLoader，如果使用SystemJS做为loader的话，经常被用来加载子路由，使用公开方法load把模块加载到浏览器，编译模块及其所有的组件
+  该方法有一个问题，SystemJsNgModuleLoader调用的是编译器的compileModuleAsync方法，这个方法只会为在entryComponents里声明的或者组件模板里的组件创建工厂函数
+2、为弥补方法一的问题，编译所有组件，可手动调用Compiler实例的compileModuleAndAllComponentsAsync函数，这个函数会为该模块上的组件生成工厂，并将它们们作为ModuleWithComponentFactories，但是这种加载模块的方式，使用的是angular并不推荐的非公开api
+
+运行时编译（JIT），运行前编译（AOT）。其实在angular里只有一种编译器，具体是JIT还是AOT取决于你在什么时候使用它，如果在浏览器中运行代码时使用那就是JIT，如果在运行程序前把所有的组件都编译好，那么就是AOT,但是后者有很多好处比如更快的渲染速度和更小的代码体积
+使用AOT意味着代码在运行时不会再有编译器（提前编译好，运行时不要编译器了），如果项目中只使用了ComponentFactoryResolver，那么代码还可以运行，但是动态编译组件（手动调用Compile实例方法）就无法正常运行了，可通过引入JitCompilerFactory解决此问题
+
 form  // form标签上，标注属性novalidate，禁用浏览器原生验证
 模板驱动式表单  // FormsModule
 ngForm  // 可通过#f="ngForm"，将ngForm实例赋值给变量f
