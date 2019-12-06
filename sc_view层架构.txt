@@ -1,3 +1,22 @@
+SSO全称Single Sign On，单点登录
+CAS全称Central Authentication Service，中心认证服务
+CAS是实现SSO的一种著名的方案
+
+passport cas单点登录基本原理  // 绕过了共享cookie，各系统cookie依旧互相独立
+/  // 未登录，重定向
+/login  // 拦截，重定向
+http://passport.com/login  // 已登录的passport可根据cookie返回有效的ticket，然后，重定向至需要自动登录的系统
+/login + ticket  // 拦截，重定向
+    后台向passport发送验证请求，验证ticket，验证通过时，passport响应基础用户信息，如username
+    根据基础用户信息，设置基础session，重定向至/auth/login 
+/auth/login  // 让浏览器预先设置cookie，并且后台可在该请求中扩展session中存储的值，然后，重定向
+/  // 此时访问时，该请求已携带cookie，自动登录完成
+
+单点退出
+当系统A向CAS认证ticket时，如果认证通过，除了系统A认为用户已登录外，CAS也会注册系统A
+当用户在任意一个系统退出时，认证服务器会通知（调用约定的接口）已注册的所有系统，把用户的cookie干掉
+
+
 系统级页面框架
 index.jsp
 	frame.jsp  //<!doctype html> -> <body>  //根据pageCode配置该页面需要的css
