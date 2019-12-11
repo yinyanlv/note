@@ -52,11 +52,36 @@ bss  // block started by symbol，存放未初始化的全局变量，在变量�
 分页
 分段
 
+有符号整数类型  // 整数默认是有符号整数，c语言标准只定义了整数类型最小的存储空间，short至少占2字节，long至少占4字节，long long至少占8字节。目前，个人计算机最常见的配置，short 2字节，int 4字节，long 4字节，long long 8字节。c语言标准并未定义有符号类型的溢出规则
+signed char
+int  // 等价于signed、signed int
+short  // 等价于short int、signed short、signed short int
+long  // 等价于long int、signed long、signed long int
+long long  // c99，等价于long long int、signed long long、signed long long int
+
+无符号整数类型
+_Bool  // bool，在stdbool.h头文件中定义
+unsigned char
+unsigned int   // 等价于unsigned
+unsigned short   // 等价于unsigned short int
+unsigned long  // 等价于unsigned long int
+unsigned long long  // c99，等价于unsigned long long int
+
+字符类型  // char类型其实是一个标准的整数类型。单独的char这个单词究竟是代表signed char还是unsigned char，取决于编译器，因此最好在程序中显式的定义
 ‘\0’ -> 0
 ' ' -> 32
 '0' -> 48
 'a' -> 97
 'A' -> 65
+
+浮点类型  // 计算机中的所有的浮点数都是有符号的
+float  // 4字节
+double  // 8字节
+long double  // c99，对long double的处理，取决于编译器，8字节、10字节、12字节、16字节都有可能
+
+枚举类型  // 一种由用户在程序中定义的整数类型
+
+void类型  // 未确定类型或任何类型，表示“没有值可以获得”
 
 #define指令行的末尾不可以有分号
 c语言不可以在函数内部再定义函数
@@ -66,7 +91,7 @@ c语言不可以在函数内部再定义函数
 static声明的外部变量和函数，它们的作用域限定为被编译源文件的剩余部分，之前的部分，即使使用extern也无法访问
 static声明的局部变量是一种只能在某个特定函数中使用但一直占据存储空间的变量
 
-const static == statci const
+const static == static const
 const限定符指定变量的值不能被修改，它本身是类型系统的一部分，类型匹配时需带上
 const int *ptr = &x;  // 常量指针，ptr本身可变，但指向的内容不可变
 int * const ptr = &x;  // 常量指针变量（变量的常量指针），ptr本身不可变，但指向的内容可变
@@ -109,8 +134,6 @@ ANSI C使用类型void*代替char*作为通用指针的类型
 在某些情况下，可以对指针进行比较运算，例如，对指向同一数组的两个指针进行比较，c语言对指向不同数组的两个指针之间的算术或比较运算没有定义
 所有的指针运算都会自动考虑它所指向对象的长度，根据指向对象的长度按比例缩放
 
-void类型，未确定类型或任何类型，表示“没有值可以获得”
-
 空指针，NULL，值为0，不指向任何空间，所以不能使用间接运算符*取值
 野指针，wild pointer，没有被初始化过的指针或者被错误初始化的指针，即地址为非法值
 悬空指针，dangling pointer，指针最初指向的内存已经被释放了的一种指针
@@ -128,6 +151,8 @@ void free(void *ptr);  // 释放堆内存
 c99标准
 int main(void) {}
 int main(int argc, char *argv[]) {}  // argc（argument count），命令行参数的个数，argv（argument vector），一个字符串数组，也可以写为char **argv
+
+main函数，一般来说，返回值为0表示正常终止，返回值为非0表示出现异常情况或出错结束条件。c语言中，函数的参数、返回值默认都为int类型
 
 结构体  // 内存对齐，一般情况下，结构体类型变量的内存空间大小为结构体成员中（不包括派生类型，如数组、结构体、联合等）所占空间字节数最大值的整数倍。处理器一般不是按字节来存取内存，而是以2字节、4字节、8字节甚至32字节为单位来存取内存
 struct coord {
