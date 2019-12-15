@@ -219,3 +219,6 @@ pkgutil模块  // 获取包里面的所有模块列表。pkgutil.get_data()可�
 pip freeze > requirements.txt
 pip install -r requirements.txt
 
+将python项目打包成可安装文件
+pyinstaller  // pip install pyinstaller，用于生成exe文件
+NSIS  // 第三方软件，根据exe文件，生成引导用户安装程序
