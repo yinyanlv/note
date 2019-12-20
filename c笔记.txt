@@ -270,3 +270,6 @@ void clearerr(FILE *fp);  // 将文件结束标志和出错标志重置为0
 create  // 创建文件，io.h
 remove  // 删除文件，stdio.h
 searchpath  // 查找文件，dir.h
+
+windows下控制台应用程序中文乱码解决方案
+打开命令提示符窗口，执行命令chcp 65001，修改命令提示符的解码方式。65001指UTF-8
