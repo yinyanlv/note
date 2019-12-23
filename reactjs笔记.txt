@@ -44,23 +44,28 @@ componentDidUpdate
 卸载过程
 componentWillUnmount
 
-this.forceUpdate  // 可以通过shouldComponentUpdate停止更新过程，从而控制渲染
 this.setState
 this.props
 this.state
+this.forceUpdate  // 可以通过shouldComponentUpdate停止更新过程，从而控制渲染
 
 [ComponentClass].defaultProps
 [ComponentClass].displayName
-
-childContextTypes  // 已废弃，但16.x版本中依旧支持。必须定义，从而让Provider能够被react认可为一个Context的提供者，Provider必须实现getChildContext方法，返回context对象，其中包含store字段，render方法中直接返回this.props.children
-contextTypes  // 已废弃，但16.x版本中依旧支持。需要使用context的子组件必须定义，且定义必须和Provider的childContextTypes定义一致，子组件的constructor中需调用super(props, context)，从而子组件中可以通过this.context访问context
-
-propTypes  // PropTypes目前由独立的npm包prop-types提供。只在开发时有作用，即使报错，也不会影响组件的正常执行。线上部署时，可以通过babel-react-optimize包，将代码中的propTypes相关的代码去掉
+[ComponentClass].propTypes  // PropTypes目前由独立的npm包prop-types提供。只在开发时有作用，即使报错，也不会影响组件的正常执行。线上部署时，可以通过babel-react-optimize包，将代码中的propTypes相关的代码去掉
+[ComponentClass].childContextTypes  // 已废弃，但16.x版本中依旧支持。必须定义，从而让Provider能够被react认可为一个Context的提供者，Provider必须实现getChildContext方法，返回context对象，其中包含store字段，render方法中直接返回this.props.children
+[ComponentClass].contextTypes  // 已废弃，但16.x版本中依旧支持。需要使用context的子组件必须定义，且定义必须和Provider的childContextTypes定义一致，子组件的constructor中需调用super(props, context)，从而子组件中可以通过this.context访问context
 
 受控组件  // 定义了value属性的input，表单数据由react组件管理，注意：<input type="file" /> 始终是一个非受控组件
 非受控组件  // 未定义value属性的input，表单数据由dom节点来处理，通过defaultValue、defaultChecked属性定义默认值
 
 容器组件和傻瓜组件  // 傻瓜组件可以写成函数形式，参数props，无状态组件
+
+高阶组件  // HOC（high order component）
+一个高阶组件就是一个函数，接受一个组件作为参数，返回另一个组件
+代理方式的高阶组件  // extends React.Component，操控props，抽取状态（容器组件），访问ref，包装组合多个组件...
+继承方式的高阶组件  // extends SomeComponent，新组件类中return super.render()，操控props，操控生命周期函数
+
+以函数为子组件  // 弥补高级组件对props操控不够灵活的缺点，子组件为函数，因此可以传入参数调用，this.props.children(...)
 
 fiber架构下，如果开启async rendering，在render函数之前的所有函数，都有可能被执行多次
 
@@ -119,7 +124,7 @@ getSnapshotBeforeUpdate  // 非静态方法，参数prevProps，prevState，只�
 react v16.4
 getDerivedStateFromProps，无论是mounting还是updating，也无论是因为什么引起的updating，全部都会被调用
 
-react v16.8  // 新增hook
+react v16.8  // 新增hook特性
 useState
 useEffect
 useContext
@@ -174,13 +179,6 @@ redux-thunk  // 中间件
 异步action对象  // 一个函数，return (dispatch, getState) => {... dispatch(action)}
 
 reselect  // npm包，提高数据获取性能，分两步执行，如果相关状态没有发生改变，就直接使用上一次的缓存结果，否则，进入正常的获取状态流程，createSelector，配合mapStateToProps使用
-
-高阶组件  // HOC（high order component）
-一个高阶组件就是一个函数，接受一个组件作为参数，返回另一个组件
-代理方式的高阶组件  // extends React.Component，操控props，抽取状态（容器组件），访问ref，包装组合多个组件...
-继承方式的高阶组件  // extends SomeComponent，新组件类中return super.render()，操控props，操控生命周期函数
-
-以函数为子组件  // 弥补高级组件对props操控不够灵活的缺点，子组件为函数，因此可以传入参数调用，this.props.children(...)
 
 chrome开发辅助工具
 React Devtools  // 查看树形结构
