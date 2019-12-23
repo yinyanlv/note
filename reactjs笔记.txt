@@ -1,7 +1,5 @@
 jsx
 小写的标签名默认是html标签，大写开头的标签名默认是react标签
-class -> className
-for -> htmlFor
 {}中只能是表达式，不能是for，while等语句
 
 注释
@@ -11,18 +9,21 @@ for -> htmlFor
 <div dangerouslySetInnerHTML={{__html: 'cc &copy; 2015'}} />  // 禁止转义
 
 事件
-合成事件和原生事件，合成事件中的event对象，并不是原生的event对象，且该event对象只在当前的event loop有效，如果想使用原生的e.stopPropagation()，需使用e.nativeEvent.stopPropagation();
+合成事件和原生事件，合成事件中的event对象，并不是原生的event对象，且该event对象只在当前的event loop有效，如果想使用原生的e.stopPropagation()，需使用e.nativeEvent.stopPropagation()
 
 组合组件
 对于动态数量的子组件，为了保证重新渲染ui的时候能够快速并正确的显示这些子元素，每个元素都需要通过一个特殊的key属性指定一个唯一值
 this.props.children  // 组件标签里面包含的子元素会通过this.props.children传递进来
 
 dom操作
-findDOMNode()  // 该方法不能用在无状态组件上
-ref  // 需尽量避免使用ref
-如果ref绑定的值是一个函数，那么再组件完成装载过程后，会调用它，参数node
-如果ref是设置在原生html元素上，它拿到的就是dom元素，如果设置在自定义组件上，它拿到的就是组件实例，这时候就需要通过findDOMNode来拿到组件的dom元素
-refs  // 通过在要引用的dom元素上面设置一个ref属性指定一个名称，然后通过this.refs.{name}来访问对应的dom元素，ref不能设置在无状态组件上
+findDOMNode()  // 已废弃，该方法不能用在无状态组件上
+ref  // React.createRef或函数调用的方式创建，如果ref是设置在原生html元素上，它拿到的就是dom元素，如果设置在自定义组件上，它拿到的就是组件实例，这时候就需要通过findDOMNode来拿到组件的dom元素
+refs  // 已废弃，通过在要引用的dom元素上面设置一个ref属性指定一个名称，然后通过this.refs.{name}来访问对应的dom元素，ref不能设置在无状态组件上
+
+dom属性
+suppressContentEditableWarning  // 当元素被标记为contentEditable时，禁止发出警告
+suppressHydrationWarning  // 当服务端与客户端渲染的内容不同时，禁止发出警告
+htmlFor  // 原生html的for
 
 key和ref两个prop比较特殊，组件不能够直接读取key和ref
 
@@ -43,29 +44,92 @@ componentDidUpdate
 卸载过程
 componentWillUnmount
 
-强制组件更新
-this.forceUpdate()  // 可以通过shouldComponentUpdate停止更新过程，从而控制渲染
+this.forceUpdate  // 可以通过shouldComponentUpdate停止更新过程，从而控制渲染
+this.setState
+this.props
+this.state
+
+[ComponentClass].defaultProps
+[ComponentClass].displayName
+
+childContextTypes  // 已废弃，但16.x版本中依旧支持。必须定义，从而让Provider能够被react认可为一个Context的提供者，Provider必须实现getChildContext方法，返回context对象，其中包含store字段，render方法中直接返回this.props.children
+contextTypes  // 已废弃，但16.x版本中依旧支持。需要使用context的子组件必须定义，且定义必须和Provider的childContextTypes定义一致，子组件的constructor中需调用super(props, context)，从而子组件中可以通过this.context访问context
 
 propTypes  // PropTypes目前由独立的npm包prop-types提供。只在开发时有作用，即使报错，也不会影响组件的正常执行。线上部署时，可以通过babel-react-optimize包，将代码中的propTypes相关的代码去掉
-defaultProps
+
+受控组件  // 定义了value属性的input，表单数据由react组件管理，注意：<input type="file" /> 始终是一个非受控组件
+非受控组件  // 未定义value属性的input，表单数据由dom节点来处理，通过defaultValue、defaultChecked属性定义默认值
+
+容器组件和傻瓜组件  // 傻瓜组件可以写成函数形式，参数props，无状态组件
 
 fiber架构下，如果开启async rendering，在render函数之前的所有函数，都有可能被执行多次
 
-react v16.0
-getDerivedStateFromError  // 静态方法，参数error对象
-componentDidCatch  // 非静态方法，参数error，info，一般用于记录错误日志，真正控制组件渲染的逻辑还是在render方法中
+React.createContext  // 当react渲染一个订阅了这个context对象的组件，这个组件会从组件树中离自己最近的那个匹配的Provider中读取到当前的context值，只有当组件所处的树中没有匹配到Provider时，defaultValue参数才会生效，这有助于在不使用Provider包装组件的情况下对组件进行测试
+    [Context].Provider  // 多个Provider也可以嵌套使用，里层的会覆盖外层的数据。当Provider的value值发生变化时，它内部的所有消费组件都会重新渲染。Provider及其内部consumer组件都不受制于shouldComponentUpdate函数，因此当consumer组件在其祖先组件退出更新的情况下也能更新
+    [Context].Consumer  // children是一个函数
+    [ComponentClass].contextType  // 静态属性
+    [Context].displayName
+React.memo  // 用于创建可缓存的函数式组件
+React.forwardRef  // 用于创建可转发ref的组件
+React.createRef
+React.Fragment  // 等价于<></>，但可以定义key属性
+React.Suspense  // 可以将Suspense组件置于懒加载组件之上的任何位置，目前不支持服务器端渲染
+React.lazy  // 目前不支持服务器端渲染
+React.StrictMode  // 组件，StrictMode是一个用来显示应用程序中潜在问题的工具，严格模式检查仅在开发模式下运行，不会影响生产构建
+React.createElement
+React.cloneElement
+React.createFactory  // 已废弃
+React.isValidElement
+React.Children  // 提供了用于处理this.props.children不透明数据结构的实用方法，如：React.Children.map、React.Children.forEach、React.Children.count、React.Children.only、React.Children.toArray
+React.unstable_Profiler  // 组件
 
-react v16.3  // deprecate了componentWillReceiveProps、componentWillMount、componentWillUpdate
+ReactDOM.render  // react-dom包
+ReactDOM.hydrate  // 与render相同，但它用于在ReactDOMServer渲染的容器中对html的内容进行hydrate（水合物）操作 
+ReactDOM.createPortal  
+ReactDOM.findDOMNode  // 严格模式下该方法已弃用
+ReactDOM.unmountComponentAtNode 
+
+ReactDOMServer.renderToString  // react-dom/server包
+ReactDOMServer.renderToStaticMarkup  // 与renderToString相似，但此方法不会在react内部创建额外的dom属性，例如 data-reactroot  
+ReactDOMServer.renderToNodeStream   // 只能在服务端使用  
+ReactDOMServer.renderToStaticNodeStream  // 只能在服务端使用
+
+react-dom/test-utils包  // 测试库
+react-test-renderer包  // 测试渲染库
+
+react v16.0  // 自react v16.0起，任何未被错误边界捕获的错误将会导致整个react组件树被卸载
+getDerivedStateFromError  // 静态方法，参数error对象，用于更改状态从而渲染备用ui
+componentDidCatch  // 非静态方法，参数error，info，一般用于记录错误日志，真正控制组件渲染的逻辑还是在render方法中
+错误边界组件  // 针对的是ui错误，只有class组件才可以成为错误边界组件，如果class组件中定义了getDerivedStateFromError和componentDidCatch这两个生命周期方法中的任意一个（或两个）时，那么它就变成一个错误边界组件
+错误边界组件无法捕获以下场景中产生的错误：
+1、事件处理  // 如：onClick事件处理函数中发生的错误
+2、异步代码  // 如：setTimeout、requestAnimationFrame
+3、服务端渲染
+4、它自身抛出来的错误（并非它的子组件）
+
+react v16.3  // 废弃了componentWillReceiveProps、componentWillMount、componentWillUpdate
 getDerivedStateFromProps  // 静态方法，参数nextProps, prevState，用于取代componentWillReceiveProps
 组件首次装载时，getDerivedStateFromProps会被调用
 每当父组件引发当前组件的渲染时，getDerivedStateFromProps会被调用
 组件自身setState或forceUpdate时，getDerivedStateFromProps不会被调用，react v16.4更改了这一点
 
 getSnapshotBeforeUpdate  // 非静态方法，参数prevProps，prevState，只在更新过程中被调用，装载过程中不被调用
-该函数会在render之后执行，而执行之时DOM元素还没有被更新，给了一个机会去获取DOM信息，返回一个snapshot，这个snapshot会作为componentDidUpdate的第三个参数传入
+该函数会在render之后，componentDidUpdate之前执行，而执行之时DOM元素还没有被更新，给了一个机会去获取DOM信息，返回一个snapshot，这个snapshot会作为componentDidUpdate的第三个参数传入
 
 react v16.4
 getDerivedStateFromProps，无论是mounting还是updating，也无论是因为什么引起的updating，全部都会被调用
+
+react v16.8  // 新增hook
+useState
+useEffect
+useContext
+useReducer
+useCallback
+useMemo
+useRef
+useImperativeHandle  // 与forwardRef一起使用，用于在使用ref时自定义暴露给父组件的实例值，imperative（急迫）
+useLayoutEffect  // 函数签名与useEffect相同，但它会在所有的dom变更之后同步调用effect，可以使用它来读取dom布局并同步触发重渲染，尽可能使用标准的useEffect以避免视觉阻塞
+useDebugValue  // 用于在react开发者工具中显示自定义hook的标签
 
 flux
 action  // 生成并发送action，dispatcher.dispatch(...)
@@ -100,12 +164,6 @@ function storeEnhancer(createStore) {
         return store;
     }
 }
-
-容器组件和傻瓜组件  // 傻瓜组件可以写成函数形式，参数props，无状态组件
-
-Provider
-childContextTypes  // 必须定义，从而让Provider能够被react认可为一个Context的提供者，Provider必须实现getChildContext方法，返回context对象，其中包含store字段，render方法中直接返回this.props.children
-contextTypes  // 需要使用context的子组件必须定义，且定义必须和Provider的childContextTypes定义一致，子组件的constructor中需调用super(props, context)，从而子组件中可以通过this.context访问context
 
 react-redux
 connect(mapStateToProps, mapDispatchToProps, mergeProps, options)(DumbComponent)  // 返回容器组件，该容器组件已经默认实现了自定义的shouldComponentUpdate，实现逻辑是对比这次传递给内层傻瓜容器的props和上一次是否一致，如果一致，则直接返回false
