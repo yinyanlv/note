@@ -24,7 +24,7 @@ G  // 移动到最后一行
 ctrl + g  // 显示当前行的位置信息
 
 %  // 匹配括号移动，包括(、{、[
-#  // 匹配光标当前所在的单词，移动光标到上一个匹配单词
+  // 匹配光标当前所在的单词，移动光标到上一个匹配单词
 *  // 匹配光标当前所在的单词，移动光标到下一个匹配单词    
 
 (  // 跳转到当前或前一个句子的开头，句子以句号区分
@@ -101,7 +101,7 @@ q/  // 列出查找历史
 q?  // 列出查找历史
 
 替换
-%s/{old_abc}/{new_abc}/g  // g，全局替换。%起始行数,末尾行数s/替换前内容/替换后内容/g 
+:%s/{old_abc}/{new_abc}/g  // g，全局替换。:%起始行数,末尾行数s/替换前内容/替换后内容/g 
 
 撤销
 u  // 撤销前一个动作
@@ -155,3 +155,19 @@ ctrl + w +  // 增加窗口尺寸
 ctrl + w -  // 减小窗口尺寸
 
 :help [command]  // 查看某命令的使用说明
+
+~/.vimrc配置
+syntax on  // 开启语法高亮
+set nu[mber]  // 显示行号
+set nonu[mber]  // 隐藏行号
+set cursorline  // 高亮当前行
+set ruler  // 显示光标位置信息
+set noruler  // 隐藏光标位置信息
+set hlsearch  // 高亮匹配
+set nohlsearch  // 取消高亮匹配
+nohlsearch  // 临时取消高亮（只取消一次查询的高亮）
+set incsearch  // 在输入字符串过程中显示匹配点
+set nowrapscan  // 找到文尾后停止查找
+set wrapscan  // 恢复为到文尾后自动从头开始
+set ic/ignorecase  // 忽略大小写
+set noic/noignorecase  // 区分大小写
