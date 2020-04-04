@@ -1,7 +1,7 @@
 1、一般情况下，当前组件更新不影响父级和兄弟组件
 2、可通过React.memo使得父组件更新时子函数组件不更新
 3、使用redux时，当store中的某字段发生变化，所有订阅(useSelector)该字段的组件都会更新，该更新和组件层级关系无关，未订阅该字段的组件不受影响
-4、context变化时，所有订阅该context的组件都会强制更新，该context的直接子组件也会强制更新，除非context的直接子组件为一个不变的引用(props.children)
+4、context值变化时，所有订阅该context的组件都会强制更新，该context的直接子组件也会强制更新，除非context的直接子组件为一个不变的引用(props.children)
 
 jsx
 小写的标签名默认是html标签，大写开头的标签名默认是react标签
