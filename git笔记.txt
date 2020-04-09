@@ -37,6 +37,7 @@ git pull  // 从远程拉最新提交
 git pull origin master --allow-unrelated-histories  // 解决通过pull合并两个不同的项目时，出现fatal: refusing to merge unrelated histories的问题
 git push origin master
 git push -u origin master  // 第一次推送，加-u，推送所有内容，还可把本地的master分支和远程的master分支关联起来，以后推送或拉取时可简化命令
+git fetch origin master  // 只获取数据不merge
 
 git checkout -- <file>  // 丢弃工作区中某文件的修改，没有--，就变成一个切换分支的命令
 git checkout .  // 丢弃工作区中所有修改
@@ -45,8 +46,13 @@ git checkout HEAD .  // 丢弃工作区和暂存区中所有修改
 
 git reset HEAD <file>  // 丢弃暂存区中该文件的修改，工作区不受影响
 git reset {commit_id}  // 暂存区的目录树会被重写，被master分支指向的目录树所替换，但是工作区不受影响
-git reset --hard HEAD^  // --hard，暂存区，工作区全部替换，再次提交，会产生冲突
-git reset --hard 版本号（7位）  // 到指定版本号，可前进和后退，再次提交，会产生冲突
+git reset --soft 版本号（7位）  // 将HEAD移动到指定的提交（或者相对于HEAD的位置索引），但不会丢弃这些提交带来的改动
+git reset --hard HEAD^  // --hard，暂存区，工作区全部替换，再次提交，可能会产生冲突
+git reset --hard 版本号（7位）  // 到指定版本号，可前进和后退，再次提交，可能会产生冲突
+
+git revert 版本号（7位）  // 复原某个提交后，会创建一个新的提交，包含了恢复后的改动
+
+git cherry-pick 版本号（7位） // 当活动分支需要某个分支的某个提交包含的改动时，我们可以用cherry-pick命令。通过cherry-pick某个提交，在当前活动分支上会创建一个新提交，包含了另一个分支某一次提交带来的改动
 
 git branch  // 查看本地所有分支
 git branch -a  // 查看远程所有分支
@@ -60,7 +66,17 @@ git branch --set-upstream dev origin/dev  // 指定本地分支和远程分支�
 git merge dev  // 合并指定分支到当前分支，Fast forward模式（快进模式），在这种模式下，删除分支后，会丢掉分支信息
 git merge --no-ff -m "merge with no-ff" dev  // 强制禁用Fast forward模式，--no-ff参数就可以用普通模式合并，合并后的历史有分支记录，可以看出做过合并，而Fast forward合并就看不出来曾经做过合并
 
-git rebase dev  // 合并指定分支到当前分支，会丢弃分支的合并与提交信息
+git rebase master  // 复制当前分支的提交，然后把这些提交放到指定分支的head之上，但不合并分支。当前分支的提交复制时会产生新的hash，因此rebase会丢弃当前分支的合并与提交信息
+与merge相比，最大的区别是git不会去找出哪些文件需要保留，哪些文件不需要保留。我们要rebase的分支总是包含了我们想要保留的最新改动。这种方式不会有合并冲突，并且保持了良好的线性git历史记录
+当在特性分支上开发时，master分支有更新的时候，rebase很有用。通过rebase，当前分支就能拿到所有更新，避免了将来可能的合并冲突
+
+交互式rebase  // 修改当前分支的提交，会产生新的hash，如：git reabse -i HEAD^3
+reword  // 修改提交说明
+edit  // 修改提交内容（amend）
+squash  // 将该提交合并到前一个提交
+fixup  // 将该提交合并到前一个提交，不保留提交的日志消息
+exec  // 在想要 rebase 的每一个提交上执行命令
+drop  // 删除提交
 
 git tag v1.0
 git tag  // 查看所有标签，按字母排序
@@ -92,8 +108,6 @@ git diff HEAD -- test_git.txt  // --后面要有空格，查看工作区和版�
 git rm <file>
 git rm --cached <file>  // 会直接从暂存区删除文件，工作区则不做出改变
 git rm -r --cached   // 删除暂存区的缓存
-
-git revert 版本号（7位）  // 回撤本地和远程版本库，再次提交，不会产生冲突
 
 git config --global user.name "bugong"
 git config --global user.email "1761869346@qq.com"
