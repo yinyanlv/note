@@ -195,7 +195,7 @@ int main(int argc, char *argv[]) {}  // argc（argument count），命令行参�
 
 main函数，一般来说，返回值为0表示正常终止，返回值为非0表示出现异常情况或出错结束条件。c语言中，函数的参数、返回值默认都为int类型
 
-结构体  // 内存对齐，一般情况下，结构体类型变量的内存空间大小为结构体成员中（不包括派生类型，如数组、结构体、联合等）所占空间字节数最大值的整数倍。处理器一般不是按字节来存取内存，而是以2字节、4字节、8字节甚至32字节为单位来存取内存
+结构体
 struct coord {
     int x;
     int y;
@@ -203,6 +203,27 @@ struct coord {
 定义时初始化
 struct coord abc = {1,2};
 struct coord abc = {.x=1, .y=2};  // c99，c11新增标准
+
+内存对齐  // 处理器一般不是按字节来存取内存，而是以2字节、4字节、8字节甚至32字节为单位来存取内存
+1、struct或union的成员，第一个成员在偏移0的位置，之后每个成员的起始位置必须是该成员（正在排放的成员）大小的整数倍
+2、如果结构体A含有结构体成员B，那么B的起始位置必须是B中最大成员大小的整数倍地址
+3、结构体的总大小，必须是内部最大成员的整数倍
+4、如果结构体中的某成员是数组，那么参与计算的是该数组中所存放的元素
+显式指定对齐方式，c语言提供了两种显式指定对齐方式的方法
+1、#pragma pack(n)  // 设置全局对齐方式，结构体和结构体内部成员都将遵循设置的对齐，原则是，成员自身对齐值（成员size）和指定对齐值（n）中的较小者
+#pragma pack (8)  // 指定按照8字节对齐，目前cpu主流cache_line长度为8字节
+struct test {
+  char a;
+  int b;
+  short c;
+};
+#pragma pack ()  // 取消指定对齐，恢复默认对齐
+2、__attribute__ ((aligned(n)))  // 修饰结构体，该结构体遵循该对齐参数，但该结构体内部成员依旧遵循默认的对齐参数（成员自身对齐值）
+struct test {
+  char a;
+  int b;
+  short c;
+} __attribute__ ((aligned(8)));
 
 ptr->a 等价于 (*ptr).a  // 括号不可以省略
 entity.a 等价于 (&entity)->a  // 括号不可以省略
@@ -242,8 +263,8 @@ int fputc(int ch, FILE *fp);  // 写一个字符到文件中，正常时返回�
 char *fgets(char *str, n, FILE *fp);  // 从文件中读取n-1个字符，存储到str所指向的内存中，最后加上结束'\0'，正常时返回字符串str的内存首地址，异常时返回NULL
 int fputs(char *str, FILE *fp);  // 将字符串str写入到文件中，正常时返回写入文件的字符个数，即字符串长度，异常时返回NULL
 格式化读写函数  // 适用于读写较小的文件
-int fscanf(FILE *fp, char *format, char* arg_list);  // 成功时，返回成功读入参数的个数，失败时返回EOF（-1）
-int fprintf(FILE *fp, char *format, char* arg_list);  // 成功时，返回写入文件的字符个数，失败时返回一个负值
+int fscanf(FILE *fp, char *format, [arguments...]);  // 成功时，返回成功读入参数的个数，失败时返回EOF（-1）
+int fprintf(FILE *fp, char *format, [arguments...]);  // 成功时，返回写入文件的字符个数，失败时返回一个负值
 数据块读写函数 
 int fread(void *buffer, unsigned size, unsigned count, FILE *fp);  // 按二进制形式，将size*count个字节读到buffer中，成功时，返回数据块的数量，出错时，返回0
 int fwrite(void *buffer, unsigned size, unsigned count, FILE *fp);  // 按二进制形式，将size*count个字节写入，从buffer中读出然后写入到文件中，成功时，返回数据块的数量，出错时，返回0
