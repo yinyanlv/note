@@ -108,7 +108,7 @@ import导入的参数是路径，而非包名
 import   "crypto/rand"  // 默认模式: rand.Function
 import R "crypto/rand"  // 包重命名: R.Function
 import . "crypto/rand"  // 简便模式: Function
-import _ "crypto/rand"  // 匿名导入: 仅让该包执行行初始化函数
+import _ "crypto/rand"  // 匿名导入: 仅让该包执行初始化函数
 .
 └── src
     └── test
