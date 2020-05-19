@@ -12,52 +12,54 @@ complex128
 bool
 string  // 字符串是不可变的字节序列，中文字符在unicode下占2个字节，在utf-8编码下占3个字节，go语言默认编码是utf-8
 
-const关键字  // 定义常量
-iota  // go语言的常量计数器，只能在常量的表达式中使用，iota不是类型。iota在const关键字出现时将被重置为0（const内部的第一行之前），const中每新增一行常量声明将使iota计数一次（iota可理解为const语句块中的行索引）
+const
+iota  // 中文，微量，go语言的常量计数器，只能在常量的表达式中使用，iota不是类型。iota在const关键字出现时将被重置为0（const内部的第一行之前），const中每新增一行常量声明将使iota计数一次
 nil  // 中文，零
 
 复合数据类型
 数组  // var a [3]int = [3]int{1,2,3}，通过range遍历数组，数组长度是数组类型的一部分
 slice  // 拥有相同类型元素的可变长度序列。属性包括指针、长度、容量，[]string，make([]T, len)，make([]T, len, cap)，make([]T, cap)[:len] 
-map  // 散列表，拥有键值对元素的无序集合，a := make(map[string][int]) { "key1": 1, } 
+map  // 散列表，拥有键值对元素的无序集合，a := make(map[string][int]){"key1": 1,} 
 结构体  // 将零个或多个任意类型的变量组合到一起的聚合数据类型
 
 函数  // 函数类型的零值是nil 
 声明  // func name(paramerter-list) (result-list) {}
 多返回值  // error放在返回参数列表的最后，error为空时返回零值nil
-匿名函数  // 匿名函数只能在包级别的作用域进行声明，闭包
+匿名函数  // 匿名函数只能在函数级别的作用域进行声明，闭包
 变长函数  // 参数数量不固定，func sum(vals ...int) int {}
 延迟调用函数  // defer
 
+go语言中方法没有重载只有重写
+
 常用语言级函数
-new  // 分配堆内存，返回指针类型，类似malloc
-make  // 用于slice、map、channel的初始化
+总的来讲，new的作用是初始化一个指向类型的指针(*T)，make的作用是为slice，map或chan初始化并返回引用(T)
+new  // 给一个值类型的数据分配内存，调用成功后返回一个初始化的内存块指针，同时该类型被初始化为零值。分配的内存不一定放在堆上，也有可能在栈上，由编译器决定。 不同于其他语言中new所做的工作，它只是将内存清零，而不是初始化内存。原型定义：func new(Type) *Type
+make  // 给引用类型分配内存空间，比如：slice，map，chan等，make直接返回一个引用类型的对象，而不是一个内存空间的指针。原型定义：func make(Type,size IntegerType) Type，Type必须是引用类型
 len
 cap
 append  // 往array，slice等追加元素，返回修改后的slice
 copy  // 内容拷贝，主要是切片的拷贝
-close  // 关闭channel
+close 
 delete  // 删除散列表map的元素
-real  // 返回complex的虚部
-imag  // 返回complex的实部
+real  // 返回complex的实部
+imag  // 返回complex的虚部
 panic  // 停止常规的goroutine
 recover  // 恢复，用于定义goroutine panic时的动作，与defer关键字配合使用
 
 结构体
-结构体嵌套  // 继承
-
-go语言中方法没有重载只有重写
+结构体嵌套  
 
 接口  // 一组仅包含方法名、参数、返回值的未具体实现的方法的集合
 go语言中接口是隐式实现的，当结构体实现了某接口的所有方法，那么就认为该结构体实现了该接口
-obj.(T)  // 判断obj对象是否实现了某接口
+obj.(T)  // 类型断言，判断obj对象是否实现了某接口
 空接口  // interface{}，空接口就是不包含任何方法的接口。因此，所有的类型都实现了空接口，空接口可以存储任意类型的数据
 接口零值  // 接口的零值是nil
+接口值  // 包括动态类型和动态值 
 指针接口  // 某类型的指针类型实现了某接口，不代表该类型本身实现了某接口，因此调用时需通过指针调用
-接口嵌套  // 继承
+接口嵌套  
 
 类型断言
-comma-ok断言  //  if _, ok := obj.(int); ok {}，comma（逗号）
+comma-ok断言  // if _, ok := obj.(int); ok {}，comma（逗号）
 switch判断  // switch  value := obj.(type) { case int: }，type为关键字
 
 当一个程序启动的时候，只有一个goroutine来调用main函数，称它为主goroutine，新的goroutine通过go语句进行创建
@@ -72,8 +74,8 @@ goroutine死锁处理方式
 2、创建缓冲通道
 
 select语句
-go语言中select的功能与epoll(nginx)/poll/select的功能类似，都是坚挺IO操作，当IO操作发生的时候，触发相应的动作
-如果有多个case都可以运行，select会随机公平地选出一个执行，其他不会执行
+go语言中select的功能与epoll(nginx)/poll/select的功能类似，都是监听io操作，当io操作发生的时候，触发相应的动作
+如果有多个case都可以运行，select会随机公平地选出一个执行，其它不会执行
 case后面必须是channel操作，否则报错
 select中的default子句总是可运行的，所以没有default的select才会阻塞（死锁）
 空select，也会引起阻塞（死锁）  // 加default
@@ -85,11 +87,11 @@ timeout机制  // 超时判断
 退出机制  // 退出循环一定要用break+具体的标记，或者goto也可以，否则其实不是真的退出
 
 defer关键字
-defer用于资源的释放，会在函数返回之前进行调用，defer表达式可能会在设置函数返回值之后，在返回到调用函数之前，修改返回值，使最终的函数返回值与你想象的不一致。
+defer用于资源的释放，会在函数返回之前进行调用，defer表达式可能会在设置函数返回值之后，在返回到调用函数之前，修改返回值
 如果有多个defer表达式，调用顺序类似于栈，越后面的defer表达式越先被调用
 
 反射  // 一种在编译时不知道类型的情况下，可更新变量、运行时查看值、调用方法以及直接对它们的内存布局进行操作的机制，go语言中只有interface类型才有反射一说
-reflect.ValueOf()	// 动态获取输入参数接口中数据的值，如果为空则返回0
+reflect.ValueOf()	// 动态获取输入参数接口中数据的值，如果为空则返回该类型的零值
 reflect.TypeOf()  // 动态获取输入参数接口中值的类型，如果为空则返回nil 
 
 包
