@@ -1,3 +1,9 @@
+go数据类型四大类
+基础类型  // number，string，bool
+聚合类型  // array，struct
+引用类型  // pointer，slice，map，function，channel
+接口类型  // interface
+
 基本数据类型
 uintptr  // 无符号整型，存放指针 
 int  // 虽然大小就是32位，但是和int32还是不同类型，需显示转换
@@ -62,18 +68,35 @@ obj.(T)  // 类型断言，判断obj对象是否实现了某接口
 comma-ok断言  // if _, ok := obj.(int); ok {}，comma（逗号）
 switch判断  // switch  value := obj.(type) { case int: }，type为关键字
 
+go两种并发编程风格
+goroutine和通道  // 通信顺序进程（communicating sequental process，csp）
+共享内存多线程的传统模型
+
 当一个程序启动的时候，只有一个goroutine来调用main函数，称它为主goroutine，新的goroutine通过go语句进行创建
 
 将一个数据value写入channel，这会导致阻塞，直到有其他goroutine从这个channel中读取数据
 从channel中读取数据，如果channel之前没有写入数据，也会导致阻塞，直到channel中被写入数据为止
-goroutine的通道默认是是阻塞的，可以通过加一个缓冲区来缓解阻塞  // ch := make(chan string, 5)
+goroutine的通道默认是是阻塞的，可以通过加一个缓冲区来缓解阻塞  
+make(chan int, 1)  // 缓冲通道，解耦发送和接收
+make(chan int)  // 无缓冲通道，即默认容量为0，提供发送和接收强同步保障
+有缓冲区时，在不超过缓冲区大小时，不会出现 发送方阻塞。无缓冲区时，只要channel数据没有被拿走，始终会阻塞发送方
 
-非缓冲通道上如果发生了流入无流出，或者流出无流入，就会引起死锁
+单向通道类型  // 当一个通道用做函数的形参时，一般都定义为单向通道
+chan<- int  // 只能发送到通道，流出
+<-chan int  // 只能从通道接收，流入
+
+代码块结束时，关闭每一个通道并不是必需的。只有在通知接收方goroutine所有的数据都发送完毕时才需要关闭通道（因此，关闭通道可以作为一个广播机制）。因为，通道也可以通过垃圾回收器根据它是否可以访问来决定是否回收它，而不是只根据它是否关闭
+不要将对channel的close操作和对文件的close混淆，代码块结束时，对每一个文件调用Close方法是非常重要的，因为文件属于程序外部资源
+
+goroutine泄漏
+如果使用一个无缓冲通道，当某个goroutine发送数据到通道的时候，没有另一个goroutine来接收，该goroutine将被阻塞，且不能被回收，这个情况叫做goroutine泄漏，属于一个bug。不像回收变量，泄漏的goroutine不会自动回收，所有需确保goroutine在不需要的时候可以自动结束
+
+无缓冲通道上如果发生了流入无流出，或者流出无流入，就会引起死锁
 goroutine死锁处理方式
-1、使goroutine非缓冲通道的流入和流出成对出现
+1、使goroutine无缓冲通道的流入和流出成对出现
 2、创建缓冲通道
 
-select语句
+select语句  // 默认阻塞，可以通过default子句使程序非阻塞
 go语言中select的功能与epoll(nginx)/poll/select的功能类似，都是监听io操作，当io操作发生的时候，触发相应的动作
 如果有多个case都可以运行，select会随机公平地选出一个执行，其它不会执行
 case后面必须是channel操作，否则报错
