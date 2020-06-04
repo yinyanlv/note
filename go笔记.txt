@@ -25,7 +25,7 @@ nil  // 中文，零
 复合数据类型
 数组  // var a [3]int = [3]int{1,2,3}，通过range遍历数组，数组长度是数组类型的一部分
 slice  // 拥有相同类型元素的可变长度序列。属性包括指针、长度、容量，[]string，make([]T, len)，make([]T, len, cap)，make([]T, cap)[:len] 
-map  // 散列表，拥有键值对元素的无序集合，a := make(map[string][int]){"key1": 1,} 
+map  // 散列表，拥有键值对元素的无序集合，a := make(map[string][int]){"key1": 1,}，key必须可以比较，除了slice、map、function的内建类型都可以作为key，struct不包括上述类型也可以作为key
 结构体  // 将零个或多个任意类型的变量组合到一起的聚合数据类型
 
 函数  // 函数类型的零值是nil 
