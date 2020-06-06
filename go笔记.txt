@@ -46,7 +46,7 @@ len
 cap
 append  // 往array，slice等追加元素，返回修改后的slice
 copy  // 内容拷贝，主要是切片的拷贝
-close 
+close  // close channel时，由发送方close 
 delete  // 删除散列表map的元素
 real  // 返回complex的实部
 imag  // 返回complex的虚部
@@ -73,7 +73,21 @@ go两种并发编程风格
 goroutine和通道  // 通信顺序进程（communicating sequental process，csp）
 共享内存多线程的传统模型
 
+go语言中传统同步机制
+WaitGroup
+Mutex
+Cond
+
 当一个程序启动的时候，只有一个goroutine来调用main函数，称它为主goroutine，新的goroutine通过go语句进行创建
+goroutine为非抢占式调度  // 当一个goroutine一直执行，不主动交出控制权，那么，其它任何goroutine都没有执行的机会。执行io操作，io操作内部会自动交出控制权、runtime.Gosched()可手动交出控制权
+
+goroutine可能自动切换的点：
+io
+select
+channel
+等待锁
+函数调用  // 有时
+runtime.Gosched()  // 手动交出控制权
 
 将一个数据value写入channel，这会导致阻塞，直到有其他goroutine从这个channel中读取数据
 从channel中读取数据，如果channel之前没有写入数据，也会导致阻塞，直到channel中被写入数据为止
@@ -154,3 +168,8 @@ go.sum  // 包含特定模块版本内容的预期加密哈希，不需要手工
 扩展系统类型或第三方包类型，有两种方法：
 定义类型别名
 使用组合  // 结构体嵌套
+
+常用命令
+go run -race a.go  // 查看数据竞争
+go doc  // 查看文档
+godoc -http 6060  // 生成文档，可通过浏览器查看
