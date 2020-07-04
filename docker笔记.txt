@@ -110,3 +110,34 @@ docker diff
 {
   "registry-mirrors": ["http://hub-mirror.c.163.com"]
 }
+
+docker-compose  // 用于对docker容器集群的快速编排  
+docker-compose up  // -d，后台启动
+docker-compose down  // 停止并删除容器 
+docker-compose stop  // 停止容器 
+
+docker-compose.yml
+version: "3"
+services:
+  mysql:
+    image: mysql:5.7.30
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: 111111 
+      LANG: C.UTF-8
+               
+
+部署实例
+mysql
+docker run --name prot -p 9000:9000 --net prot_default --link mysql:mysql -d prot  // 使prot容器关联外部mysql容器并启动
+docker exec -it mysql /bin/bash  // 进入容器，然后初始化数据库，source /abc.sql 
+exit  // 退出容器
+
+nginx
+docker cp 65bc23f952db:/etc/nginx/ /root/nginx/etc/
+vim /root/nginx/etc/nginx/conf.d/prot.conf
+docker run --name=nginx_p -p 80:80 -v /root/nginx/html:/usr/share/nginx/html -v /root/nginx/etc/nginx/conf.d:/etc/nginx/conf.d -d nginx
+
