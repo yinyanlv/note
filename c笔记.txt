@@ -86,6 +86,9 @@ unsigned long long  // c99，等价于unsigned long long int
 'a' -> 97
 'A' -> 65
 
+\u，unicode码点，代表一个字符
+\x，十六进制编码的数据，可表示多种编码方式，如：utf-8、ascii等
+
 浮点类型  // 计算机中的所有的浮点数都是有符号的
 float  // 4字节
 double  // 8字节
