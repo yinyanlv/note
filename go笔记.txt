@@ -16,6 +16,7 @@ go数据类型四大类
 uintptr  // 无符号整型，存放指针 
 int  // 虽然大小就是32位，但是和int32还是不同类型，需显示转换
 int8、int16、int32、int64
+uint
 uint8、uint16、uint32、uint64
 rune  // 符文，int32别名，常用来处理unicode或utf-8字符
 byte  // uint8别名，常用来处理ascii字符
@@ -24,7 +25,7 @@ float64
 complex64  // 复数
 complex128  
 bool
-string  // 字符串是不可变的字节序列，中文字符在unicode下占2个字节，在utf-8编码下占3个字节，go语言默认编码是utf-8
+string  // 字符串是不可变的字节序列，中文字符用unicode码点表示时占2个字节，用utf-8编码时占3个字节，go语言中字符串默认编码是utf-8
 
 const
 iota  // 中文，微量，go语言的常量计数器，只能在常量的表达式中使用，iota不是类型。iota在const关键字出现时将被重置为0（const内部的第一行之前），const中每新增一行常量声明将使iota计数一次
@@ -32,7 +33,7 @@ nil  // 中文，零
 
 复合数据类型
 数组  // var a [3]int = [3]int{1,2,3}，通过range遍历数组，数组长度是数组类型的一部分
-slice  // 拥有相同类型元素的可变长度序列。属性包括指针、长度、容量，[]string，make([]T, len)，make([]T, len, cap)，make([]T, cap)[:len] 
+slice  // 拥有相同类型元素的可变长度序列。属性包括指针、长度、容量，[]T，make([]T, len)，make([]T, len, cap)，make([]T, cap)[:len] 
 map  // 散列表，拥有键值对元素的无序集合，a := make(map[string][int]){"key1": 1,}，key必须可以比较，除了slice、map、function的内建类型都可以作为key，struct不包括上述类型也可以作为key
 结构体  // 将零个或多个任意类型的变量组合到一起的聚合数据类型
 
@@ -51,7 +52,7 @@ map  // 散列表，拥有键值对元素的无序集合，a := make(map[string]
 常用语言级函数
 总的来讲，new的作用是初始化一个指向类型的指针(*T)，make的作用是为slice，map或chan初始化并返回引用(T)
 new  // 给一个值类型的数据分配内存，调用成功后返回一个初始化的内存块指针，同时该类型被初始化为零值。分配的内存不一定放在堆上，也有可能在栈上，由编译器决定。 不同于其他语言中new所做的工作，它只是将内存清零，而不是初始化内存。原型定义：func new(Type) *Type
-make  // 给引用类型分配内存空间，比如：slice，map，chan等，make直接返回一个引用类型的对象，而不是一个内存空间的指针。原型定义：func make(Type,size IntegerType) Type，Type必须是引用类型
+make  // 给引用类型分配内存空间，比如：slice，map，chan等，make直接返回一个引用类型的对象，而不是一个内存空间的指针。原型定义：func make(Type, size IntegerType) Type，Type必须是引用类型
 len
 cap
 append  // 往array，slice等追加元素，返回修改后的slice
@@ -84,9 +85,11 @@ goroutine和通道  // 通信顺序进程（communicating sequental process，cs
 共享内存多线程的传统模型
 
 go语言中传统同步机制
-WaitGroup
-Mutex
-Cond
+sync.WaitGroup
+sync.Mutex
+sync.RWMutex
+sync.Cond
+sync.Map
 
 当一个程序启动的时候，只有一个goroutine来调用main函数，称它为主goroutine，新的goroutine通过go语句进行创建
 goroutine为非抢占式调度  // 当一个goroutine一直执行，不主动交出控制权，那么，其它任何goroutine都没有执行的机会。执行io操作，io操作内部会自动交出控制权、runtime.Gosched()可手动交出控制权
@@ -153,7 +156,7 @@ reflect.TypeOf()  // 动态获取输入参数接口中值的类型，如果为�
 runtime包
 runtime.Gosched()  // 让出cpu时间片，gpm重新调度
 runtime.Goexit()  // 立即退出当前goroutine，已注册的defer正常执行
-runtime.GOMAXPROCS(n int)  // 设置当前程序并发时占用的cpu核心数（os线程），默认值是机器上的cpu核心数，最大256
+runtime.GOMAXPROCS(n int)  // 设置当前程序并发时占用的cpu核心数（os线程），默认值是机器上的cpu核心数
 
 包
 go语言编译工具对源码目录有很严格的要求，每个工作空间（workspace）必须由bin（存放可执行文件）、pkg（存放编译好的库文件，主要是*.a文件）、src（存放源文件）三个目录组成
@@ -186,7 +189,7 @@ init函数
 go包管理  // go1.11+，项目不必放在GOPATH/src内
 添加环境变量GO111MODULE为on或者auto  // auto（如果项目在$GOPATH/src里会使用$GOPATH/src的依赖包） | on（总是使用go.mod里require的包） | off
 go.mod  // 包管理文件
-go.sum  // 包含特定模块版本内容的预期加密哈希，不需要手工维护
+go.sum  // 包含特定模块版本内容的加密哈希，不需要手工维护
 
 扩展系统类型或第三方包类型，有两种方法：
 定义类型别名
