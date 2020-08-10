@@ -37,6 +37,8 @@ slice  // 拥有相同类型元素的可变长度序列。属性包括指针、�
 map  // 散列表，拥有键值对元素的无序集合，a := make(map[string][int]){"key1": 1,}，key必须可以比较，除了slice、map、function的内建类型都可以作为key，struct不包括上述类型也可以作为key
 结构体  // 将零个或多个任意类型的变量组合到一起的聚合数据类型
 
+go语言中slice、map、function不可比较。数组、channel（总是为false）可比较。struct是否可比较，取决于内部是否包含slice、map、function。interface是否可比较，取决于其内部包含的动态类型是否可比较（非slice、map、function）
+
 对于结构体
 type A struct {
     a int32 
