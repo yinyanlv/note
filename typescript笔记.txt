@@ -26,9 +26,6 @@ type Tree<T> = {
     right: Tree<T>;
 }
 
-declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法与属性。这会让你通过编译，但是没有自动完成和类型检查
-declare var $: any;
-
 变量声明
 let  // 不能重复声明同名变量，模式匹配
 const  // let的升级，阻止对变量进行再一次赋值
@@ -109,6 +106,9 @@ function find<T, U extends Findable<T>>(n: T, s: U) {  // 泛型约束
 }
 let output = identity<string>("myString");  // 可类型推论
 
+declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法与属性。这会让你通过编译，但是没有自动完成和类型检查
+declare var $: any;
+
 命名空间  // 即内部模块
 namespace Validation {
     export interface StringValidator {
@@ -116,9 +116,20 @@ namespace Validation {
     }
 }
 
-外部模块  // 模块
+外部模块  // 文件模块
 declare module "SomeModule" {
     export function fn(): string;
+}
+
+namespace和module区别
+namespace是跨文件的，概念上等同于包名，主要是解决命名冲突的问题，会在全局生成一个对象，不同的文件能够读取其他文件注册在全局的命名空间内的信息，也可以注册自己的
+module是以文件为单位的，概念上等同于文件，主要是解决加载依赖关系的，module跟文件绑定在一起，一个文件就是一个module
+
+在typescirpt中，如果.d.ts文件的顶部不以import或者export语句开始，那么该文件会被当作一个全局的ts脚本，而不是模块，因此不能进行类型扩展
+export declare global {
+    interface Window {
+        abc: any;
+    }
 }
 
 装饰器  // Decorators，用来支持标注或修改类及其成员，目前是一项实验性特性
