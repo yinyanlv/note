@@ -204,3 +204,11 @@ webpack-dev-middleware  // 动态运行webpack打包生成文件
 webpack-hot-middleware  // 处理来自浏览器端的热加载请求或者推送代码到网页
 react-hot-loader  // 处理react组件的热加载
 webpack-manifest-plugin   // 生成静态资源说明文件
+
+测试
+jest  // 一个功能丰富的js测试框架，可以用于babel、typescript、node、react、vue、angular等
+enzyme  // airbnb 公司开源的一个用于react的js测试工具，方便判断、操纵和遍历react components输出。enzyme的api通过模仿jQuery的api，使得dom操作和遍历很灵活、直观，模拟触发事件（cmp.simulate('click')），enzyme兼容所有的主要测试运行器和断言库
+  shallow  // 浅渲染，将组件渲染成虚拟dom对象，只会渲染第一层，子组件将不会被渲染出来，性能较高
+  render  // 静态渲染，将react组件渲染成静态的html字符串，然后使用cheerio这个库解析这段字符串，并返回一个cheerio的实例对象，可以用来分析组件的html结构
+  mount  // 完全渲染，将组件渲染加载成一个真实的dom节点，用来测试dom api的交互和组件的生命周期，用到了jsdom来模拟浏览器环境
+sinon  // spy模拟函数，spy（间谍、侦探），用于监听函数调用次数、模拟函数返回等，jest框架自带了一个简单的spyOn方法
