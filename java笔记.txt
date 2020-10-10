@@ -5,6 +5,9 @@ jdk (java development kit)
 jcp  // java community process
 jsr  // java specification requests，java规范提案
 
+jfr  // java flight recorder，生成性能日志 
+jmc  // java mission control，可视化分析性能日志
+
 *.java (源文件) -> 编译器 (javac.exe) -> *.class (字节码文件) -> java.exe 执行字节码文件，执行字节码文件时，不能加字节码文件后缀
 
 jni(java native interface)  // 允许java与其它语言写的代码交互
@@ -404,7 +407,7 @@ public synchronized void push() {}  // 相当于synchronized(this)
 this.wait()  // 可以释放对象锁
 this.notify()  // 通知一个wait的线程
 this.notifyAll()  // 通知所有wait的线程
-java.util.concurrent.*;  // 锁，集合等，jdk1.5，用于并发，底层用synchronized、wait、 notify、notifyAll实现
+java.util.concurrent.*;  // 锁，集合等，jdk1.5，用于并发，底层用synchronized、wait、notify、notifyAll实现
 线程池  // ExecutorService接口，ThreadPoolExecutor类，Executors工具类
 ExecutorSerice pool = Executors.newCachedTreadPool(); 
 pool.execute(Runnable r);
@@ -412,8 +415,8 @@ java.util.Timer  // 底层用线程实现
 java.swing.Timer  // 底层用线程实现
 
 流  // 把不同类型的输入、输出都抽象为流。jdk 1.4加入java.nio，jdk 1.7加入java.nio2
-输入流输出流  // 按流的方向分类
 字节流字符流  // 按流的内容分类，字节流一个一个字节读取，字符流一个一个字符读取，每一个字符在字符流中占据的字节数，由编码方式决定
+输入流输出流  // 按流的方向分类
 节点流处理流  // 按流的功能分类，节点流，向一个特定的地方(节点)读写，处理流，对一个已存在的流进行连接和封装，又称为过滤流
 
        字节流         字符流
