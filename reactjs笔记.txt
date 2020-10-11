@@ -206,9 +206,11 @@ react-hot-loader  // 处理react组件的热加载
 webpack-manifest-plugin   // 生成静态资源说明文件
 
 测试
+react-test-renderer  // 负责将组件输出成json对象以方便我们遍历、断言或是进行snapshot测试，分为shallow render和full render
+react-dom/test-utils  // 用于测试用户交互、事件，某些方法依赖dom环境，jest默认集成了jsdom
 jest  // 一个功能丰富的js测试框架，可以用于babel、typescript、node、react、vue、angular等
-enzyme  // airbnb公司开源的一个用于测试react组件的工具，内部是对react-test-renderer的封装，方便判断、操纵和遍历react组件的输出。enzyme的api通过模仿jquery的api，使得dom操作和遍历很灵活、直观，模拟触发事件（cmp.simulate('click')），enzyme兼容所有的主要测试运行器和断言库
-  shallow  // 浅渲染，将组件渲染成虚拟dom对象，只会渲染第一层，子组件将不会被渲染出来，性能较高
-  render  // 静态渲染，将react组件渲染成静态的html字符串，然后使用cheerio这个库解析这段字符串，并返回一个cheerio的实例对象，可以用来分析组件的html结构
-  mount  // 完全渲染，将组件渲染加载成一个真实的dom节点，用来测试dom api的交互和组件的生命周期，用到了jsdom来模拟浏览器环境
+enzyme  // airbnb公司开源的一个用于测试react组件的工具，内部是对react-test-renderer和react-dom/test-utils的封装，方便判断、操纵和遍历react组件的输出。enzyme的api通过模仿jquery的api，使得dom操作和遍历很灵活、直观，模拟触发事件（cmp.simulate('click')），enzyme兼容所有的主要测试运行器和断言库
+  shallow  // shallow render，对应react-test-renderer/shallow，将组件渲染成虚拟dom对象，只会渲染第一层，子组件将不会被渲染出来，性能较高
+  render  // static render，对应react-test-renderer，将react组件渲染成静态的html字符串，然后使用cheerio这个库解析这段字符串，并返回一个cheerio的实例对象，可以用来分析组件的html结构
+  mount  // full dom render，对应react-dom/test-utils，将组件渲染加载成一个真实的dom节点，用来测试dom api的交互和组件的生命周期，用到了jsdom来模拟浏览器环境
 sinon  // spy模拟函数，spy（间谍、侦探），用于监听函数调用次数、模拟函数返回等，jest框架自带了一个简单的spyOn方法
