@@ -1,3 +1,16 @@
+typeof关键字  // 用于获取一个变量、对象、函数的类型
+keyof关键字  // 用于获取某种类型的所有键，其返回类型是联合类型
+const断言  // ts 3.4引入的一种新的字面量联合类型构造方式
+  let x = "hello" as const; 
+  type X = typeof x;  // type X = "hello"
+infer关键字  //infer R就是声明了一个类型变量R，表示不确定、需要让ts编译器自己推断的类型，infer只能用于extends语句中
+  type Flatten<T> = T extends Array<infer U> ? U : never
+  type T0 = [string, number]
+  type T1 = Flatten<T0> // string | number
+ReturnType<T>  // ts内置的工具类型，用于获取函数返回值类型
+  const add = (x:number, y:number) => x + y; 
+  type t = ReturnType<typeof add>;  // type t = number
+
 基础类型
 number  // let isDone: number = 0xf11d;
 boolean
