@@ -143,7 +143,7 @@ a2 //[2, 4, 6, 8]
 length属性，返回没有指定默认值的参数个数，不包括指定了默认值的参数
 rest参数（剩余参数），用来替代arguments，函数的length属性，不包括rest参数
 参数的扩展运算符...，将一个数组转为用逗号分隔的参数序列，不再需要apply方法，来将数组转为函数的参数，可正确识别32位unicode字符，可成功展开部署了iterator接口的对象
-name属性，返回该函数的函数名，Function构造函数返回的函数实例，name属性的值为'anonymous',bind方法返回的函数，name属性值会加上'bound '前缀
+name属性，返回该函数的函数名。new Function(...)返回的函数实例，name属性的值为'anonymous'，bind方法返回的函数，name属性值会加上'bound '前缀
 箭头函数
 如果箭头函数的代码块部分多于一条语句，就要使用大括号将它们括起来，并且使用return语句返回
 由于大括号被解释为代码块，所以如果箭头函数直接返回一个对象，必须在对象外面加上括号
@@ -473,7 +473,7 @@ const MyClass = class Me { //这个类的名字是MyClass而不是Me，Me只在C
 extends关键字
 super关键字，它指代父类的实例（即父类的this对象）
 super(x, y); // 调用父类的constructor(x, y);
-ES5的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6的继承机制完全不同，实质是先创造父类的实例对象this（所以必须先调用super方法），然后再用子类的构造函数修改this。
+ES5的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面（Parent.apply(this)）。ES6的继承机制完全不同，实质是先创造父类的实例对象this（所以必须先调用super方法），然后再用子类的构造函数修改this
 es5中，每一个对象都有__proto__属性，指向对应的构造函数的prototype属性
 Class作为构造函数的语法糖，同时有prototype属性和__proto__属性，因此同时存在两条继承链
 （1）子类的__proto__属性，表示构造函数的继承，总是指向父类
@@ -509,6 +509,9 @@ class DistributedEdit extends mix(Loggable, Serializable) {
 Module
 静态化加载
 es6的module不是对象，而是通过export命令显式指定输出需要的代码，输入时也采用静态命令的形式，这种加载称为“编译时加载”，即es6可以在编译时就完成模块加载，效率要比CommonJS模块的加载方式高。当然，这也导致了没法引用ES6模块本身，因为它不是对象
+es6模块加载的机制，与CommonJS模块完全不同。CommonJS模块输出的是一个值的拷贝，而es6模块输出的是值的引用
+ES6模块不会缓存运行结果，而是动态地去被加载的模块取值，并且变量总是绑定其所在的模块
+由于ES6输入的模块变量，只是一个”符号连接“，所以这个变量是只读的，对它进行重新赋值会报错
 export命令 //export命令可以出现在模块的任何位置，只要处于模块顶层就可以
 as关键字 //重命名
 import命令 //import命令可以出现在模块的任何位置，import命令具有提升效果，会提升到整个模块的头部，首先执行
@@ -520,9 +523,6 @@ import * as circle from './circle';
 export * from 'circle';
 export default命令
 import customName, { otherMethod } from './export-default'; //在一条import语句中，同时输入默认方法和其他变量
-es6模块加载的机制，与CommonJS模块完全不同。CommonJS模块输出的是一个值的拷贝，而es6模块输出的是值的引用
-ES6模块不会缓存运行结果，而是动态地去被加载的模块取值，并且变量总是绑定其所在的模块
-由于ES6输入的模块变量，只是一个”符号连接“，所以这个变量是只读的，对它进行重新赋值会报错
 循环加载 //a脚本的执行依赖b脚本，而b脚本的执行又依赖a脚本
 
 Decorator

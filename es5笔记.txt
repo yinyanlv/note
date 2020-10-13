@@ -9,13 +9,17 @@
 
 闭包可以跨多层作用域捕获变量
 方法也可以用作构造函数
+函数的prototype默认为一个各自对立的空对象{}，但通过原生bind方法生成的函数的prototype属性为undefined，且该函数的原型链已被冻结无法更改，改了也无效
+如果直接替换构造函数的原型对象，即fn.prototype = newObj;之前生成的对象不受影响
+如果修改构造函数的原型对象，即fn.prototype.abc = xxx;之前生成的对象也会动态改变
 函数调用模式本质上是调用全局对象的方法，即fn()本质上是global.fn()
 函数调用模式，this默认指向global对象，使用'use strict';时，this指向undefined
 new操作符可以把this绑定到当前生成的对象
-如果通过bind方法绑定this指向，无法通过call，apply，bind方法改变this指向，但new操作符可以把this重新绑定到当前新生成的对象
-bind方法相当于生成并返回一个新的匿名函数
-call，apply，bind方法的第一个参数如果null，undefined，不传，this将会指向global对象（非严格模式下）
+如果通过bind方法绑定this指向，无法通过call、apply、bind方法改变this指向，但new操作符可以把this重新绑定到当前新生成的对象
+bind方法相当于生成并返回一个新的匿名函数，但这个函数比较特殊，它没有prototype属性，只有__proto__属性（指向Function.prototype），它的原型链已被冻结无法更改，改了也无效
+call，apply，bind方法的第一个参数如果是null，undefined、不传，this将会指向global对象（非严格模式下），使用'use strict';时，this指向undefined
 call，apply，bind方法的第一个参数如果是原始值，该原始值将被自动转换为对应的包装对象，如fn.call(1)，this将指向Number，并且这个Number的[[PrimitiveValue]]值为1，可以通过this.valueOf()取值
+Object.prototype.__proto__为null，这是原型链的终点
 
 Function.prototype.myCall = function(ctx, ...args) {
 	ctx = ctx ? Object(ctx) : global;
@@ -35,6 +39,7 @@ Function.prototype.myApply = function(ctx, args) {  // 可以检查一下args是
 	return result;
 }
 
+// 该模拟的原型链部分与实际情况不一致
 Function.prototype.myBind = function (ctx, ...args1) {
 	let self = this;
 	let temp = function() {}; 
