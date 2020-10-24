@@ -130,7 +130,7 @@ react v16.4
 getDerivedStateFromProps，无论是mounting还是updating，也无论是因为什么引起的updating，全部都会被调用
 
 react v16.8  // 新增hook特性
-useState
+useState  // 由于传递的是set函数的引用，因此，第一次初始化后，set函数将不再改变
 useEffect
 useContext
 useReducer
