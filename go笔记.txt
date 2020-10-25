@@ -227,3 +227,6 @@ go tool pprof ...  // 分析性能
 性能分析工具
 pprof  // 用于可视化和分析性能、分析数据的工具
 pprof以profile.proto读取分析样本的集合，并生成报告以可视化并帮助分析数据（支持文本和图形报告）
+
+go run main.go报错：# command-line-arguments undefined
+main包中的不同文件（main包中有两个或多个go文件）的代码不能相互调用，其他包可以。使用go run *.go解决。运行测试用例时，使用go test .
