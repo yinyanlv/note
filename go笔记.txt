@@ -7,6 +7,8 @@
 ...
 
 go语言中只有值传递，没有引用传递。引用类型和传引用是两个概念
+值类型不可以直接打印指针
+由于gc等原因，go语言中对象的地址可能发生变化，因此指针不能从其它非指针类型的值生成。当内存发生变化的时候，相关的指针会同步更新，但是非指针类型uintptr（本质上是无符号整型）不会做同步更新
 
 go数据类型四大类
 基础类型  // number，string，bool
@@ -15,7 +17,7 @@ go数据类型四大类
 接口类型  // interface
 
 基本数据类型
-uintptr  // 无符号整型，存放指针 
+uintptr  // 无符号整型，存放指针，uintptr和指针类型相互转换时，需通过unsafe.Pointer中转
 int  // 虽然大小就是32位，但是和int32还是不同类型，需显示转换
 int8、int16、int32、int64
 uint
@@ -78,7 +80,7 @@ delete  // 删除散列表map的元素
 real  // 返回complex的实部
 imag  // 返回complex的虚部
 panic  // 停止常规的goroutine
-recover  // 恢复，用于定义goroutine panic时的动作，与defer关键字配合使用
+recover  // 恢复，必须在defer函数中运行，只能捕获当前函数栈帧及子栈帧的异常，直接调用（defer recover()）或嵌套调用（defer func(){ func(){ recover() } }()）无效
 
 结构体  // 当进行属性的引用或方法的调用，会自动取地址或者解引用 
 结构体嵌套  // 匿名结构体，匿名接口（具有类型约束作用，一般用于不针对某种具体类型进行方法重写）  
