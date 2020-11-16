@@ -1,3 +1,16 @@
+生命周期
+beforeCreate
+created
+beforeMount
+mounted
+beforeUpdate
+updated
+activated
+deactivated
+beforeDestroy
+destroyed
+errorCaptured
+
 vm  // vue实例
 
 vm.$set(target, key, value)  // 新增属性
@@ -13,7 +26,7 @@ vm.$once(event, callback)
 vm.$emit(event, [...args])
 
 vm.$forceUpdate()
-vm.$destory()
+vm.$destroy()
 vm.$nextTick(callback)  // 在下一次dom更新循环结束之后执行回调，获得更新后的dom，与全局的Vue.nextTick一样，不同的是回调函数的this自动绑定到调用它的实例上
   vm.$nextTick和dom更新回调都同样属于微任务，如果想在vm.$nextTick中获取更新后的dom，则一定要先更改数据，然后再使用vm.$nextTick注册回调。如果是先使用vm.$nextTick注册回调，再修改数据，则在微任务队列中先执行vm.$nextTick注册的回调，然后执行更新dom的回调，所有回调中得不到最新的dom  
 vm.$mount([elementOrSelector])  // 把vue实例挂载到dom元素上
@@ -22,7 +35,7 @@ Vue.extend(options)  // 创建一个子类，参数是一个包含组件选项�
 Vue.nextTick([callback, context])  // 在下一次dom更新循环结束之后执行回调，获得更新后的dom，vue 2.1.0后可以以promise的方式使用
 Vue.set(target, key, value)
 Vue.delete(target, key)
-Vue.direcive(id, [definition])  // 注册或获取全局指令
+Vue.directive(id, [definition])  // 注册或获取全局指令
 Vue.filter(id, [definition])  // 注册或获取全局过滤器
 Vue.component(id, [definition])  // 注册或获取全局组件
 Vue.use(plugin)  // 安装插件，如果插件是一个对象，必须提供install方法
