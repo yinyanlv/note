@@ -41,7 +41,7 @@ slice  // 拥有相同类型元素的可变长度序列。属性包括指针、�
 map  // 散列表，拥有键值对元素的无序集合，a := make(map[string][int]){"key1": 1,}，key必须可以比较，除了slice、map、function的内建类型都可以作为key，struct不包括上述类型也可以作为key
 结构体  // 将零个或多个任意类型的变量组合到一起的聚合数据类型
 
-go语言中slice、map、function不可比较。数组、channel（总是为false）可比较。struct是否可比较，取决于内部是否包含slice、map、function。interface是否可比较，取决于其内部包含的动态类型是否可比较（非slice、map、function）
+go语言中slice、map、function不可比较（只可与nil比较，甚至连自己与自己比较也不可以）。数组、channel（总是为false，除非是同一个引用）可比较。struct是否可比较，取决于内部是否包含slice、map、function。interface是否可比较，取决于其内部包含的动态类型是否可比较（非slice、map、function）
 
 对于结构体
 type A struct {
@@ -69,7 +69,7 @@ go语言中，方法调用模式，编译器可且只可自动取引用或解引
 
 常用语言级函数
 总的来讲，new的作用是初始化一个指向类型的指针(*T)，make的作用是为slice，map或chan初始化并返回引用(T)
-new  // 给一个值类型的数据分配内存，调用成功后返回一个初始化的内存块指针，同时该类型被初始化为零值。分配的内存不一定放在堆上，也有可能在栈上，由编译器决定。 不同于其他语言中new所做的工作，它只是将内存清零，而不是初始化内存。原型定义：func new(Type) *Type
+new  // 给一个值类型（也可以是引用类型）的数据分配内存，调用成功后返回一个初始化的内存块指针，同时该类型被初始化为零值。分配的内存不一定放在堆上，也有可能在栈上，由编译器决定。 不同于其他语言中new所做的工作，它只是将内存清零，而不是初始化内存。原型定义：func new(Type) *Type
 make  // 给引用类型分配内存空间，比如：slice，map，chan等，make直接返回一个引用类型的对象，而不是一个内存空间的指针。原型定义：func make(Type, size IntegerType) Type，Type必须是引用类型
 len
 cap
@@ -212,7 +212,7 @@ import "test/test2"  // 一般我们使用这种方式导入
 import "./test2"  // 也可以使用相对目录（go1.13开始不支持在GOPATH目录下和go module模式中使用相对路径，GOPATH外且未使用go module的项目，仍旧可以以相对路径的方式导入包），这种相对路径的导入方式只对go run main.go有效，因为，go应用程序执行的时候，代码中的相对路径是相对于执行命令时所在的目录，而非可执行文件本身所在的目录
 init函数  
 当初始化包的时候，init函数也会被执行，它没有参数，也没有返回值，可以在一个文件或一个包中定义多个init函数。在同一个文件中，init函数是按照它们被定义的先后顺序被执行的
-当所有的init函数被执行以后，main函数才会被执行。因此，init函数的主要工作就是，初始化无法在全局范围内初始化的全局变量，例如，初始化数组
+当所有的init函数被执行以后，main函数才会被执行。init函数的主要作用是在程序运行前进行一些配置、引导工作，如配置数据库驱动、读取配置文件初始化全局变量等。初始化顺序：const -> var -> init() -> main()
 go包管理  // go1.11+开始，使用go module时，项目不必放在GOPATH下
 环境变量GO111MODULE  // auto（如果项目放在$GOPATH下，则会优先使用$GOPATH模式） | on（强制启用go module） | off
 go.mod  // 包管理文件
@@ -233,4 +233,4 @@ pprof  // 用于可视化和分析性能、分析数据的工具
 pprof以profile.proto读取分析样本的集合，并生成报告以可视化并帮助分析数据（支持文本和图形报告）
 
 go run main.go报错：# command-line-arguments undefined
-main包中的不同文件（main包中有两个或多个go文件）的代码不能相互调用，其他包可以。使用go run *.go解决。运行测试用例时，使用go test .
+main包中的不同文件（main包中有两个或多个go文件）的代码不能相互调用，其他包可以。使用go run main.go a.go b.go...或go run .解决。运行测试用例时，使用go test .
