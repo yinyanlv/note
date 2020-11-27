@@ -1,3 +1,17 @@
+// https://www.cnblogs.com/h2zzhou/p/12929472.html
+// https://segmentfault.com/a/1190000016365409
+模块加载优先级 // package.json的browser（字符串或对象，当该包只能在web端使用，并且严禁在server端使用时，使用browser字段）、module、main字段
+webpack + web + esm 
+  browser = browser+mjs > module > browser+cjs > main
+webpack + web + commonjs // 事实上，使用webpack构建web应用时，使用import或者require对于加载优先级并没有任何影响
+  browser = browser+mjs > module > browser+cjs > main 
+webpack + node + esm/commonjs  // 使用webpack构建项目的时候，有一个target选项（和output.libraryTarget不是一个东西），默认为web，即进行web应用构建，当我们需要进行一些同构项目或者其他的node项目构建时，需将target配置为node（使用nodejs的require，而不是使用任意内置模块，如fs或path来加载chunk）
+  module > main
+node + commonjs // require导入
+  只有main字段有效
+node + esm // import导入，并且文件后缀名必须是mjs，node --experimental-modules test.mjs
+  只有module字段有效  
+
 宏任务  // 宏任务的事件放在宏任务队列中，由事件触发线程维护，同步代码和ui渲染也算作宏任务。事件类型有：I/O、setTimeout、setInterval、setImmediate、requestAnimationFrame
 微任务  // 微任务的事件放在微任务队列中，由js引擎线程维护。事件类型有：process.nextTick、MutationObserver、Promise
 事件循环运行机制
