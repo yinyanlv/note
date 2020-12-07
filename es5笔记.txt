@@ -1,3 +1,4 @@
+webpack会将以~符号作为前缀的路径当作依赖的模块去解析，这样css中alias（如：@）配置就能生效了，如：background: url("~@/assets/xxx.jpg")
 // https://www.cnblogs.com/h2zzhou/p/12929472.html
 // https://segmentfault.com/a/1190000016365409
 模块加载优先级 // package.json的browser（字符串或对象，当该包只能在web端使用，并且严禁在server端使用时，使用browser字段）、module、main字段
