@@ -13,6 +13,8 @@ node + commonjs // require导入
 node + esm // import导入，并且文件后缀名必须是mjs，node --experimental-modules test.mjs
   只有module字段有效  
 
+出现未捕获异常，整个函数调用栈都会崩溃
+
 宏任务  // 宏任务的事件放在宏任务队列中，由事件触发线程维护，同步代码和ui渲染也算作宏任务。事件类型有：I/O、setTimeout、setInterval、setImmediate、requestAnimationFrame
 微任务  // 微任务的事件放在微任务队列中，由js引擎线程维护。事件类型有：process.nextTick、MutationObserver、Promise
 事件循环运行机制
