@@ -11,6 +11,10 @@ beforeDestroy
 destroyed
 errorCaptured
 
+new Vue、Vue.component、Vue.extend的区别
+new Vue创建的是vue实例（与页面中容器元素绑定），Vue.component、Vue.extend创建的是组件实例，new Vue与其它两个仅仅是参数相似而已
+Vue.component和Vue.extend没有本质区别，Vue.component需要定义组件名，而Vue.extend不需要，Vue.component内部调用了Vue.extend
+
 全局组件 // 全局注册的行为必须在根Vue实例(通过 new Vue)创建之前发生，require.context
 局部组件 // 局部注册的组件在其子组件中不可用
 
