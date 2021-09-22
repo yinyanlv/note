@@ -3,11 +3,14 @@ package.json需配置types或typings字段
 typeof关键字  // 用于获取一个变量、对象、函数的类型
 keyof关键字  // 用于获取某种类型的所有键，其返回类型是联合类型
 infer关键字  // 用于类型不确定、需要让ts编译器自己推断类型的情况，做到类型“模式匹配”。infer R就是声明了一个类型变量R，infer只能用于extends语句中
-    type R<T> = T extends (infer U)[] ? U : T;
-    type A = number[];
-    // 等同于 type B = number;
-    type B = R<A>;
-    const test: B = 123;
+  type R<T> = T extends (infer U)[] ? U : T;
+  type A = number[];
+  // 等同于 type B = number;
+  type B = R<A>;
+  const test: B = 123;
+as关键字 // 类型断言，这种方式可以告诉编译器，“相信我，我知道自己在干什么”，它没有运行时的影响，只是在编译阶段起作用
+  let strLength: number = (someValue as string).length;
+  let strLength: number = (<string>someValue).length;  
 const断言  // ts 3.4引入的一种新的字面量联合类型构造方式
   let x = "hello" as const; 
   type X = typeof x;  // type X = "hello"
@@ -32,6 +35,32 @@ Parameters // 用于获取函数的参数类型，type Parameters<T extends (...
   const b: Parameters<typeof a> = [1, '2'] // 类型：[a: number, b: string]
 InstanceType // 用于获取实例类型，type InstanceType<T extends new (...args: any) => any> = T extends new (...args: any) => infer R ? R : any;
 
+declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法与属性。这会让你通过编译，但是没有自动完成和类型检查
+declare var $: any;
+
+命名空间  // 即内部模块
+namespace Validation {
+    export interface StringValidator {
+        isAcceptable(s: string): boolean;
+    }
+}
+
+外部模块  // 文件模块
+declare module "SomeModule" {
+    export function fn(): string;
+}
+
+namespace和module区别
+namespace是跨文件的，概念上等同于包名，主要是解决命名冲突的问题，会在全局生成一个对象，不同的文件能够读取其他文件注册在全局的命名空间内的信息，也可以注册自己的
+module是以文件为单位的，概念上等同于文件，主要是解决加载依赖关系的，module跟文件绑定在一起，一个文件就是一个module
+
+在typescirpt中，如果.d.ts文件的顶部不以import或者export语句开始，那么该文件会被当作一个全局的ts脚本，而不是模块，因此不能进行类型扩展
+export declare global {
+    interface Window {
+        abc: any;
+    }
+}
+
 基础类型
 number  // let isDone: number = 0xf11d;
 boolean
@@ -51,9 +80,6 @@ never  // 表示永远无法到达终点的类型，如异常，never类型是�
 
 联合类型
 |  // 用'|'分隔每个类型，所以number | string | boolean
-
-类型断言  // 这种方式可以告诉编译器，“相信我，我知道自己在干什么”，它没有运行时的影响，只是在编译阶段起作用
-let strLength: number = (<string>someValue).length;  or let strLength: number = (someValue as string).length;
 
 类型别名
 type Name = string;
@@ -142,32 +168,6 @@ function pickCard(x): any {}
 function find<T, U extends Findable<T>>(n: T, s: U) {  // 泛型约束
 }
 let output = identity<string>("myString");  // 可类型推论
-
-declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法与属性。这会让你通过编译，但是没有自动完成和类型检查
-declare var $: any;
-
-命名空间  // 即内部模块
-namespace Validation {
-    export interface StringValidator {
-        isAcceptable(s: string): boolean;
-    }
-}
-
-外部模块  // 文件模块
-declare module "SomeModule" {
-    export function fn(): string;
-}
-
-namespace和module区别
-namespace是跨文件的，概念上等同于包名，主要是解决命名冲突的问题，会在全局生成一个对象，不同的文件能够读取其他文件注册在全局的命名空间内的信息，也可以注册自己的
-module是以文件为单位的，概念上等同于文件，主要是解决加载依赖关系的，module跟文件绑定在一起，一个文件就是一个module
-
-在typescirpt中，如果.d.ts文件的顶部不以import或者export语句开始，那么该文件会被当作一个全局的ts脚本，而不是模块，因此不能进行类型扩展
-export declare global {
-    interface Window {
-        abc: any;
-    }
-}
 
 装饰器  // Decorators，用来支持标注或修改类及其成员，目前是一项实验性特性
 装饰器是一种特殊类型的声明，它能够被附加到类声明，方法， 访问符，属性或参数上。 装饰器使用@expression这种形式，expression求值后必须为一个函数，它会在运行时被调用，被装饰的声明信息做为参数传入
