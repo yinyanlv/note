@@ -284,3 +284,6 @@ go install ./... // 检查、下载并生成bin文件
 性能分析工具
 pprof  // 用于可视化和分析性能、分析数据的工具
 pprof以profile.proto读取分析样本的集合，并生成报告以可视化并帮助分析数据（支持文本和图形报告）
+
+go1.17泛型
+go build -gcflags=-G=3 test.go

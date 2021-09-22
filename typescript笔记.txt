@@ -2,16 +2,35 @@ package.json需配置types或typings字段
 
 typeof关键字  // 用于获取一个变量、对象、函数的类型
 keyof关键字  // 用于获取某种类型的所有键，其返回类型是联合类型
+infer关键字  // 用于类型不确定、需要让ts编译器自己推断类型的情况，做到类型“模式匹配”。infer R就是声明了一个类型变量R，infer只能用于extends语句中
+    type R<T> = T extends (infer U)[] ? U : T;
+    type A = number[];
+    // 等同于 type B = number;
+    type B = R<A>;
+    const test: B = 123;
 const断言  // ts 3.4引入的一种新的字面量联合类型构造方式
   let x = "hello" as const; 
   type X = typeof x;  // type X = "hello"
-infer关键字  //infer R就是声明了一个类型变量R，表示不确定、需要让ts编译器自己推断的类型，infer只能用于extends语句中
-  type Flatten<T> = T extends Array<infer U> ? U : never
-  type T0 = [string, number]
-  type T1 = Flatten<T0> // string | number
-ReturnType<T>  // ts内置的工具类型，用于获取函数返回值类型
+
+工具泛型
+Partial // 将类型的所有属性变为可选，type Partial<T> = {[P in keyof T]?: T[P]}
+Required // 将类型的所有属性变为必选项，type Required<T> = {[P in keyof T]-?: T[P]}
+Readonly // 将类型的所有属性变为只读选项，type Readonly<T> = {readonly [P in keyof T]: T[P]}
+Record // 组合两种类型，一种类型作为key，一种类型作为value，type Record<K extends keyof any, T> = {[P in K]: T}
+Pick // 从类型T中取出一些属性，type Pick<T, K extends keyof T> = {[P in K]: T[P]}，如：Pick<PetInfo, 'name'>
+Exclude // 将某个类型中属于另一个类型的属性剔除掉，type Exclude<T, U> = T extends U ? never : T，常用于联合类型
+Extract // 将两个类型中共同的属性提取出来，type Extract<T, U> = T extends U ? T : never，常用于联合类型
+Omit // 将类型T中的一些属性隐藏，type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+NonNullable // 该类型不可为空，type NonNullable<T> = T extends null | undefined ? never : T
+ReturnType // 用于获取函数返回值类型，type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any
   const add = (x:number, y:number) => x + y; 
   type t = ReturnType<typeof add>;  // type t = number
+Parameters // 用于获取函数的参数类型，type Parameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never
+  function a(a: number, b: string): string {
+      return 'abc'
+  }
+  const b: Parameters<typeof a> = [1, '2'] // 类型：[a: number, b: string]
+InstanceType // 用于获取实例类型，type InstanceType<T extends new (...args: any) => any> = T extends new (...args: any) => infer R ? R : any;
 
 基础类型
 number  // let isDone: number = 0xf11d;
@@ -26,6 +45,9 @@ void  // 与any类型相反，它表示没有任何类型，void类型的变量�
 undefined  // --strictNullChecks标记，null和undefined只能赋值给void和它们各自，默认情况下null和undefined是所有类型的子类型（不包括never）
 null
 never  // 表示永远无法到达终点的类型，如异常，never类型是任何类型的子类型，也可以赋值给任何类型，然而，没有类型是never的子类型或可以赋值给never类型（除了never本身之外）
+
+字典类型
+{[key: string]: string}
 
 联合类型
 |  // 用'|'分隔每个类型，所以number | string | boolean
