@@ -17,12 +17,13 @@ context对象 // 上下文环境对象，HTML5 canvas暂时只提供了2D绘图A
 线
 moveTo(x, y) // 将画笔移动到该位置，然后开始绘图。可多次调用
 lineTo(x, y) // 将画笔从上一个位置开始画直线，一直到该位置。可多次调用
-stroke() // 绘制。可多次调用。同时绘制多个图形，只需最后调用一次即可，多次调用也不会报错，但会重复绘制，颜色会变深
+stroke() // 描边。可多次调用。同时绘制多个图形，只需最后调用一次即可，多次调用也不会报错，但会重复绘制，颜色会变深
 strokeStyle // 该属性取值有3种，颜色值（支持#ff0000、red、rgb(255, 0, 0)、rgba(255, 0, 0, 0.8)）、渐变色、图案
 strokeRect(x, y, width, height) // 绘制描边矩形。该描边相对于相关坐标点，内外描边，有一半边宽的溢出
 fillStyle // 同strokeStyle
 fillRect(x, y, width, height) // 绘制填充矩形
 rect(x, y, width, height) // 与strokeRect和fillRect不一样，该方法并不会立即把矩形绘制出来，只有调用了stroke或fill方法才会把矩形绘制出来
+fill() // 填充。不可以用于通过moveTo、lineTo划线
 clearRect(x, y, width, height) // 清空指定矩形区域。清空整个canvas，ctx.clearRect(0, 0, canvas.width, canvas.height)
 
 WebGL // 使用GPU计算并绘制，canvas.getContext('xxx')，对于WebGL有三种入参，experimental-webgl、webgl、webgl2（推荐）。WebGL2几乎100%兼容WebGL1。示例教程：https://blog.csdn.net/weixin_34041003/article/details/92072765
