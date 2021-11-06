@@ -1,0 +1,38 @@
+canvas是行内块元素（inline-block）
+canvas绘制的是位图
+canvas默认宽高分别是300px和150px
+canvas宽高一定不要在css样式表中定义，而应该在html属性中定义。在样式表中定义，无法通过js获取canvas元素正确的宽高，返回的是默认的宽高
+canvas兼容ie9及以上 // ie7、8可通过excanvas.js兼容，但功能上有很多限制，如无法使用fillText()方法
+w3c坐标系，y轴正方向向下。数学坐标系，y轴正方向向上 // 前端开发几乎所有涉及到坐标系的技术使用的都是w3c坐标系，如CSS3、canvas、SVG等
+
+canvas对象 // document.getElementById('canvas')
+常用属性
+width
+height
+常用方法
+getContext('2d') // 获取canvas 2D上下文环境
+toDataURL() // 获取canvas对象产生的位图的字符串
+
+context对象 // 上下文环境对象，HTML5 canvas暂时只提供了2D绘图API。3D绘图可以使用HTML5中WebGL（Web Graphics Library）实现，WebGL本质上是基于光栅化的API，而不是基于3D的API
+线
+moveTo(x, y) // 将画笔移动到该位置，然后开始绘图。可多次调用
+lineTo(x, y) // 将画笔从上一个位置开始画直线，一直到该位置。可多次调用
+stroke() // 绘制。可多次调用。同时绘制多个图形，只需最后调用一次即可，多次调用也不会报错，但会重复绘制，颜色会变深
+strokeStyle // 该属性取值有3种，颜色值（支持#ff0000、red、rgb(255, 0, 0)、rgba(255, 0, 0, 0.8)）、渐变色、图案
+strokeRect(x, y, width, height) // 绘制描边矩形。该描边相对于相关坐标点，内外描边，有一半边宽的溢出
+fillStyle // 同strokeStyle
+fillRect(x, y, width, height) // 绘制填充矩形
+rect(x, y, width, height) // 与strokeRect和fillRect不一样，该方法并不会立即把矩形绘制出来，只有调用了stroke或fill方法才会把矩形绘制出来
+clearRect(x, y, width, height) // 清空指定矩形区域。清空整个canvas，ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+WebGL // 使用GPU计算并绘制，canvas.getContext('xxx')，对于WebGL有三种入参，experimental-webgl、webgl、webgl2（推荐）。WebGL2几乎100%兼容WebGL1。示例教程：https://blog.csdn.net/weixin_34041003/article/details/92072765
+前端使用GPU的能力是通过WebGL实现的，更加广泛的理解可以认为是通过canvas来实现的，canvas由许多个像素组成，每个像素的颜色可以有RGBA四个维度表示，每个维度范围为0-255，即8位，把RGBA表示成数值的话，那每个像素可以存32位，这就是前端使用GPU计算最为核心的一点，每个像素可以存储一个32位的值, 刚好就是一个int或者uint
+WebGL只关注两个方面，即投影矩阵的坐标和投影矩阵的颜色。使用WebGL程序的任务就是实现具有投影矩阵坐标和颜色的WebGL对象即可
+GLSL // OpenGL着色语言OpenGL Shading Language，语法跟C语言很类似。使用WebGL需通过GLSL编写shader（着色器）代码
+基本绘制流程如下：
+1、创建WebGL program // const gl = canvas.getContext('webgl2'); const program = gl.createProgram();
+2、初始化两个shader，vertex shader和fragment shader // 这两个shader为两个GLSL代码片段（OpenGL语法），分别处理坐标数据和颜色数据，可以远程加载进来，通过js环境中的gl对象（如上）编译
+  vertex shader和fragment shader的执行是以像素为单位，canvas开始绘制的时候，vertex shader中得到每个需要绘制的像素的坐标，视需要可以对坐标进行各种转换，最终得到一个最终位置，这个过程中可以将数据传入fragment shader参与下一步的计算，fragment shader接受各种输入，最终输出一个RGBA颜色数据作为该像素点的颜色值
+3、传入各个顶点坐标
+4、开始绘制
+5、绘制完成 // 当所有像素都绘制完成之后，画布绘制完成
