@@ -23,7 +23,7 @@ strokeRect(x, y, width, height) // 绘制描边矩形。该描边相对于相关
 fillStyle // 同strokeStyle
 fillRect(x, y, width, height) // 绘制填充矩形
 rect(x, y, width, height) // 与strokeRect和fillRect不一样，该方法并不会立即把矩形绘制出来，只有调用了stroke或fill方法才会把矩形绘制出来
-fill() // 填充。不可以用于通过moveTo、lineTo划线
+fill() // 填充。不可以用于通过moveTo、lineTo画线
 clearRect(x, y, width, height) // 清空指定矩形区域。清空整个canvas，ctx.clearRect(0, 0, canvas.width, canvas.height)
 
 WebGL // 使用GPU计算并绘制，canvas.getContext('xxx')，对于WebGL有三种入参，experimental-webgl、webgl、webgl2（推荐）。WebGL2几乎100%兼容WebGL1。示例教程：https://blog.csdn.net/weixin_34041003/article/details/92072765
