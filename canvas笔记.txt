@@ -14,7 +14,7 @@ getContext('2d') // 获取canvas 2D上下文环境
 toDataURL() // 获取canvas对象产生的位图的字符串
 
 context对象 // 上下文环境对象，HTML5 canvas暂时只提供了2D绘图API。3D绘图可以使用HTML5中WebGL（Web Graphics Library）实现，WebGL本质上是基于光栅化的API，而不是基于3D的API
-线
+直线图形
 moveTo(x, y) // 将画笔移动到该位置，然后开始绘图。可多次调用
 lineTo(x, y) // 将画笔从上一个位置开始画直线，一直到该位置。可多次调用
 stroke() // 描边。可多次调用。同时绘制多个图形，只需最后调用一次即可，多次调用也不会报错，但会重复绘制，颜色会变深
@@ -25,6 +25,11 @@ fillRect(x, y, width, height) // 绘制填充矩形
 rect(x, y, width, height) // 与strokeRect和fillRect不一样，该方法并不会立即把矩形绘制出来，只有调用了stroke或fill方法才会把矩形绘制出来
 fill() // 填充。不可以用于通过moveTo、lineTo画线
 clearRect(x, y, width, height) // 清空指定矩形区域。清空整个canvas，ctx.clearRect(0, 0, canvas.width, canvas.height)
+beginPath() // 开始一条新路径，用于隔离图形状态。每一个路径，都要调用stroke或fill，否则，只会绘制最后一个路径
+closePath() // 关闭路径
+
+曲线图形
+arc(x, y, radius, 开始角度, 结束角度, 是否逆时针) // 绘制圆形，必须先调用beginPath，开始角度和结束角度以弧度为单位（度数/180*Math.PI），默认顺时针（false）
 
 WebGL // 使用GPU计算并绘制，canvas.getContext('xxx')，对于WebGL有三种入参，experimental-webgl、webgl、webgl2（推荐）。WebGL2几乎100%兼容WebGL1。示例教程：https://blog.csdn.net/weixin_34041003/article/details/92072765
 前端使用GPU的能力是通过WebGL实现的，更加广泛的理解可以认为是通过canvas来实现的，canvas由许多个像素组成，每个像素的颜色可以有RGBA四个维度表示，每个维度范围为0-255，即8位，把RGBA表示成数值的话，那每个像素可以存32位，这就是前端使用GPU计算最为核心的一点，每个像素可以存储一个32位的值, 刚好就是一个int或者uint
