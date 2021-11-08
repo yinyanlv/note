@@ -25,11 +25,13 @@ fillRect(x, y, width, height) // 绘制填充矩形
 rect(x, y, width, height) // 与strokeRect和fillRect不一样，该方法并不会立即把矩形绘制出来，只有调用了stroke或fill方法才会把矩形绘制出来
 fill() // 填充。不可以用于通过moveTo、lineTo画线
 clearRect(x, y, width, height) // 清空指定矩形区域。清空整个canvas，ctx.clearRect(0, 0, canvas.width, canvas.height)
-beginPath() // 开始一条新路径，用于隔离图形状态。每一个路径，都要调用stroke或fill，否则，只会绘制最后一个路径
-closePath() // 关闭路径
+beginPath() // 开始一条新路径，用于隔离图形状态。stroke和fill方法只能用于绘制当前路径，不能用于同时绘制多个路径
+closePath() // 关闭路径（用于绘制闭合图形，连接终点和起点）
 
 曲线图形
-arc(x, y, radius, 开始角度, 结束角度, 是否逆时针) // 绘制圆形，必须先调用beginPath，开始角度和结束角度以弧度为单位（度数/180*Math.PI），默认顺时针（false）
+arc(x, y, radius, 开始角度, 结束角度, 是否逆时针) // 绘制圆形或弧线，必须先调用beginPath，开始角度和结束角度以弧度为单位（注意：此函数的开始、结束角度正方向为顺时针，而非数学角度的正方向。为了直观常写作：度数/180*Math.PI），默认顺时针（false）
+arcTo(cx, cy, x2, y2, radius) // 绘制弧线，cx, cy（控制点）、x2, y2（结束点），开始点一般由moveTo或lineTo提供
+quadraticCurveTo(cx, cy, x2, y2) // cx, cy（控制点）、x2, y2（结束点）
 
 WebGL // 使用GPU计算并绘制，canvas.getContext('xxx')，对于WebGL有三种入参，experimental-webgl、webgl、webgl2（推荐）。WebGL2几乎100%兼容WebGL1。示例教程：https://blog.csdn.net/weixin_34041003/article/details/92072765
 前端使用GPU的能力是通过WebGL实现的，更加广泛的理解可以认为是通过canvas来实现的，canvas由许多个像素组成，每个像素的颜色可以有RGBA四个维度表示，每个维度范围为0-255，即8位，把RGBA表示成数值的话，那每个像素可以存32位，这就是前端使用GPU计算最为核心的一点，每个像素可以存储一个32位的值, 刚好就是一个int或者uint
