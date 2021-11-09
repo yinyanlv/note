@@ -31,7 +31,8 @@ closePath() // 关闭路径（用于绘制闭合图形，连接终点和起点�
 曲线图形
 arc(x, y, radius, 开始角度, 结束角度, 是否逆时针) // 绘制圆形或弧线，必须先调用beginPath，开始角度和结束角度以弧度为单位（注意：此函数的开始、结束角度正方向为顺时针，而非数学角度的正方向。为了直观常写作：度数/180*Math.PI），默认顺时针（false）
 arcTo(cx, cy, x2, y2, radius) // 绘制弧线，cx, cy（控制点）、x2, y2（结束点），开始点一般由moveTo或lineTo提供
-quadraticCurveTo(cx, cy, x2, y2) // cx, cy（控制点）、x2, y2（结束点）
+quadraticCurveTo(cx, cy, x2, y2) // 二次贝塞尔曲线，cx, cy（控制点）、x2, y2（结束点）
+bezierCurveTo(cx1, cy1, cx2, cy2, x2, y2) // 三次贝塞尔曲线，与二次贝塞尔曲线的唯一区别是有两个控制点
 
 WebGL // 使用GPU计算并绘制，canvas.getContext('xxx')，对于WebGL有三种入参，experimental-webgl、webgl、webgl2（推荐）。WebGL2几乎100%兼容WebGL1。示例教程：https://blog.csdn.net/weixin_34041003/article/details/92072765
 前端使用GPU的能力是通过WebGL实现的，更加广泛的理解可以认为是通过canvas来实现的，canvas由许多个像素组成，每个像素的颜色可以有RGBA四个维度表示，每个维度范围为0-255，即8位，把RGBA表示成数值的话，那每个像素可以存32位，这就是前端使用GPU计算最为核心的一点，每个像素可以存储一个32位的值, 刚好就是一个int或者uint
