@@ -270,6 +270,7 @@ rename user old_username to new_username;
 删除用户
 drop user username;
 设置密码
+alter user 'root'@'localhost' identified by 'youpassword' // 已验证
 set password = password('password')  // 为当前用户设置密码
 set password for username = password('password')  // 为指定用户设置密码
 mysqladmin -u username -p password new_password
