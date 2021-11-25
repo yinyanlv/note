@@ -75,6 +75,37 @@ function myNew(Constructor, ...args) {
 	return newObj;
 }
 
+// 模拟promise
+function Promise() {
+	const func = arguments[0];
+	const self = this;
+	this.status === 'pending';
+	this.data = undefined;
+	function resolve(data) {
+		self.status = 'resolved';
+		self.data = data;
+	}
+
+	function reject(data) {
+		self.status = 'rejected';
+		self.data= data;
+	}
+
+	func(resolve, reject) // TODO，异步
+	return this;
+}
+
+Promise.prototype.then = function () {
+	const resolve = arguments[0];
+	const reject = arguments[1];
+
+	if (this.status === 'resolved') {
+		resolve(this.data);
+	} else if (this.status === 'rejected') {
+		reject(this.data);
+	}
+}
+
 Array
 forEach  // 不会遍历纯粹“占着官位吃空饷”的元素
 map 
