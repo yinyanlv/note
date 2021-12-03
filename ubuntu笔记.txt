@@ -92,6 +92,9 @@ grep node  // 查找带node字符串的行
 杀死进程 
 sudo kill {pid}
 
+查看文件最后n行
+tail -f -n 20 filename.txt // 跟踪查看文件后20行，-f：跟踪文件增长，-n：指定查看的行数，-20等同于20，但+20代表从文件的第20行开始查看
+
 后台运行进程
 nohup cmd [args...] &
 
