@@ -479,10 +479,10 @@ group()  // group()或group(0)表示整个匹配项，group(1), group(2)...表�
 
 jpa  // 持久化规范
 jdbc  // 提供规范，具体驱动由数据库厂商提供
-DML  // 返回值，影响的数据行数 or 0 
-DQL  // 返回值，ResultSet，ResultSet.next()返回true or false
-DDL  // 创建删除库、表等操作
-DCL  // 权限控制
+DDL  // Data Definition Language，数据定义语言。用于完成对数据库对象（数据库、数据表、视图、索引等）的创建、删除、修改。创建删除库、表等操作
+DML  // Data Manipulation Language，数据操作语言。用于完成对数据表中数据的添加、删除、修改操作。返回值，影响的数据行数 or 0 
+DQL  // Data Query Language，数据查询语言。用于将数据表中的数据查询出来。返回值，ResultSet，ResultSet.next()返回true or false
+DCL  // Data Control Language，数据控制语言。用于完成事务管理等控制性操作。权限控制
 基本流程：贾琏欲执事  // 贾，加载驱动，事，释放资源
 DAO  // 结合抽取出的jdbcUtil，精简、共用代码
 Statement和PreparedStatement
