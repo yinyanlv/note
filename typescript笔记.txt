@@ -54,12 +54,20 @@ namespace和module区别
 namespace是跨文件的，概念上等同于包名，主要是解决命名冲突的问题，会在全局生成一个对象，不同的文件能够读取其他文件注册在全局的命名空间内的信息，也可以注册自己的
 module是以文件为单位的，概念上等同于文件，主要是解决加载依赖关系的，module跟文件绑定在一起，一个文件就是一个module
 
-在typescirpt中，如果.d.ts文件的顶部不以import或者export语句开始，那么该文件会被当作一个全局的ts脚本，而不是模块，因此不能进行类型扩展
+在typescript中，如果.d.ts文件的顶部不以import或者export语句开始，那么该文件会被当作一个全局的ts脚本，而不是模块，因此不能进行类型扩展
 export declare global {
     interface Window {
         abc: any;
     }
 }
+
+interface和type
+1、interface强调数据结构、协议，type强调类型
+2、interface会创建新类型名，type本质上是定义别名，不会创建新类型名（ide提示仍然为底层数据结构）
+3、interface可以使用extends、implement，type不可以，但type可以使用&（交叉类型）达到同样的效果
+4、type可定义基础类型别名、联合类型、元组类型，interface不可以
+5、同名interface可以自动合并，而同名type不行，会报编译报错
+6、如果项目是按照oop的编程思想来架构的，那么建议除非是明确的interface（协议），其他场景下尽量用type，反之如果是一个普通的typescript项目，则按照官方的建议，尽量使用interface
 
 基础类型
 number  // let isDone: number = 0xf11d;
