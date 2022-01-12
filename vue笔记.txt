@@ -1,3 +1,12 @@
+vue3
+setup返回的render函数优先级高于render属性定义的render函数
+对于ref变量，setup中定义的render需要通过.value访问，render属性定义的render不需要通过.value访问
+
+ref本质上是对reactive的一层封装
+ref、toRef、toRefs
+
+---
+
 生命周期
 beforeCreate
 created
