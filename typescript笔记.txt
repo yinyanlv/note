@@ -54,7 +54,7 @@ namespace和module区别
 namespace是跨文件的，概念上等同于包名，主要是解决命名冲突的问题，会在全局生成一个对象，不同的文件能够读取其他文件注册在全局的命名空间内的信息，也可以注册自己的
 module是以文件为单位的，概念上等同于文件，主要是解决加载依赖关系的，module跟文件绑定在一起，一个文件就是一个module
 
-在typescript中，如果.d.ts文件的顶部不以import或者export语句开始，那么该文件会被当作一个全局的ts脚本，而不是模块，因此不能进行类型扩展
+在typescript中，任何包含一个顶级import或export的文件都被视为一个“模块”，否则该文件会被视为一个全局的ts脚本。如果类型声明在“模块”之外，该声明会覆盖而不是扩展原本的类型
 export declare global {
     interface Window {
         abc: any;
