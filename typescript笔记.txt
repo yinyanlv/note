@@ -1,6 +1,6 @@
 package.json需配置types或typings字段
 
-typeof关键字  // 用于获取一个变量、对象、函数的类型
+typeof关键字  // 用于获取一个变量、对象、函数的类型，注意：在typescript的类型系统中typeof ClassName得到的是该类型构造函数。typeof ClassName是类ClassName的构造函数
 keyof关键字  // 用于获取某种类型的所有键，其返回类型是联合类型
 infer关键字  // 用于类型不确定、需要让ts编译器自己推断类型的情况，做到类型“模式匹配”。infer R就是声明了一个类型变量R，infer只能用于extends语句中
   type R<T> = T extends (infer U)[] ? U : T;
@@ -11,9 +11,11 @@ infer关键字  // 用于类型不确定、需要让ts编译器自己推断类�
 as关键字 // 类型断言，这种方式可以告诉编译器，“相信我，我知道自己在干什么”，它没有运行时的影响，只是在编译阶段起作用
   let strLength: number = (someValue as string).length;
   let strLength: number = (<string>someValue).length;  
-const断言  // ts 3.4引入的一种新的字面量联合类型构造方式
-  let x = "hello" as const; 
+const断言  // ts 3.4引入的一种新的断言，const assertions，使用了该断言后，字面量不能被扩展。变量的类型被约束在当前字面量的形状上，并且属性只读
+  let x = "hello" as const; // 此时x的类型为"hello"
   type X = typeof x;  // type X = "hello"
+  const y = { text: "hello" } as const;
+  type Y = typeof y; // type Y = {text: string} 
 
 工具泛型
 Partial // 将类型的所有属性变为可选，type Partial<T> = {[P in keyof T]?: T[P]}
@@ -33,7 +35,12 @@ Parameters // 用于获取函数的参数类型，type Parameters<T extends (...
       return 'abc'
   }
   const b: Parameters<typeof a> = [1, '2'] // 类型：[a: number, b: string]
-InstanceType // 用于获取实例类型，type InstanceType<T extends new (...args: any) => any> = T extends new (...args: any) => infer R ? R : any;
+InstanceType // 用于获取构造函数的实例类型，type InstanceType<T extends new (...args: any) => any> = T extends new (...args: any) => infer R ? R : any;
+  class C {
+    x = 0;
+    y = 0;
+  }
+  type T0 = InstanceType<typeof C>; // type T0 = C
 
 declare关键字  // 在程序中使用外部代码的最简单方法是声明一个any变量。TypeScript编译器允许any对象调用任何方法与属性。这会让你通过编译，但是没有自动完成和类型检查
 declare var $: any;
