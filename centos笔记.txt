@@ -1,0 +1,7 @@
+安装docker // https://blog.csdn.net/weixin_50513383/article/details/116588640
+yum install -y yum-utils
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+yum makecache
+yum -y install docker-ce docker-ce-cli containerd.io --allowerasing
+systemctl start docker
+docker version
