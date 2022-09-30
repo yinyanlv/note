@@ -184,6 +184,7 @@ ctrl + w -  // 减小窗口尺寸
 ~/.vimrc配置
 syntax on  // 开启语法高亮
 set nu[mber]  // 显示行号
+set rnu  // 显示相对行号
 set nonu[mber]  // 隐藏行号
 set cursorline  // 高亮当前行
 set ruler  // 显示光标位置信息
