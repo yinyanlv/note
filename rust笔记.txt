@@ -10,6 +10,64 @@ Copy类型可以通过按位复制进行完整的拷贝，只要一个自定类�
 1、当你为某类型实现某trait的时候，必须要求类型或者trait至少有一个是在当前crate中定义的。你不能为第三方的类型实现第三方的trait
 2、在调用trait中定义的方法的时候，一定要记得让这个trait可被访问
 
+impl trait和dyn trait区别在于静态分发与动态分发，trait object必须用dyn显式定义
+静态分发性能好, 但大量使用有可能造成二进制文件膨胀
+动态分发以trait object的概念通过虚表实现，会带来一些运行时开销。又因trait object与Trait在不引入dyn的情况下经常导致语义混淆，所以rust特地引入dyn关键字，在rust 2018中已经稳定
+
+动态大小类型?Sized，如：str、trait object
+
+Send和Sync，这两个trait并不互斥，大多数时候都是同时被实现的，但是并不是强相关，在一些特殊的使用场景中只有单个出现
+Send意味着该类型的所有权可以在不同的线程间传递，而实现了Sync则意味着该类型的引用可以在不同的线程间共享。即，Send是指对象在不同线程间传递，Sync是指不可变引用在不同线程间传递
+Send和Sync由编译器自动推导，不需要手动是实现
+
+函数、impl块，生命周期编译器自动推导（补全）三大规则： // 注意：如果编译器自动补全后，发现自动补全的生命周期有问题，编译器仍会报错，这时需手动定义正确的生命周期
+1、每个引用的参数都有它自己的生命周期参数。例如：
+  一个引用参数的函数，其中有一个生命周期： fn foo<'a>(x: &'a i32)
+  两个引用参数的函数，则有两个生命周期 ：fn foo<'a, 'b>(x: &'a i32, y: &'b i32)
+  以此类推...
+2、如果只有一个输入生命周期参数，那么它被赋予所有输出生命周期参数：
+  fn foo(x: &i32) -> &i32   等价于  fn foo<'a>(x: &'a i32) -> &'a i32
+3、如果方法有多个输入生命周期参数，不过其中之一因为是方法的缘故为&self或者&mut self，那么self的生命周期被赋予所有输出生命周期参数。例如：
+  fn function(&self, x: &str, y: &str, ....) -> &str 
+
+trait关联类型 // 用于定义一个使用多种类型的trait
+关联类型用于在trait定义中指定占位符类型，关联类型是一个将类型占位符与trait相关联的方式，trait的实现者会针对特定的实现在这个类型的位置指定相应的具体类型
+struct A {
+    value: i32,
+}
+pub trait Iterator { // 用关联类型的方式定义trait，只能为某类型impl一个版本的trait，如：impl Iterator for A，此时编译器可以自动推导，调用方可以直接执行a.next()
+  type Item;
+  fn next(&mut self) -> Option<Self::Item>;
+}
+impl Iterator for A {
+  type Item = A;
+  fn next(&mut self) -> Option<Self::Item> {
+    ...
+  }
+}
+pub trait Iterator<T> { // 用泛型的方式定义trait时，可以为某类型impl多个版本的trait，如：impl Iterator<i32> for A、impl Iterator<String> for A，此时编译器不能自动推导，调用方只能标注具体类型通过完全限定语法调用，如：<A as Iterator<i32>>::next(&mut a);
+  fn next(&mut self) -> Option<T>;
+}
+
+trait默认类型参数 // 单纯的语法糖，impl未传入自定义RHS时，则使用默认的Self，本质上是用泛型的方式定义trait
+trait Add<RHS = Self> { // RHS，right hand side
+  type Output;
+  fn add(self, rhs: RHS) -> Self::Output;
+}
+impl Add<A> for B {
+  ...
+}
+
+类型别名 // 语法上和trait关联类型很像，但完全不是一回事。主要作用是简化代码、减少重复。如：将Box<dyn fn() + Send + 'Static>定义别名为Abc，则大大简化了代码书写
+type A = i32;
+
+Pin // 保证指针类型背后的值，不被移动，依旧可以访问之前的地址。防止多线程时，未使用Pin对象所有权转移，发生拷贝、移动，指针地址未及时更新
+大多数类型都不存在移动类型，即实现了UnPin trait
+Pin<T>保护的是T内部的指针地址，而非Pin<T>本身的地址
+将Pin转换成UnPin：
+  1、Box::pin(aPinObject)
+  2、pin_mut!(aPinObject)
+  
 基础命令
 rustc main.rs  // 编译
 rustc main.rs -O  // 优化编译
