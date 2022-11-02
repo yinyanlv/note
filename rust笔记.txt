@@ -61,13 +61,13 @@ impl Add<A> for B {
 类型别名 // 语法上和trait关联类型很像，但完全不是一回事。主要作用是简化代码、减少重复。如：将Box<dyn fn() + Send + 'Static>定义别名为Abc，则大大简化了代码书写
 type A = i32;
 
-Pin // 保证指针类型背后的值，不被移动，依旧可以访问之前的地址。防止多线程时，未使用Pin对象所有权转移，发生拷贝、移动，指针地址未及时更新
+Pin // 保证指针类型背后的值，不被移动，依旧可以访问之前的地址。防止多线程时，未使用Pin时，对象所有权转移，发生拷贝、移动，指针地址未及时更新
 大多数类型都不存在移动类型，即实现了UnPin trait
 Pin<T>保护的是T内部的指针地址，而非Pin<T>本身的地址
 将Pin转换成UnPin：
   1、Box::pin(aPinObject)
   2、pin_mut!(aPinObject)
-  
+
 基础命令
 rustc main.rs  // 编译
 rustc main.rs -O  // 优化编译
