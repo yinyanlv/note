@@ -39,6 +39,17 @@ cpu把内存看成一块一块的，一块内存可以是2、4、8、16个字节
   规则一：结构体第一个成员变量偏移量为0，后面的成员变量的偏移量等于该成员（后面）变量大小和该成员（后面）对齐系数两者中较小的那个值的最小整数倍，如果不满足规则，编译器会在前面填充值为0的字节空间
   规则二：结构体本身也需要内存对齐，其大小等于各成员变量占用内存最大的和编译器默认对齐系数（32位默认4，64位默认8）两者中较小的那个值的最小整数倍
 
+空指针和空接口不是一个概念。未初始化或初始化为nil的接口，与nil比较时为true。一旦将指针赋值给接口，无论该指针指向的值是否为nil，此时与nil比较时为false
+type A interface{}
+1、var a A // a == nil, true
+2、var a A = nil // a == nil, true
+3、var a A = nil; var b A = a // b == nil, true
+4、var a *A // a == nil, true 
+5、var a *A = nil // a == nil, true 
+6、var a *A = nil; var b *A = a // b == nil, true
+7、var a A = nil; var b *A = &a // b == nil, false，指针
+8、var a A = nil; var b A = &a // b == nil, false，指针
+
 go数据类型四大类
 基础类型  // number，string，bool
 聚合类型  // array，struct
