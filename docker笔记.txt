@@ -132,7 +132,7 @@ services:
 
 部署实例
 mysql
-docker run --name prot -p 9000:9000 --net prot_default --link mysql:mysql -d prot  // 使prot容器关联外部mysql容器并启动
+docker run --name prot -p 9000:9000 --net prot_default --link mysql:mysql -d prot  // 使prot容器关联外部mysql容器并启动，--net非必须
 docker exec -it mysql /bin/bash  // 进入容器，然后初始化数据库，source /abc.sql 
 exit  // 退出容器
 
