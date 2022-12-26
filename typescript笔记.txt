@@ -23,8 +23,9 @@ Required // 将类型的所有属性变为必选项，type Required<T> = {[P in 
 Readonly // 将类型的所有属性变为只读选项，type Readonly<T> = {readonly [P in keyof T]: T[P]}
 Record // 组合两种类型，一种类型作为key，一种类型作为value，type Record<K extends keyof any, T> = {[P in K]: T}
        // keyof any // 即string | number | symbol
-       // [P in K] // 对象的key可以取string，number，symbol
+       // [P in K] // 对象的key可以取string，number，symbol，in用于枚举联合类型，in keyof用于枚举对象key
 Pick // 从类型T中取出一些属性，type Pick<T, K extends keyof T> = {[P in K]: T[P]}，如：Pick<PetInfo, 'name'>
+     // K extends keyof T，即类型K的key被约束在类型T的key中，不能超出这个范围。extends用来约束类型而不是表示继承
 Exclude // 将某个类型中属于另一个类型的属性剔除掉，type Exclude<T, U> = T extends U ? never : T，常用于联合类型
 Extract // 将两个类型中共同的属性提取出来，type Extract<T, U> = T extends U ? T : never，常用于联合类型
 Omit // 将类型T中的一些属性隐藏，type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
