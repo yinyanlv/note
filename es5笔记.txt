@@ -81,14 +81,22 @@ function Promise() {
 	const self = this;
 	this.status === 'pending';
 	this.data = undefined;
+	this.resolveCallbacks = []
+	this.rejectCallbacks = []
 	function resolve(data) {
 		self.status = 'resolved';
 		self.data = data;
+		self.resolveCallbacks.forEach((fn) => {
+			self.data = fn(self.data)
+		})
 	}
 
 	function reject(data) {
 		self.status = 'rejected';
 		self.data= data;
+		self.rejectCallbacks.forEach((fn) => {
+			self.data = fn(self.data)
+		})
 	}
 
 	func(resolve, reject) // TODO，异步
@@ -96,18 +104,20 @@ function Promise() {
 }
 
 Promise.prototype.then = function () {
-	const resolve = arguments[0];
-	const reject = arguments[1];
+	const onResolve = arguments[0];
+	const onReject = arguments[1];
 
-	if (this.status === 'resolved') {
-		resolve(this.data);
-	} else if (this.status === 'rejected') {
-		reject(this.data);
+	if (onResolve) {
+		this.resolveCallbacks.push(onResolve)
 	}
+	if (onReject) {
+		this.rejectCallbacks.push(onReject)
+	}
+	return this
 }
 
 Array
-forEach  // 不会遍历纯粹“占着官位吃空饷”的元素
+forEach  
 map 
 filter 
 some
