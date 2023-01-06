@@ -38,6 +38,12 @@ call，apply，bind方法的第一个参数如果是null，undefined、不传，
 call，apply，bind方法的第一个参数如果是原始值，该原始值将被自动转换为对应的包装对象，如fn.call(1)，this将指向Number，并且这个Number的[[PrimitiveValue]]值为1，可以通过this.valueOf()取值
 Object.prototype.__proto__为null，这是原型链的终点
 
+instanceof只能正确判断引用数据类型，而不能判断基本数据类型，如：
+1 instanceof Number // false
+Number(1) instanceof Number // false
+new Number(1) instanceof Number // true 
+Object(1) instanceof Number  // true
+
 Function.prototype.myCall = function(ctx, ...args) {
 	ctx = ctx ? Object(ctx) : global;
 	const fn = Symbol('fn');
