@@ -49,6 +49,10 @@ type A interface{}
 6、var a *A = nil; var b *A = a // b == nil, true
 7、var a A = nil; var b *A = &a // b == nil, false，指针
 8、var a A = nil; var b A = &a // b == nil, false，指针
+type B struct{}
+var a *B; // a == nil, true
+var a *B = nil; // a == nil, true
+var a *B; var b *B; // a == b, true
 
 go数据类型四大类
 基础类型  // number，string，bool
