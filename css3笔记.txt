@@ -151,16 +151,21 @@ matrix3d(); // 4*4矩阵
 事件
 transformend
 
-animation
-animation-delay: -20s;  // 负的动画延时可直接跳至动画中对应的时间点
-animation-direction: alternate;  // normal(不反转循环周期)，alternate(反转偶数)，alternate-reverse(反转奇数)，reverse(反转每一个循环周期)
-animation-play-state: paused;  // paused/running，可通过交互控制动画状态
+animation // animation: name 2s linear 3s forwards 2 normal;
+animation-name
+animation-duration
 animation-timing-function:  // 注意：timing-function作用于每两个关键帧之间，而不是整个动画
-cubic-bezier(x1, y1, x2, y2);  // 反向版本，锚点的水平坐标和垂直坐标互换，水平方向上[0, 1]，垂直方向上(-∞, +∞)
-steps(4, end);  // 根据指定的步数，把每个间隔（两个相邻的keyframe之间的动画）切分为多帧，整个动画会在帧与帧之间硬切，不作插值处理，start/end(指定在每个间隔的起点或是终点发生阶跃变化，默认end，start跳过间隔的起点状态（类似跳过间隔的0%），end跳过间隔的终点状态（类似跳过间隔的100%）
-step-start;  // 单步切换，相当于steps(1, start)的简写
-step-end;  // 相当于steps(1, end)的简写
-事件
+  cubic-bezier(x1, y1, x2, y2);  // 反向版本，锚点的水平坐标和垂直坐标互换，水平方向上[0, 1]，垂直方向上(-∞, +∞)
+  steps(4, end);  // 根据指定的步数，把每个间隔（两个相邻的keyframe之间的动画）切分为多帧，整个动画会在帧与帧之间硬切，不作插值处理，start/end(指定在每个间隔的起点或是终点发生阶跃变化，默认end，start跳过间隔的起点状态（类似跳过间隔的0%），end跳过间隔的终点状态（类似跳过间隔的100%）
+  step-start;  // 单步切换，相当于steps(1, start)的简写
+  step-end;  // 相当于steps(1, end)的简写
+animation-delay: -20s;  // 负的动画延时可直接跳至动画中对应的时间点  
+animation-fill-mode  // 定义动画在播放之前或之后，元素的状态。none | forwards，是否动画在播放之后保留元素的最终(关键帧最后一帧)状态 | backwards，在动画播放之前(延迟播放期间)将元素的初始状态设置为动画关键帧第一帧的状态 | both，相当于同时设置为forwards、backwards
+animation-iteration-count // 定义动画的播放次数，n | infinite
+animation-direction: alternate;  // normal(正向播放) | alternate(播放次数为偶数时，反向播放) | reverse(反向播放) | alternate-reverse(播放次数为偶数时，正向播放)
+animation-play-state: paused;  // 定义动画正在运行还是暂停，可在js中使用该属性，这样就能在播放过程中暂停动画，paused | running
+
+动画事件
 w3c/firefox animationstart animation animateionend
 webkit webkitAnimationStart webkitAnimationIteration webkitAnimationEnd
 ie10 animationstart animationiteration animationend
