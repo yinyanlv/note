@@ -131,7 +131,7 @@ img
 通过width属性缩放图片，只会以图片的左上角为原点进行缩放
 通过scale缩放图片，默认以图片的中心点进行缩放，除非重新设置了transform-origin
 
-transform // 内联元素（与标签无关，display: inline）无法设置transform属性（包括动画），即使将该元素设置为position:relative等也无法生效，除非将display设置为inline-block、block等
+transform // 内联元素（与标签无关，display: inline）设置transform属性无法生效（包括动画），即使将该元素设置为position:relative等也无法生效，除非将display设置为inline-block、block等
 transform-style: preserve-3d;
 transform-origin: center center;
 perspective: 500;
