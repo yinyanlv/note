@@ -20,6 +20,30 @@ Send和Sync，这两个trait并不互斥，大多数时候都是同时被实现�
 Send意味着该类型的所有权可以在不同的线程间传递，而实现了Sync则意味着该类型的引用可以在不同的线程间共享。即，Send是指对象在不同线程间传递，Sync是指不可变引用在不同线程间传递
 Send和Sync由编译器自动推导，不需要手动是实现
 
+move、copy的应用场景，主要是在变量赋值、函数调用的传入参数、函数返回值、闭包的变量捕获
+Copy trait中没有任何方法，所以在copy语义中不可以调用用户自定义的资源复制代码，也就是不可以做deep copy。copy语义就是变量在stack内存的按位复制，没有其他任何多余的操作（即复制堆内存）
+Clone是Copy的super trait，一个类型要实现Copy就必须先实现Clone
+clone需要显式调用clone方法，用户可以对类型做自定义的资源复制，这就可以做deep copy
+Clone trait，对于任何自定义类型都可以实现。Copy trait只有自定义类型中的field全部实现了Copy trait，才可以实现Copy trait
+只有类型中的所有field都有Clone，才可以通过#[derive(Clone)]自动实现Clone trait
+drop是在变量的作用范围结束时，被自动调用
+rust的类型可以实现Drop trait，也可以不实现Drop trait。但是对于类型实现了Copy trait的类型，不能实现Drop trait，因为，如果类型实现了Copy trait，在copy语义中并不会调用Clone::clone方法，不会做deep copy，那就会出现两个变量同时拥有一个资源（比如说是heap内存等），在这两个变量离开作用范围时，会分别调用Drop::drop方法释放资源，这就会出现double free错误
+如果变量类型有Drop trait，就先调用Drop::drop方法，做资源清理，一般会回收heap内存等资源，然后再收回变量所占用的stack内存。如果变量没有Drop trait，那就只收回stack内存
+
+闭包捕获变量
+如果闭包只是对捕获变量的非修改操作，闭包捕获的是&T类型，闭包按照Fn trait方式执行，闭包可以重复多次执行
+如果闭包对捕获变量有修改操作，闭包捕获的是&mut T类型，闭包按照FnMut trait方式执行，闭包可以重复多次执行
+如果闭包会消耗掉捕获的变量（和是否使用move关键字无关），变量被move进闭包，闭包按照FnOnce trait方式执行，闭包只能执行一次
+具体逻辑如下：
+类型实现了Copy，闭包中是&T操作，则闭包按照Fn trait方式执行
+类型实现了Copy，闭包中是&mut T操作，则闭包按照FnMut trait方式执行
+类型实现了Copy，闭包使用move关键字，闭包中是&mut T操作，此处move关键字的使用，强制copy一个新的变量，将新变量move进闭包，闭包按照FnMut trait方式执行 // 闭包外仍可使用该变量
+类型没有实现Copy，闭包中是&T操作，则闭包按照Fn trait方式执行 // immutable borrowed，非move
+类型没有实现Copy，闭包中是&mut T操作，则闭包按照FnMut trait方式执行 // mutable borrowed，非move
+类型没有实现Copy，闭包使用move关键字，闭包中是&mut T操作，此处move关键字的使用，变量所有权被转移进闭包，闭包按照FnMut trait方式执行 // 闭包外不可使用该变量，除非给该变量绑定新的实例
+类型没有实现Copy，闭包中是&mut T操作，捕获的变量被消耗（通过函数返回值转移所有权等方式），则闭包按照FnOnce trait方式执行 // 注意：只能执行一次。本质执行了move（即使未使用move关键字），闭包外不可使用该变量，除非给该变量绑定新的实例
+类型没有实现Copy，闭包使用move关键字，闭包中是T操作（Self调用），捕获的变量被消耗，则闭包按照FnOnce trait方式执行
+
 函数、impl块，生命周期编译器自动推导（补全）三大规则： // 注意：如果编译器自动补全后，发现自动补全的生命周期有问题，编译器仍会报错，这时需手动定义正确的生命周期
 1、每个引用的参数都有它自己的生命周期参数。例如：
   一个引用参数的函数，其中有一个生命周期： fn foo<'a>(x: &'a i32)
