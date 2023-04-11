@@ -17,16 +17,16 @@ impl trait和dyn trait区别在于静态分发与动态分发，trait object必�
 动态大小类型?Sized，如：str、trait object
 
 Send和Sync，这两个trait并不互斥，大多数时候都是同时被实现的，但是并不是强相关，在一些特殊的使用场景中只有单个出现
-Send意味着该类型的所有权可以在不同的线程间传递，而实现了Sync则意味着该类型的引用可以在不同的线程间共享。即，Send是指对象在不同线程间传递，Sync是指不可变引用在不同线程间传递
-Send和Sync由编译器自动推导，不需要手动是实现
+Send意味着该类型的所有权可以在不同的线程间传递，而实现了Sync则意味着该类型的引用可以在不同的线程间共享。即Send是指对象在不同线程间传递，Sync是指不可变引用在不同线程间传递
+Send和Sync由编译器自动推导，不需要手动实现
 
 move、copy的应用场景，主要是在变量赋值、函数调用的传入参数、函数返回值、闭包的变量捕获
 Copy trait中没有任何方法，所以在copy语义中不可以调用用户自定义的资源复制代码，也就是不可以做deep copy。copy语义就是变量在stack内存的按位复制，没有其他任何多余的操作（即复制堆内存）
 Clone是Copy的super trait，一个类型要实现Copy就必须先实现Clone
-clone需要显式调用clone方法，用户可以对类型做自定义的资源复制，这就可以做deep copy
+Clone需要显式调用clone方法，用户可以对类型做自定义的资源复制，这就可以做deep copy
 Clone trait，对于任何自定义类型都可以实现。Copy trait只有自定义类型中的field全部实现了Copy trait，才可以实现Copy trait
-只有类型中的所有field都有Clone，才可以通过#[derive(Clone)]自动实现Clone trait
-drop是在变量的作用范围结束时，被自动调用
+只有类型中的所有field都实现了Clone，才可以通过#[derive(Clone)]自动实现Clone trait
+Drop是在变量的作用范围结束时，被自动调用
 rust的类型可以实现Drop trait，也可以不实现Drop trait。但是对于类型实现了Copy trait的类型，不能实现Drop trait，因为，如果类型实现了Copy trait，在copy语义中并不会调用Clone::clone方法，不会做deep copy，那就会出现两个变量同时拥有一个资源（比如说是heap内存等），在这两个变量离开作用范围时，会分别调用Drop::drop方法释放资源，这就会出现double free错误
 如果变量类型有Drop trait，就先调用Drop::drop方法，做资源清理，一般会回收heap内存等资源，然后再收回变量所占用的stack内存。如果变量没有Drop trait，那就只收回stack内存
 
