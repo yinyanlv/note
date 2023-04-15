@@ -34,6 +34,9 @@ rust的类型可以实现Drop trait，也可以不实现Drop trait。但是对�
 如果闭包只是对捕获变量的非修改操作，闭包捕获的是&T类型，闭包按照Fn trait方式执行，闭包可以重复多次执行
 如果闭包对捕获变量有修改操作，闭包捕获的是&mut T类型，闭包按照FnMut trait方式执行，闭包可以重复多次执行
 如果闭包会消耗掉捕获的变量（和是否使用move关键字无关），变量被move进闭包，闭包按照FnOnce trait方式执行，闭包只能执行一次
+Fn/FnMut/FnOnce它们之间是“继承”关系：Fn继承于FuMut继承于FnOnce，所以有时函数参数要求参数是一个FnOnce的闭包，一看能传递进去当参数，就以为该闭包是FnOnce，但其实并不一定是：
+  1、任何闭包，都可以满足FnOnce限定，因为Fn/FnMut都以调用多次，更不怕FnOnce只调用一次了。只是以FnOnce调用一次，会丢掉闭包所有权
+  1、Fn也同样满足FnMut限定，因为Fn本身不改变捕获变量，更不怕以&mut self的方式调用了
 具体逻辑如下：
 类型实现了Copy，闭包中是&T操作，则闭包按照Fn trait方式执行
 类型实现了Copy，闭包中是&mut T操作，则闭包按照FnMut trait方式执行
