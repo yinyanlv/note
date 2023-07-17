@@ -251,7 +251,7 @@ reflect.Type
   newVal.SetFloat(8.8)
 4、通过reflect.ValueOf()函数来进行方法调动
   methodVal := reflectVal.MethodByName("func1")
-  args1 := []reflect.Value{reflect.Value("abc")}
+  args1 := []reflect.Value{reflect.ValueOf("abc")}
   methodVal.Call(args1)  // 有参调用
   args2 := make([]reflect.value, 0)
   methodVal.Call(arg2)  // 无参调用
