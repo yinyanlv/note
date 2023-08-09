@@ -60,11 +60,16 @@ declare module "SomeModule" {
     export function fn(): string;
 }
 
+typeScript模块除了支持所有js模块的语法外，特别之处在于允许export或import类型，即import type或export type
+typescript使用import =语句输入commonjs模块 // import fs = require('fs')
+typescript使用export =语句，输出commonjs模块的对象，等同于commonjs的module.exports对象，export =语句输出的对象，只能使用import =语句加载 // export = {a: 1}
+
 namespace和module区别
 namespace是跨文件的，概念上等同于包名，主要是解决命名冲突的问题，会在全局生成一个对象，不同的文件能够读取其他文件注册在全局的命名空间内的信息，也可以注册自己的
 module是以文件为单位的，概念上等同于文件，主要是解决加载依赖关系的，module跟文件绑定在一起，一个文件就是一个module
+一个文件只能有一个模块，但可以有多个namespace，如果namespace代码放在一个单独的文件里，那么引入这个文件需要使用三斜杠的语法 /// <reference path = "SomeFileName.ts" />
 
-在typescript中，任何包含一个顶级import或export的文件都被视为一个“模块”，否则该文件会被视为一个全局的ts脚本。如果类型声明在“模块”之外，该声明会覆盖而不是扩展原本的类型
+任何包含import或export语句的文件，就是一个模块（module）。相应地，如果文件不包含import或export语句，就是一个全局的脚本文件。模块内部的变量、函数、类只在内部可见，对于模块外部是不可见的。如果类型声明在“模块”之外，该声明会覆盖而不是扩展原本的类型
 export declare global {
     interface Window {
         abc: any;
