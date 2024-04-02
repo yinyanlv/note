@@ -92,7 +92,7 @@ typescript使用export =语句，输出commonjs模块的对象，等同于common
 namespace和module区别
 namespace是跨文件的，概念上等同于包名，主要是解决命名冲突的问题，会在全局生成一个对象，不同的文件能够读取其他文件注册在全局的命名空间内的信息，也可以注册自己的
 module是以文件为单位的，概念上等同于文件，主要是解决加载依赖关系的，module跟文件绑定在一起，一个文件就是一个module
-一个文件只能有一个模块，但可以有多个namespace，如果namespace代码放在一个单独的文件里，那么引入这个文件需要使用三斜杠的语法 /// <reference path="SomeFileName.ts" />
+一个文件只能有一个模块，但可以有多个namespace
 
 任何包含import或export语句的文件，就是一个模块（module）。相应地，如果文件不包含import或export语句，就是一个全局的脚本文件。模块内部的变量、函数、类只在内部可见，对于模块外部是不可见的。如果类型声明在“模块”之外，该声明会覆盖而不是扩展原本的类型
 export declare global {
@@ -100,6 +100,8 @@ export declare global {
         abc: any;
     }
 }
+
+/// <reference path="SomeFileName.ts" />，三斜杠指令不导入文件的内容或实现，它仅仅告诉TypeScript编译器在解析类型信息时要考虑指定的文件。这个指令在编译阶段帮助TypeScript理解其他文件中的类型定义，但并不会在运行时产生任何效果
 
 基础类型
 number  // let isDone: number = 0xf11d;
